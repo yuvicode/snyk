@@ -149,29 +149,38 @@ async function assembleLocalPayload(root, options, policyLocations): Promise<Pay
     await spinner(spinnerLbl);
     const inspectRes = await moduleInfo.inspect(root, options.file, options);
 
-    const pkg = inspectRes.package;
     if (_.get(inspectRes, 'plugin.packageManager')) {
       options.packageManager = inspectRes.plugin.packageManager;
     }
-    if (!_.get(pkg, 'docker.baseImage') && options['base-image']) {
-      pkg.docker = pkg.docker || {};
-      pkg.docker.baseImage = options['base-image'];
+
+    let depGraph: depGraphLib.DepGraph;
+    if (inspectRes.depGraphData) {
+      depGraph = depGraphLib.createFromJSON(inspectRes.depGraphData);
+    } else {
+      const pkg = inspectRes.package;
+      if (_.get(pkg, 'files.gemfileLock.contents')) {
+        const gemfileLockBase64 = pkg.files.gemfileLock.contents;
+        const gemfileLockContents = Buffer.from(gemfileLockBase64, 'base64').toString();
+        pkg.dependencies = gemfileLockToDependencies(gemfileLockContents);
+      }
+
+      depGraph = await depGraphLib.legacy.depTreeToGraph(
+        pkg, options.packageManager);
     }
 
-    if (_.get(pkg, 'files.gemfileLock.contents')) {
-      const gemfileLockBase64 = pkg.files.gemfileLock.contents;
-      const gemfileLockContents = Buffer.from(gemfileLockBase64, 'base64').toString();
-      pkg.dependencies = gemfileLockToDependencies(gemfileLockContents);
+    let dockerInfo;
+    if (!_.get(inspectRes.package, 'docker.baseImage') && options['base-image']) {
+      dockerInfo = inspectRes.package.docker || {};
+      dockerInfo.baseImage = options['base-image'];
+    } else {
+      dockerInfo = inspectRes.package && inspectRes.package.docker;
     }
-
-    const depGraph = await depGraphLib.legacy.depTreeToGraph(
-      pkg, options.packageManager);
 
     analytics.add('policies', policyLocations.length);
     analytics.add('packageManager', options.packageManager);
-    analytics.add('packageName', pkg.name);
-    analytics.add('packageVersion', pkg.version);
-    analytics.add('package', pkg.name + '@' + pkg.version);
+    analytics.add('packageName', depGraph.rootPkg.name);
+    analytics.add('packageVersion', depGraph.rootPkg.version);
+    analytics.add('package', depGraph.rootPkg.name + '@' + depGraph.rootPkg.version);
 
     let policy;
     if (policyLocations.length > 0) {
@@ -197,10 +206,10 @@ async function assembleLocalPayload(root, options, policyLocations): Promise<Pay
       qs: common.assembleQueryString(options),
       body: {
         depGraph,
-        targetFile: pkg.targetFile || options.file,
+        targetFile: (inspectRes.package && inspectRes.package.targetFile) || options.file,
         projectNameOverride: options.projectName,
         policy: policy && policy.toString(),
-        docker: pkg.docker,
+        docker: dockerInfo,
       },
     };
 

@@ -1716,15 +1716,12 @@ test('`test sbt-simple-struts`', async (t) => {
     inspect: () => {
       return Promise.resolve({
         plugin: {},
-        package: require('./workspaces/sbt-simple-struts/dep-tree.json'),
+        depGraphData: require('./workspaces/sbt-simple-struts/dep-graph.json'),
       });
     },
   };
   sinon.stub(plugins, 'loadPlugin').returns(plugin);
-
-  t.teardown(() => {
-    plugins.loadPlugin.restore();
-  });
+  t.teardown(plugins.loadPlugin.restore);
 
   server.setNextResponse(
     require('./workspaces/sbt-simple-struts/test-graph-result.json'));
@@ -1735,6 +1732,14 @@ test('`test sbt-simple-struts`', async (t) => {
     t.fail('should have thrown');
 
   } catch (err) {
+    var req = server.popRequest();
+    t.equal(req.method, 'POST', 'makes POST request');
+    t.match(req.url, '/test-dep-graph', 'posts to correct url');
+
+    const depGraph = req.body.depGraph;
+    t.equal(depGraph.pkgManager.name, 'sbt');
+    t.is(depGraph.pkgs.length, 12, 'depGraph has 12 pkgs as expected');
+
     const res = JSON.parse(err.message);
 
     const expected =
@@ -1753,7 +1758,6 @@ test('`test sbt-simple-struts`', async (t) => {
       'vulns are the same');
   }
 });
-
 
 /**
  * `monitor`
