@@ -1,5 +1,6 @@
 module.exports = monitor;
 
+const path = require('path');
 var snyk = require('../lib');
 var apiTokenExists = require('./api-token').exists;
 var request = require('./request');
@@ -9,7 +10,9 @@ var _ = require('lodash');
 var isCI = require('./is-ci');
 var analytics = require('./analytics');
 
-function monitor(root, meta, info) {
+var gitInfoLib = require('./git-info');
+
+function monitor(root, meta, info, targetFile) {
   var pkg = info.package;
   var pluginMeta = info.plugin;
   var policyPath = meta['policy-path'];
@@ -26,10 +29,15 @@ function monitor(root, meta, info) {
         return snyk.policy.create();
       }
       return snyk.policy.load(policyLocations, opts);
-    }).then(function (policy) {
+    }).then(async (policy) => {
       analytics.add('packageManager', packageManager);
       // YARN temporary fix to avoid BE changes
       packageManager = packageManager === 'yarn' ? 'npm' : packageManager;
+
+      const gitInfo = await gitInfoLib.getGitInfo();
+      const gitRelativeTargetFile = path.relative(gitInfo.localRoot, path.resolve(root, targetFile));
+      console.log('KOKO', gitInfo, gitRelativeTargetFile);
+
       return new Promise(function (resolve, reject) {
         request({
           body: {
@@ -49,6 +57,13 @@ function monitor(root, meta, info) {
               dockerImageId: pluginMeta.dockerImageId,
               dockerBaseImage: pkg.docker ? pkg.docker.baseImage : undefined,
               projectName: meta['project-name'],
+              git: {
+                originUrl: gitInfo.originUrl,
+                branch: gitInfo.branch,
+                commitSha: gitInfo.commitSha,
+                // TODO: is dirty
+              },
+              gitRelativeTargetFile,
             },
             policy: policy.toString(),
             package: pkg,

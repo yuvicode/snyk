@@ -83,19 +83,19 @@ function monitor() {
                     return info;
                   });
               })
-              .then(function (info) {
+              .then(async (info) => {
                 if (_.get(info, 'plugin.packageManager')) {
                   packageManager = info.plugin.packageManager;
                 }
+
                 var meta = {
                   method: 'cli',
                   packageManager: packageManager,
                   'policy-path': options['policy-path'],
-                  'project-name':
-                options['project-name'] || config['PROJECT_NAME'],
+                  'project-name': options['project-name'] || config['PROJECT_NAME'],
                   isDocker: !!options.docker,
                 };
-                return snyk.monitor(path, meta, info);
+                return snyk.monitor(path, meta, info, targetFile);
               })
             // clear spinner in case of success or failure
               .then(spinner.clear(postingMonitorSpinnerLabel))
