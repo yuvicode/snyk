@@ -129,6 +129,7 @@ export function args(processargv) {
     'package-manager',
     'packages-folder',
     'severity-threshold',
+    'per-package-fixes',
   ]) {
     if (argv[dashedArg]) {
       const camelCased = dashToCamelCase(dashedArg);
