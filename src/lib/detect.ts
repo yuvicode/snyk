@@ -19,6 +19,7 @@ const DETECTABLE_FILES = [
   'requirements.txt',
   'Gopkg.lock',
   'vendor/vendor.json',
+  'go.mod',
   'obj/project.assets.json',
   'project.assets.json',
   'packages.config',
@@ -41,6 +42,7 @@ const DETECTABLE_PACKAGE_MANAGERS = {
   'requirements.txt': 'pip',
   'Gopkg.lock': 'golangdep',
   'vendor.json': 'govendor',
+  'go.mod': 'golangdep', //TODO: rename correctly
   'project.assets.json': 'nuget',
   'packages.config': 'nuget',
   'project.json': 'nuget',
