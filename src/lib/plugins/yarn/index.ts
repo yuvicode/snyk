@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as fs from 'then-fs';
 import * as _ from 'lodash';
 import * as Debug from 'debug';
-import {buildDepTree, PkgTree, LockfileType} from 'snyk-nodejs-lockfile-parser';
+import {buildDepTree, PkgTree, LockfileType, getYarnWorkspaces} from 'snyk-nodejs-lockfile-parser';
 import * as snyk from '../../';
 
 const debug = Debug('snyk');

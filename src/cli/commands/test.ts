@@ -81,7 +81,11 @@ async function test(...args) {
     }
 
     // add the tested path to the result of the test (or error)
-    results.push(_.assign(res, {path}));
+    for (const r of res) {
+      results.push(_.assign(r, { path }));
+      // yarn workspaces can result into multiple data with single test opts
+      resultOptions.push(testOpts);
+    }
   }
 
   // resultOptions is now an array of 1 or more options used for

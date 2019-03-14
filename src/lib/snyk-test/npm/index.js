@@ -74,36 +74,33 @@ function test(root, options) {
               modules = pkg;
               return pkg;
             });
-        }).then((pkg) => {
-          policyLocations = policyLocations.concat(pluckPolicies(pkg));
-          debug('policies found', policyLocations);
-          analytics.add('policies', policyLocations.length);
-          hasDevDependencies = pkg.hasDevDependencies;
-          payload.method = 'POST';
-          payload.body = pkg;
-          payload.qs = common.assembleQueryString(options);
-          // load all relevant policies, apply relevant options
-          return snyk.policy.load(policyLocations, options)
-            .then((policy) => {
+        }).then(async (pkgs) => {
+          const resArr = [];
+          for (const pkg of pkgs) {
+            policyLocations = policyLocations.concat(pluckPolicies(pkg));
+            debug('policies found', policyLocations);
+            analytics.add('policies', policyLocations.length);
+            hasDevDependencies = pkg.hasDevDependencies;
+            payload.method = 'POST';
+            payload.body = pkg;
+            payload.qs = common.assembleQueryString(options);
+            // load all relevant policies, apply relevant options
+            try {
+              const policy = await snyk.policy.load(policyLocations, options);
               payload.body.policy = policy.toString();
-              return {
-                package: pkg,
-                payload,
-              };
-            },(error) => { // note: inline catch, to handle error from .load
-            // the .snyk file wasn't found, which is fine, so we'll return
-              if (error.code === 'ENOENT') {
-                return {
-                  package: pkg,
-                  payload,
-                };
+            } catch (error) {
+              // if the .snyk file wasn't found, we'll return
+              if (error.code !== 'ENOENT') {
+                throw error;
               }
-              throw error;
-            });
+            }
+            // modules is either null (as defined) or was updated during the flow using node modules
+            // TODO: await needed, otherwise event loop is starving; let's find why
+            resArr.push(await queryForVulns({package: pkg, payload}, modules, hasDevDependencies, root, options));
+          };
+
+          return resArr;
         });
-    }).then((data) => {
-      // modules is either null (as defined) or was updated during the flow using node modules
-      return queryForVulns(data, modules, hasDevDependencies, root, options);
     });
 }
 
@@ -144,6 +141,42 @@ function generateDependenciesFromLockfile(root, options, targetFile) {
 
   const lockFileType = targetFile.endsWith('yarn.lock') ?
     lockFileParser.LockfileType.yarn : lockFileParser.LockfileType.npm;
+
+  if (lockFileType === lockFileParser.LockfileType.yarn) {
+    const workspaces = _.flatten(
+      lockFileParser.getYarnWorkspaces(manifestFile)
+        .map((workspace) => {
+          const p = path.parse(workspace);
+          if (p.name = '*') {
+            return fileSystem.readdirSync(p.dir).map((workspace) => `${p.dir}/${workspace}`);
+          }
+
+          return workspace;
+        }));
+
+    if (workspaces) {
+      const resolveModuleSpinnerLabel = `Analyzing yarn workspaces dependencies for ${lockFileFullPath}`;
+      debug(resolveModuleSpinnerLabel);
+      return spinner(resolveModuleSpinnerLabel)
+        .then(() => {
+          const strictOutOfSync = 'false'; // assuming finding workspaces there
+          return Promise.all(workspaces.map((workspace) => {
+
+            const workspaceManifestPath = path.resolve(`${fullPath.dir}/${workspace}`, 'package.json');
+            const workspaceManifestFile = fileSystem.readFileSync(workspaceManifestPath);
+            return lockFileParser
+              .buildDepTree(workspaceManifestFile, lockFile, options.dev, lockFileType, strictOutOfSync);
+          }));
+        })
+        // clear spinner in case of success or failure
+        .then(spinner.clear(resolveModuleSpinnerLabel))
+        .catch((error) => {
+          spinner.clear(resolveModuleSpinnerLabel)();
+          throw error;
+        });
+    }
+  }
+
 
   const resolveModuleSpinnerLabel = `Analyzing npm dependencies for ${lockFileFullPath}`;
   debug(resolveModuleSpinnerLabel);

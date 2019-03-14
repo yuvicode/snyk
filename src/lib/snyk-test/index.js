@@ -27,11 +27,13 @@ function executeTest(root, options) {
     var packageManager = detect.detectPackageManager(root, options);
     options.packageManager = packageManager;
     return run(root, options)
-      .then(function (res) {
-        if (!res.packageManager) {
-          res.packageManager = packageManager;
+      .then(function (results) {
+        for (const r of results) {
+          if (!r.packageManager) {
+            r.packageManager = packageManager;
+          }
         }
-        return res;
+        return results;
       });
   } catch (error) {
     return Promise.reject(chalk.red.bold(error));
