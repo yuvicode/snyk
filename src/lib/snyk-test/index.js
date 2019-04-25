@@ -50,7 +50,7 @@ function run(root, options) {
   if (['npm', 'yarn'].indexOf(packageManager) >= 0) {
     return require('./npm')(root, options).then((res) => [res]);
   }
-  if (!options.docker && [
+  if (!options.docker && !options.plugin && [
     'rubygems',
     'maven',
     'gradle',

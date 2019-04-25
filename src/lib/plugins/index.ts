@@ -1,3 +1,4 @@
+import * as path from 'path';
 import * as dockerPlugin from 'snyk-docker-plugin';
 import * as npmPlugin from './npm';
 import * as rubygemsPlugin from './rubygems';
@@ -12,6 +13,9 @@ import * as phpPlugin from 'snyk-php-plugin';
 import * as types from './types';
 
 export function loadPlugin(packageManager: string, options: types.Options = {}): types.Plugin {
+  if (options.plugin) {
+    return require(path.resolve(options.plugin));
+  }
   if (options.docker) {
     return dockerPlugin;
   }

@@ -68,6 +68,11 @@ export function detectPackageManager(root, options) {
   if (options.docker) {
     return undefined;
   }
+  // The package manager used by a custom plugin is not known ahead of time
+  if (options.plugin) {
+    debug('custom plugin path provided: ' + options.plugin);
+    return undefined;
+  }
 
   let packageManager;
   let file;

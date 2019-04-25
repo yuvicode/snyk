@@ -13,6 +13,7 @@ export interface Options {
   strictOutOfSync?: boolean | 'true' | 'false';
   multiDepRoots?: boolean;
   debug?: boolean;
+  plugin?: string;
 }
 
 export interface Plugin {
