@@ -33,19 +33,6 @@ const plugins = require('../../../lib/plugins');
 const moduleInfo = require('../../../lib/module-info');
 const {MissingTargetFileError} = require('../lib/errors');
 
-const unsupportedPackageManagers = {
-  rubygems: 'RubyGems',
-  maven: 'Maven',
-  pip: 'Python',
-  sbt: 'SBT',
-  gradle: 'Gradle',
-  golangdep: 'Golang/Dep',
-  govendor: 'Govendor',
-  nuget: 'NuGet',
-  paket: 'Paket',
-  composer: 'Composer',
-};
-
 function wizard(options = {}) {
   options.org = options.org || config.org || null;
 
@@ -57,10 +44,10 @@ function wizard(options = {}) {
 async function processPackageManager(options) {
   const packageManager = detect.detectPackageManager(cwd, options);
 
-  const usupportedPackageManager = unsupportedPackageManagers[packageManager];
-  if (usupportedPackageManager) {
+  const wizardIsSupported = ['npm', 'yarn'].includes(packageManager);
+  if (!wizardIsSupported) {
     return Promise.reject(
-      `Snyk wizard for ${usupportedPackageManager} projects is not currently supported`);
+      `Snyk wizard for ${packageManager} projects is not currently supported`);
   }
 
   return fs.exists(path.join('.', 'node_modules'))
