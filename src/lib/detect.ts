@@ -92,6 +92,7 @@ export function detectPackageManager(root, options) {
     const registry = options.registry || 'npm';
     packageManager = detectPackageManagerFromRegistry(registry);
   }
+  debug('detected ', packageManager);
   if (!packageManager) {
     throw NoSupportedManifestsFoundError([root]);
   }
