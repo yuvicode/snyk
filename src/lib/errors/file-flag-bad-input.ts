@@ -7,6 +7,7 @@ export class FileFlagBadInputError extends CustomError {
     constructor() {
         super(FileFlagBadInputError.ERROR_MESSAGE);
         this.code = FileFlagBadInputError.ERROR_CODE;
+        this.strCode = 'FILE_COMMAND_BAD_INPUT';
         this.userMessage = FileFlagBadInputError.ERROR_MESSAGE;
     }
 }

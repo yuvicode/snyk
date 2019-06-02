@@ -4,7 +4,7 @@ var protect = require('../../../lib/protect');
 var analytics = require('../../../lib/analytics');
 var detect = require('../../../lib/detect');
 var pm = require('../../../lib/package-managers');
-
+const errors = require('../../../lib/errors');
 
 function protectFunc(options = {}) {
   options.loose = true; // replace missing policies with empty ones
@@ -46,11 +46,7 @@ function protectFunc(options = {}) {
 
   return snyk.policy.load(options['policy-path'])
     .catch(function (error) {
-      if (error.code === 'ENOENT') {
-        error.code = 'MISSING_DOTFILE';
-      }
-
-      throw error;
+      throw new errors.MissingPolicyError();
     }).then(function (policy) {
       if (policy.patch) {
         return patch(policy, options);
