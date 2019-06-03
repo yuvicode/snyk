@@ -7,26 +7,32 @@ import { SupportedPackageManagers } from './package-managers';
 
 const debug = debugLib('snyk-detect');
 
-const DETECTABLE_FILES: string[] = [
-  'yarn.lock',
-  'package-lock.json',
-  'package.json',
-  'Gemfile',
-  'Gemfile.lock',
-  'pom.xml',
-  'build.gradle',
-  'build.gradle.kts',
-  'build.sbt',
-  'Pipfile',
-  'requirements.txt',
-  'Gopkg.lock',
-  'vendor/vendor.json',
-  'obj/project.assets.json',
-  'project.assets.json',
-  'packages.config',
-  'paket.dependencies',
-  'composer.lock',
-];
+interface DetectableFiles {
+  [fileName: string]: {
+    fallbackFiles?: string[];
+  };
+}
+
+const DETECTABLE_FILES: DetectableFiles = {
+  'yarn.lock': {fallbackFiles: ['package.json']},
+  'package-lock.json': {fallbackFiles: ['package.json']},
+  'package.json': {},
+  'Gemfile': {fallbackFiles: ['Gemfile.lock']},
+  'Gemfile.lock': {},
+  'pom.xml': {},
+  'build.gradle': {},
+  'build.gradle.kts': {},
+  'build.sbt': {},
+  'Pipfile': {},
+  'requirements.txt': {},
+  'Gopkg.lock': {},
+  'vendor/vendor.json': {},
+  'obj/project.assets.json': {},
+  'project.assets.json': {},
+  'packages.config': {},
+  'paket.dependencies': {},
+  'composer.lock': {},
+};
 
 // when file is specified with --file, we look it up here
 const DETECTABLE_PACKAGE_MANAGERS: {
@@ -54,13 +60,17 @@ const DETECTABLE_PACKAGE_MANAGERS: {
 };
 
 export function isPathToPackageFile(path) {
-  for (const fileName of DETECTABLE_FILES) {
+  for (const fileName of Object.keys(DETECTABLE_FILES)) {
     if (_.endsWith(path, fileName)) {
       return true;
     }
   }
   return false;
 }
+
+// export function detectPackageManagers(root, options) {
+//
+// }
 
 export function detectPackageManager(root, options) {
   // If user specified a package manager let's use it.
@@ -116,7 +126,7 @@ export function isLocalFolder(root) {
 }
 
 export function detectPackageFile(root) {
-  for (const file of DETECTABLE_FILES) {
+  for (const file of Object.keys(DETECTABLE_FILES)) {
     if (fs.existsSync(pathLib.resolve(root, file))) {
       debug('found package file ' + file + ' in ' + root);
       return file;

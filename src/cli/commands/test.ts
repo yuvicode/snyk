@@ -47,6 +47,10 @@ async function test(...args: MethodArgs): Promise<string> {
 
   apiTokenExists();
 
+  // snyk test . ../blah --all?
+  // snyk test . ../blah --all -- project-name="blah"?
+  // snyk test . ../blah --all --packageManager=npm?
+
   // Promise waterfall to test all other paths sequentially
   for (const path of args as string[]) {
     // Create a copy of the options so a specific test can

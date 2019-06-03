@@ -23,8 +23,6 @@ import { NoSupportedManifestsFoundError } from '../errors';
 // tslint:disable-next-line:no-var-requires
 const debug = require('debug')('snyk');
 
-export = runTest;
-
 interface DepTreeFromResolveDeps extends DepTree {
   numDependencies: number;
   pluck: any;
@@ -52,7 +50,7 @@ interface Payload {
   modules?: DepTreeFromResolveDeps;
 }
 
-async function runTest(packageManager: string, root: string, options): Promise<LegacyVulnApiResult[]> {
+export async function runTest(packageManager: string, root: string, options): Promise<LegacyVulnApiResult[]> {
   const results: LegacyVulnApiResult[] = [];
   const spinnerLbl = 'Querying vulnerabilities database...';
   try {

@@ -9,6 +9,7 @@ declare interface Global extends NodeJS.Global {
 declare const global: Global;
 
 const alias = abbrev('copy', 'version', 'debug', 'help', 'quiet', 'interactive', 'dev');
+alias.a = 'all';
 alias.d = 'debug'; // always make `-d` debug
 alias.t = 'test';
 

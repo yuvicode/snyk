@@ -1,34 +1,23 @@
-module.exports = test;
+import chalk from 'chalk';
 
-var detect = require('../detect');
-var runTest = require('./run-test');
-var chalk = require('chalk');
-var pm = require('../package-managers');
+import {runTest} from './run-test';
+import * as detect from '../detect';
+import * as pm from '../package-managers';
 
-function test(root, options, callback) {
-  if (typeof options === 'function') {
-    callback = options;
-    options = {};
-  }
-  if (!options) {
-    options = {};
-  }
-
-  var promise = executeTest(root, options);
-  if (callback) {
-    promise.then(function (res) {
-      callback(null, res);
-    }).catch(callback);
-  }
-  return promise;
-}
-
-function executeTest(root, options) {
+export function test(root, options) {
   try {
-    var packageManager = detect.detectPackageManager(root, options);
+    // if (options.all) {
+    //   for (packageManagerFileCombo of detect.detectPackageManagers(root, options)) {
+    //     const optionsObj = clone(options);
+    //     optionsObj.files? = packageManagerFileCombo.files;
+    //     optionsObj.packageManager = packageManagerFileCombo.packageManager
+    //
+    //   }
+    // }
+    const packageManager = detect.detectPackageManager(root, options);
     options.packageManager = packageManager;
     return run(root, options)
-      .then(function (results) {
+      .then((results) => {
         for (const res of results) {
           if (!res.packageManager) {
             res.packageManager = packageManager;
@@ -47,7 +36,7 @@ function executeTest(root, options) {
 }
 
 function run(root, options) {
-  var packageManager = options.packageManager;
+  const packageManager = options.packageManager;
   if (!(options.docker || pm.SUPPORTED_PACKAGE_MANAGER_NAME[packageManager])) {
     throw new Error('Unsupported package manager: ' + packageManager);
   }
