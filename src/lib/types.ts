@@ -1,4 +1,5 @@
 import { SupportedPackageManagers } from './package-managers';
+import {DepGraph} from '@snyk/dep-graph';
 
 // TODO(kyegupov): use a shared repository snyk-cli-interface
 
@@ -40,6 +41,12 @@ export interface DepTree {
 export interface DepRoot {
   depTree: DepTree; // to be soon replaced with depGraph
   targetFile?: string;
+}
+
+// Some plugins are returning a graph or tree, see SBT plugin
+export interface GraphDepRootsResult {
+  plugin: PluginMetadata;
+  depRoots: DepGraph[];
 }
 
 // Legacy result type. Will be deprecated soon.
