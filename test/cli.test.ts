@@ -126,7 +126,7 @@ test('monitor --json', (t) => {
   });
 });
 
-test('multiple test arguments', (t) => {
+test('multiple test arguments', async (t) => {
   t.plan(4);
 
   cli.test('semver@4', 'qs@6').then((res) => {
@@ -165,13 +165,42 @@ test('multiple test arguments', (t) => {
   });
 });
 
-test('test for non-existing', (t) => {
+test('test for existing remote package with dev-deps only', async (t) => {
+  try {
+    const res = await cli.test('lodash@4.17.1');
+    t.fail('should fail, instead received ' + res);
+  } catch (error) {
+    console.log(error);
+
+    const res = error.message;
+    const lastLine = res.trim().split('\n').pop();
+    t.equal(error.code, 200);
+    t.match(lastLine, 'Failed to get vulns for package.');
+  }
+});
+
+test('test for existing remote package with dev-deps only with --dev', async (t) => {
+  try {
+    const res = await cli.test('lodash@4.17.1', {dev: true});
+    t.fail('should fail, instead received ' + res);
+  } catch (error) {
+    const res = error.message;
+    console.log(error);
+    const lastLine = res.trim().split('\n').pop();
+    t.equal(error.code, 200);
+    t.match(lastLine, 'Failed to get vulns for package.');
+  }
+});
+
+test('test for non-existing package@version', (t) => {
   t.plan(1);
 
   cli.test('@123').then((res) => {
     t.fails('should fail, instead received ' + res);
   }).catch((error) =>  {
-    t.match(error.message, '500', 'expected error ' + error.message);
+    t.equal(error.userMessage, 'Failed to get vulnerabilities. Are you sure this is a package?');
+    t.equal(error.code, 404);
+    t.match(error.message, 'Failed to get vulns for package.');
   });
 });
 
@@ -209,7 +238,7 @@ test('snyk ignore - no ID', (t) => {
     'policy-path': dir,
   }).then((res) => {
     t.fail('should not succeed with missing ID');
-  }).catch(function(e) {
+  }).catch((e) => {
     const errors = require('../src/lib/errors/legacy-errors');
     const message = stripAnsi(errors.message(e));
     t.equal(message.toLowerCase().indexOf('id is a required field'), 0,
@@ -258,6 +287,7 @@ test('test without authentication', async (t) => {
     await cli.test('semver@2');
     t.fail('test should not pass if not authenticated');
   } catch (error) {
+    t.equal(error.code, 401, 'code is as expected');
     t.deepEquals(error.strCode, 'NO_API_TOKEN', 'string code is as expected');
     t.match(error.message,
       '`snyk` requires an authenticated account. Please run `snyk auth` and try again.',
@@ -288,7 +318,7 @@ test('auth via invalid key', (t) => {
 });
 
 test('auth via github', (t) => {
-  let tokenRequest = null;
+  let tokenRequest;
 
   const openSpy = sinon.spy((url) => {
     tokenRequest = parse(url);

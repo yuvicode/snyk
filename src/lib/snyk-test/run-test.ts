@@ -21,6 +21,7 @@ import {
   NoSupportedManifestsFoundError,
   InternalServerError,
   FailedToGetVulnerabilitiesError,
+  PackageNotFoundError,
 } from '../errors';
 import { maybePrintDeps } from '../print-deps';
 import { SupportedPackageManagers } from '../package-managers';
@@ -63,6 +64,7 @@ async function runTest(packageManager: SupportedPackageManagers,
   const spinnerLbl = 'Querying vulnerabilities database...';
   try {
     const payloads = await assemblePayloads(root, options);
+
     for (const payload of payloads) {
       const payloadPolicy = payload.body && payload.body.policy;
       const depGraph = payload.body && payload.body.depGraph;
@@ -74,7 +76,7 @@ async function runTest(packageManager: SupportedPackageManagers,
 
       await spinner(spinnerLbl);
       // Type assertion might be a lie, but we are correcting that below
-      let res = await sendTestPayload(payload) as LegacyVulnApiResult;
+      let res = await sendTestPayload(payload, root, options) as LegacyVulnApiResult;
       if (depGraph) {
         res = convertTestDepGraphResultToLegacy(
           res as any as TestDepGraphResponse, // Double "as" required by Typescript for dodgy assertions
@@ -150,14 +152,25 @@ async function runTest(packageManager: SupportedPackageManagers,
   }
 }
 
-function sendTestPayload(payload: Payload):
+function sendTestPayload(payload: Payload, root, options):
     Promise<LegacyVulnApiResult | TestDepGraphResponse> {
   const filesystemPolicy = payload.body && !!payload.body.policy;
+  const isRemotePackageTest = !(fs.existsSync(root) || options.docker);
+
   return new Promise((resolve, reject) => {
     request(payload, (error, res, body) => {
       if (error) {
         return reject(error);
       }
+
+      if (res.statusCode !== 200 && isRemotePackageTest) {
+        console.log('res ', res);
+        console.log('statusCode ', res.statusCode);
+
+        const err = handlePackageTestHttpErrorResponse(res, body);
+        return reject(err);
+      }
+
       if (res.statusCode !== 200) {
         const err = handleTestHttpErrorResponse(res, body);
         return reject(err);
@@ -180,6 +193,22 @@ function handleTestHttpErrorResponse(res, body) {
       err.innerError = body.stack;
     default:
       err = new FailedToGetVulnerabilitiesError(userMessage, statusCode);
+      err.innerError = body.error;
+  }
+  return err;
+}
+
+function handlePackageTestHttpErrorResponse(res, body) {
+  console.log(res, body);
+  const {statusCode} = res;
+  let err;
+  const userMessage = body && body.userMessage;
+  switch (statusCode) {
+    case (statusCode === 500):
+      err = new InternalServerError(userMessage);
+      err.innerError = body.stack;
+    case (statusCode === 404):
+      err = new PackageNotFoundError();
       err.innerError = body.error;
   }
   return err;
