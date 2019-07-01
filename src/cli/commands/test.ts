@@ -8,16 +8,12 @@ import {isCI} from '../../lib/is-ci';
 import {apiTokenExists} from '../../lib/api-token';
 import {SEVERITIES, WIZARD_SUPPORTED_PMS} from '../../lib/snyk-test/common';
 import * as Debug from 'debug';
-import {Options} from '../../lib/types';
+import {Options, TestOptions} from '../../lib/types';
 import {isLocalFolder} from '../../lib/detect';
 import { MethodArgs } from '../args';
 
 const debug = Debug('snyk');
 const SEPARATOR = '\n-------------------------------------------------------\n';
-
-interface OptionsAtDisplayStage {
-  canSuggestRemediation: boolean;
-}
 
 // TODO: avoid using `as any` whenever it's possible
 
@@ -215,11 +211,11 @@ function summariseErrorResults(errorResults) {
   return '';
 }
 
-function displayResult(res, options: Options & OptionsAtDisplayStage) {
+function displayResult(res, options: Options & TestOptions) {
   const meta = metaForDisplay(res, options) + '\n\n';
   const dockerAdvice = dockerRemediationForDisplay(res);
   const packageManager = options.packageManager;
-  options.canSuggestRemediation = isLocalFolder(options.path);
+  const localPackageTest = isLocalFolder(options.path);
   const prefix = chalk.bold.white('\nTesting ' + options.path + '...\n\n');
 
   // handle errors by extracting their message
@@ -250,17 +246,23 @@ function displayResult(res, options: Options & OptionsAtDisplayStage) {
       'no vulnerable paths found.' :
       'none were found.';
     const summaryOKText = chalk.green(`✓ ${testedInfoText}, ${vulnPathsText}`);
-    const nextStepsText =
+    const nextStepsText = localPackageTest ?
       '\n\nNext steps:' +
       '\n- Run `snyk monitor` to be notified ' +
       'about new related vulnerabilities.' +
       '\n- Run `snyk test` as part of ' +
-      'your CI/test.';
+      'your CI/test.' : '';
+    // user tested a package@version and got 0 vulns back, but there were dev deps
+    // to consider
+    const snykPackageTestTip: string = !(localPackageTest || options.dev) ?
+      '\n\nTip: Snyk only tests production dependencies by default (which ' +
+      'this project had none). Try re-running with the `--dev` flag.' : '';
     return (
       prefix + meta + summaryOKText + multiProjAdvice + (
         isCI() ? '' :
           dockerAdvice +
-          nextStepsText)
+          nextStepsText +
+          snykPackageTestTip)
     );
   }
 
@@ -288,7 +290,7 @@ function displayResult(res, options: Options & OptionsAtDisplayStage) {
   }
   let summary = testedInfoText + ', ' + chalk.red.bold(vulnCountText);
 
-  if (options.canSuggestRemediation && WIZARD_SUPPORTED_PMS.indexOf(packageManager) > -1) {
+  if (localPackageTest && WIZARD_SUPPORTED_PMS.indexOf(packageManager) > -1) {
     summary += chalk.bold.green('\n\nRun `snyk wizard` to address these issues.');
   }
   let dockerSuggestion = '';
@@ -333,7 +335,7 @@ function displayResult(res, options: Options & OptionsAtDisplayStage) {
 function formatDockerBinariesIssues(
     dockerBinariesSortedGroupedVulns,
     binariesVulns,
-    options: Options & OptionsAtDisplayStage) {
+    options: Options & TestOptions) {
   const binariesIssuesOutput = [] as string[];
   for (const pkgInfo of _.values(binariesVulns.affectedPkgs)) {
     binariesIssuesOutput.push(createDockerBinaryHeading(pkgInfo));
@@ -355,7 +357,8 @@ function createDockerBinaryHeading(pkgInfo) {
       ` for ${binaryName}@${binaryVersion} ------------`, '\n') : '';
 }
 
-function formatIssues(vuln, options: Options & OptionsAtDisplayStage) {
+function formatIssues(vuln, options: Options & TestOptions) {
+  const localPackageTest = isLocalFolder(options.path);
   const vulnID = vuln.list[0].id;
   const packageManager = options.packageManager;
   const uniquePackages = _.uniq(
@@ -385,7 +388,7 @@ function formatIssues(vuln, options: Options & OptionsAtDisplayStage) {
     fromPaths: options.showVulnPaths
       ? createTruncatedVulnsPathsText(vuln.list) : '',
     extraInfo: vuln.note ? chalk.bold('\n  Note: ' + vuln.note) : '',
-    remediationInfo: vuln.metadata.type !== 'license' && options.canSuggestRemediation
+    remediationInfo: vuln.metadata.type !== 'license' && localPackageTest
       ? createRemediationText(vuln, packageManager)
       : '',
     fixedIn: options.docker ? createFixedInText(vuln) : '',

@@ -53,7 +53,6 @@ export interface LegacyVulnApiResult {
   summary: string;
   docker?: {baseImage?: any};
   severityThreshold?: string;
-
   filesystemPolicy?: boolean;
   uniqueCount?: any;
 }
