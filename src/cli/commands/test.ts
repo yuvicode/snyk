@@ -99,7 +99,7 @@ async function test(...args: MethodArgs): Promise<string> {
 
   const vulnerableResults = results.filter((res) => res.vulnerabilities && res.vulnerabilities.length);
   const errorResults = results.filter((res) => res instanceof Error);
-  const notSuccess = errorResults.length > 0;
+  const notSuccess = errorResults && errorResults.length > 0;
   const foundVulnerabilities = vulnerableResults.length > 0;
 
   // resultOptions is now an array of 1 or more options used for

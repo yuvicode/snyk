@@ -79,6 +79,7 @@ async function runTest(packageManager: SupportedPackageManagers,
       await spinner(spinnerLbl);
       // Type assertion might be a lie, but we are correcting that below
       let res = await sendTestPayload(payload, root, options) as LegacyVulnApiResult;
+      let resVulnerabilities = res.vulnerabilities;
       if (depGraph) {
         res = convertTestDepGraphResultToLegacy(
           res as any as TestDepGraphResponse, // Double "as" required by Typescript for dodgy assertions
@@ -89,8 +90,8 @@ async function runTest(packageManager: SupportedPackageManagers,
         // For Node.js: inject additional information (for remediation etc.) into the response.
         if (payload.modules) {
           res.dependencyCount = payload.modules.numDependencies;
-          if (res.vulnerabilities) {
-            res.vulnerabilities.forEach((vuln) => {
+          if (resVulnerabilities) {
+            resVulnerabilities.forEach((vuln) => {
               if (payload.modules && payload.modules.pluck) {
                 const plucked = payload.modules.pluck(vuln.from, vuln.name, vuln.version);
                 vuln.__filename = plucked.__filename;
@@ -113,17 +114,17 @@ async function runTest(packageManager: SupportedPackageManagers,
         }
       }
 
-      analytics.add('vulns-pre-policy', res.vulnerabilities.length);
+      analytics.add('vulns-pre-policy', resVulnerabilities && resVulnerabilities.length);
       res.filesystemPolicy = !!payloadPolicy;
       if (!options['ignore-policy']) {
         res.policy = res.policy || payloadPolicy as string;
         const policy = await snyk.policy.loadFromText(res.policy);
         res = policy.filter(res, root);
       }
-      analytics.add('vulns', res.vulnerabilities.length);
+      analytics.add('vulns', resVulnerabilities && resVulnerabilities.length);
 
       if (res.docker && dockerfilePackages) {
-        res.vulnerabilities = res.vulnerabilities.map((vuln) => {
+        resVulnerabilities = resVulnerabilities.map((vuln) => {
           const dockerfilePackage = dockerfilePackages[vuln.name.split('/')[0]];
           if (dockerfilePackage) {
             vuln.dockerfileInstruction = dockerfilePackage.instruction;
@@ -134,10 +135,10 @@ async function runTest(packageManager: SupportedPackageManagers,
       }
 
       if (options.docker && options.file && options['exclude-base-image-vulns']) {
-        res.vulnerabilities = res.vulnerabilities.filter((vuln) => (vuln.dockerfileInstruction));
+        resVulnerabilities = resVulnerabilities.filter((vuln) => (vuln.dockerfileInstruction));
       }
 
-      res.uniqueCount = countUniqueVulns(res.vulnerabilities);
+      res.uniqueCount = countUniqueVulns(resVulnerabilities);
       results.push(res);
     }
     return results;
@@ -199,10 +200,8 @@ function handleTestHttpErrorResponse(res, body) {
 
 function handlePackageTestHttpErrorResponse(res, body) {
   const {statusCode} = res;
-  console.log(res, body)
   let err;
   const userMessage = body && body.userMessage || 'Failed to get vulnerabilities for package.';
-  console.log('statusCode pkg', statusCode)
   switch (statusCode) {
     case 404:
       err = new PackageNotFoundError();
@@ -215,14 +214,7 @@ function handlePackageTestHttpErrorResponse(res, body) {
 }
 
 function assemblePayloads(root: string, options: Options & TestOptions): Promise<Payload[]> {
-  let isLocal;
-  if (options.docker) {
-    isLocal = true;
-  } else {
-    // TODO: Refactor this check so we don't require files when tests are using mocks
-    isLocal = isLocalFolder(root);
-  }
-  console.log('isLocal', isLocal);
+  const isLocal =  options.docker || isLocalFolder(options.path);
   analytics.add('local', isLocal);
   if (isLocal) {
     return assembleLocalPayloads(root, options);

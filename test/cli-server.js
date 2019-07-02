@@ -47,9 +47,21 @@ module.exports = function (root, apikey, notAuthorizedApiKey) {
 
   server.get(root + '/vuln/npm/:module', function (req, res, next) {
     var module = req.params.module;
-    var body = fs.readFileSync(__dirname + '/fixtures/cli-test-results/' + module, 'utf8');
-    res.send(JSON.parse(body));
-    return next();
+    try {
+      var body = fs.readFileSync(__dirname + '/fixtures/cli-test-results/' + module, 'utf8');
+      res.send(JSON.parse(body));
+      return next();
+    } catch (error) {
+      res.status(404);
+      res.send({
+        "code": "404",
+        "message": "Internal error (reference: 0ecbb56b)",
+        "error": "Internal error (reference: 0ecbb56b)",
+        "errorRef": "0ecbb56b"
+      });
+      console.log('Note: Did you forget to mock a payload /vuln/npm/:module? By default sent a 404 response' + error);
+      return next();
+    }
   });
 
   server.put(root + '/monitor/npm', function (req, res) {
