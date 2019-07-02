@@ -25,6 +25,8 @@ import {
 } from '../errors';
 import { maybePrintDeps } from '../print-deps';
 import { SupportedPackageManagers } from '../package-managers';
+import { stat } from 'fs';
+import { isLocalFolder } from '../../lib/detect';
 
 // tslint:disable-next-line:no-var-requires
 const debug = require('debug')('snyk');
@@ -155,8 +157,7 @@ async function runTest(packageManager: SupportedPackageManagers,
 function sendTestPayload(payload: Payload, root, options):
     Promise<LegacyVulnApiResult | TestDepGraphResponse> {
   const filesystemPolicy = payload.body && !!payload.body.policy;
-  const isRemotePackageTest = !(fs.existsSync(root) || options.docker);
-
+  const isRemotePackageTest = !(isLocalFolder(root) || options.docker);
   return new Promise((resolve, reject) => {
     request(payload, (error, res, body) => {
       if (error) {
@@ -164,9 +165,6 @@ function sendTestPayload(payload: Payload, root, options):
       }
 
       if (res.statusCode !== 200 && isRemotePackageTest) {
-        console.log('res ', res);
-        console.log('statusCode ', res.statusCode);
-
         const err = handlePackageTestHttpErrorResponse(res, body);
         return reject(err);
       }
@@ -187,31 +185,33 @@ function handleTestHttpErrorResponse(res, body) {
   const {statusCode} = res;
   let err;
   const userMessage = body && body.userMessage;
-  switch (statusCode) {
-    case (statusCode === 500):
+  switch (parseInt(statusCode, 10)) {
+    case 500:
       err = new InternalServerError(userMessage);
       err.innerError = body.stack;
+      return err;
     default:
       err = new FailedToGetVulnerabilitiesError(userMessage, statusCode);
       err.innerError = body.error;
+      return err;
   }
-  return err;
 }
 
 function handlePackageTestHttpErrorResponse(res, body) {
-  console.log(res, body);
   const {statusCode} = res;
+  console.log(res, body)
   let err;
-  const userMessage = body && body.userMessage;
+  const userMessage = body && body.userMessage || 'Failed to get vulnerabilities for package.';
+  console.log('statusCode pkg', statusCode)
   switch (statusCode) {
-    case (statusCode === 500):
-      err = new InternalServerError(userMessage);
-      err.innerError = body.stack;
-    case (statusCode === 404):
+    case 404:
       err = new PackageNotFoundError();
+      return err;
+    default:
+      err = new FailedToGetVulnerabilitiesError(userMessage, statusCode);
       err.innerError = body.error;
+      return err;
   }
-  return err;
 }
 
 function assemblePayloads(root: string, options: Options & TestOptions): Promise<Payload[]> {
@@ -220,8 +220,9 @@ function assemblePayloads(root: string, options: Options & TestOptions): Promise
     isLocal = true;
   } else {
     // TODO: Refactor this check so we don't require files when tests are using mocks
-    isLocal = fs.existsSync(root);
+    isLocal = isLocalFolder(root);
   }
+  console.log('isLocal', isLocal);
   analytics.add('local', isLocal);
   if (isLocal) {
     return assembleLocalPayloads(root, options);
