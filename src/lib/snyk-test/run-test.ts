@@ -273,6 +273,7 @@ async function assembleLocalPayloads(root, options: Options & TestOptions): Prom
         if (!baseImageFromDockerfile && options['base-image']) {
           pkg.docker.baseImage = options['base-image'];
         }
+        pkg.docker.imageLayers = deps.plugin.imageLayers;
 
         if (baseImageFromDockerfile && deps.plugin && deps.plugin.imageLayers) {
           analytics.add('BaseImage', baseImageFromDockerfile);
