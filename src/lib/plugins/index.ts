@@ -10,6 +10,7 @@ import * as phpPlugin from 'snyk-php-plugin';
 import * as nodejsPlugin from './nodejs-plugin';
 import * as types from './types';
 import {SupportedPackageManagers} from '../package-managers';
+// import * as path from 'path';
 
 export function loadPlugin(packageManager: SupportedPackageManagers,
                            options: types.Options = {}): types.Plugin {
@@ -18,7 +19,8 @@ export function loadPlugin(packageManager: SupportedPackageManagers,
   }
 
   switch (packageManager) {
-    case 'npm': {
+    case 'npm':
+    case 'yarn': {
       return nodejsPlugin;
     }
     case 'rubygems': {
@@ -32,9 +34,6 @@ export function loadPlugin(packageManager: SupportedPackageManagers,
     }
     case 'sbt': {
       return sbtPlugin;
-    }
-    case 'yarn': {
-      return nodejsPlugin;
     }
     case 'pip': {
       return pythonPlugin;
@@ -73,3 +72,56 @@ export function getPluginOptions(packageManager: string, options: types.Options)
     }
   }
 }
+
+export function getPluginHelpTxt(packageManager: string): string {
+  switch (packageManager) {
+    case 'sbt': {
+      return sbtPlugin.help;
+    }
+    default: {
+      throw new Error(`Unsupported package manager: ${packageManager}`);
+    }
+  }
+}
+
+// export function getPluginHelpTxt(packageManager: string): string {
+//   switch (packageManager) {
+//     case 'npm':
+//     case 'yarn': {
+//       return path.resolve('./nodejs-plugin/README.md');
+//     }
+//     case 'rubygems': {
+//       return path.resolve('./rubygems/README.md');
+//     }
+//     case 'maven': {
+//       return path.resolve('../../../node_modules/snyk-mvn-plugin/README.md');
+//     }
+//     case 'gradle': {
+//       return path.resolve('../../../node_modules/snyk-gradle-plugin/README.md');
+//     }
+//     case 'sbt': {
+//       return path.resolve('../../../node_modules/snyk-sbt-plugin/README.md');
+//     }
+//     case 'pip': {
+//       return path.resolve('../../../node_modules/snyk-python-plugin/README.md');
+//     }
+//     case 'golangdep':
+//     case 'gomodules':
+//     case 'govendor': {
+//       return path.resolve('../../../node_modules/snyk-go-plugin/README.md');
+//     }
+//     case 'nuget':
+//     case 'paket': {
+//       return path.resolve('../../../node_modules/snyk-nuket-plugin/README.md');
+//     }
+//     case 'composer': {
+//       return path.resolve('../../../node_modules/snyk-php-plugin/README.md');
+//     }
+//     case 'docker': {
+//       return path.resolve('../../../node_modules/snyk-docker-plugin/README.md');
+//     }
+//     default: {
+//       throw new Error(`Unsupported package manager: ${packageManager}`);
+//     }
+//   }
+// }
