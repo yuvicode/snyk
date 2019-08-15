@@ -4,8 +4,12 @@ import * as wrap from 'wrap-ansi';
 import * as config from '../../../../lib/config';
 import {Options, TestOptions} from '../../../../lib/types';
 import {isLocalFolder} from '../../../../lib/detect';
-import { WIZARD_SUPPORTED_PACKAGE_MANAGERS } from '../../../../lib/package-managers';
-import { GroupedVuln } from '../../../../lib/snyk-test/legacy';
+import {
+  WIZARD_SUPPORTED_PACKAGE_MANAGERS,
+  SupportedPackageManagers,
+  PINNING_SUPPORTED_PACKAGE_MANAGERS } from '../../../../lib/package-managers';
+import { GroupedVuln, DockerIssue } from '../../../../lib/snyk-test/legacy';
+import parsePackageNameVersion = require('snyk-module');
 
 export function formatIssues(vuln: GroupedVuln, options: Options & TestOptions) {
   const vulnID = vuln.list[0].id;
@@ -129,7 +133,7 @@ function createTruncatedVulnsPathsText(vulnList) {
   }
 }
 
-function createFixedInText(vuln: any): string {
+function createFixedInText(vuln: GroupedVuln & DockerIssue): string {
   if (vuln.nearestFixedInVersion) {
     return chalk.bold('\n  Fixed in: ' + vuln.nearestFixedInVersion);
   } else if (vuln.fixedIn && vuln.fixedIn.length > 0) {
@@ -139,12 +143,21 @@ function createFixedInText(vuln: any): string {
   return '';
 }
 
-function createRemediationText(vuln, packageManager) {
+function createRemediationText(
+  vuln: GroupedVuln,
+  packageManager: SupportedPackageManagers,
+): string {
   let wizardHintText = '';
   if (WIZARD_SUPPORTED_PACKAGE_MANAGERS.includes(packageManager)) {
     wizardHintText = 'Run `snyk wizard` to explore remediation options.';
   }
+  if (vuln.fixedIn && PINNING_SUPPORTED_PACKAGE_MANAGERS.includes(packageManager)) {
+    const toVersion = vuln.fixedIn.join(' or ');
+    const transitive = vuln.list.every((i) => i.from.length > 2);
 
+    const action = transitive ? 'Pin the transitive' : 'Update the';
+    return chalk.bold(`\n  Remediation: \n    ${action} dependency ${vuln.name} to version ${toVersion}`);
+  }
   if (vuln.isFixable === true) {
     const upgradePathsArray = _.uniq(vuln.list.map((v) => {
       const shouldUpgradeItself = !!v.upgradePath[0];
@@ -157,7 +170,7 @@ function createRemediationText(vuln, packageManager) {
         const selfUpgradeInfo = (v.upgradePath.length > 0)
           ? ` (triggers upgrades to ${ v.upgradePath.join(' > ')})`
           : '';
-        const testedPackageName = v.upgradePath[0].split('@');
+        const testedPackageName = parsePackageNameVersion(v.upgradePath[0] as string).name;
         return `You've tested an outdated version of ${testedPackageName[0]}.` +
            + ` Upgrade to ${v.upgradePath[0]}${selfUpgradeInfo}`;
       }
