@@ -16,6 +16,7 @@ import ansiEscapes = require('ansi-escapes');
 import {isPathToPackageFile} from '../lib/detect';
 import {updateCheck} from '../lib/updater';
 import { MissingTargetFileError, FileFlagBadInputError } from '../lib/errors';
+import { testV2 } from '../cli/commands/test/testV2';
 
 const debug = Debug('snyk');
 const EXIT_CODES = {
@@ -28,6 +29,25 @@ async function runCommand(args: Args, targetFiles: string[]) {
   const res = analytics({
     args: args.options._,
     command: args.command,
+  });
+
+  if (result && !args.options.quiet) {
+    if (args.options.copy) {
+      copy(result);
+      console.log('Result copied to clipboard');
+    } else {
+      console.log(result);
+    }
+  }
+
+  return res;
+}
+
+async function runTest(args: Args, targetFiles: string[]) {
+  const result = await testV2(targetFiles, ...args.options._);
+  const res = analytics({
+    args: args.options._,
+    command: 'testV2',
   });
 
   if (result && !args.options.quiet) {
@@ -189,7 +209,8 @@ async function discover(args) {
   try {
     // TODO: find globs
     targetFiles = findGlobs(args);
-    res = await runCommand(args, targetFiles);
+    // res = await runCommand(args, targetFiles);
+    res = await runTest(args, targetFiles);
 
   } catch (error) {
     failed = true;
