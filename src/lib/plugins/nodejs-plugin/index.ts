@@ -3,12 +3,12 @@ import * as lockParser from './npm-lock-parser';
 import * as types from '../types';
 import { MissingTargetFileError } from '../../errors/missing-targetfile-error';
 
-export async function inspect(root: string, targetFile: string, options: types.Options = {}):
+export async function inspect(root: string, targetFiles: string[], options: types.Options = {}):
 Promise<types.InspectResult> {
-  if (!targetFile ) {
+  if (!targetFiles ) {
     throw MissingTargetFileError(root);
   }
-  const isLockFileBased = (targetFile.endsWith('package-lock.json') || targetFile.endsWith('yarn.lock'));
+  const isLockFileBased = ((targetFiles.filter(file => 'package-lock.json') || targetFiles.filter(file => 'yarn.lock')));
 
   const getLockFileDeps = isLockFileBased && !options.traverseNodeModules;
   return {
@@ -17,7 +17,7 @@ Promise<types.InspectResult> {
       runtime: process.version,
     },
     package: getLockFileDeps ?
-      await lockParser.parse(root, targetFile, options) :
-      await modulesParser.parse(root, targetFile, options),
+      await lockParser.parse(root, targetFiles, options) :
+      await modulesParser.parse(root, targetFiles, options),
   };
 }

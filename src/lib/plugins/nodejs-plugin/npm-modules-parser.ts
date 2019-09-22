@@ -6,9 +6,9 @@ import * as fs from 'then-fs';
 import {PkgTree} from 'snyk-nodejs-lockfile-parser';
 import {Options} from '../types';
 
-export async function parse(root: string, targetFile: string, options: Options): Promise<PkgTree> {
+export async function parse(root: string, targetFiles: string[], options: Options): Promise<PkgTree> {
   const nodeModulesPath = path.join(
-    path.dirname(path.resolve(root, targetFile)),
+    path.dirname(path.resolve(root, targetFiles[0])),
     'node_modules',
   );
   const packageManager = options.packageManager || 'npm';
@@ -21,19 +21,19 @@ export async function parse(root: string, targetFile: string, options: Options):
   analytics.add('local', true);
   analytics.add('generating-node-dependency-tree', {
     lockFile: false,
-    targetFile,
+    targetFiles,
   });
 
   const resolveModuleSpinnerLabel = 'Analyzing npm dependencies for ' +
-    path.dirname(path.resolve(root, targetFile));
+    path.dirname(path.resolve(root, targetFiles[0]));
   try {
     await spinner(resolveModuleSpinnerLabel);
-    if (targetFile.endsWith('yarn.lock')) {
+    if (targetFiles.filter(file => 'yarn.lock')) {
       options.file = options.file && options.file.replace('yarn.lock', 'package.json');
     }
 
     // package-lock.json falls back to package.json (used in wizard code)
-    if (targetFile.endsWith('package-lock.json')) {
+    if (targetFiles.filter(file => 'package-lock.json')) {
       options.file = options.file && options.file.replace('package-lock.json', 'package.json');
     }
     return snyk.modules(

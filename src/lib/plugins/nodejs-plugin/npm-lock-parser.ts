@@ -9,10 +9,10 @@ import * as lockFileParser from 'snyk-nodejs-lockfile-parser';
 import {PkgTree} from 'snyk-nodejs-lockfile-parser';
 import {Options} from '../types';
 
-export async function parse(root: string, targetFile: string, options: Options): Promise<PkgTree> {
-  const lockFileFullPath = path.resolve(root, targetFile);
+export async function parse(root: string, targetFiles: string[], options: Options): Promise<PkgTree> {
+  const lockFileFullPath = path.resolve(root, targetFiles[0]);
   if (!fs.existsSync(lockFileFullPath)) {
-    throw new Error('Lockfile ' + targetFile + ' not found at location: ' +
+    throw new Error('Lockfile ' + targetFiles[0] + ' not found at location: ' +
       lockFileFullPath);
   }
 
@@ -22,12 +22,12 @@ export async function parse(root: string, targetFile: string, options: Options):
 
   if (!fs.existsSync(manifestFileFullPath)) {
     throw new Error(`Could not find package.json at ${manifestFileFullPath} `
-      + `(lockfile found at ${targetFile})`);
+      + `(lockfile found at ${targetFiles[0]})`);
   }
 
   if (fs.existsSync(shrinkwrapFullPath)) {
     throw new Error('`npm-shrinkwrap.json` was found while using lockfile.\n'
-      + 'Please run your command again without `--file=' + targetFile + '` flag.');
+      + 'Please run your command again without `--file=' + targetFiles[0] + '` flag.');
   }
 
   const manifestFile = fs.readFileSync(manifestFileFullPath, 'utf-8');
@@ -36,10 +36,10 @@ export async function parse(root: string, targetFile: string, options: Options):
   analytics.add('local', true);
   analytics.add('generating-node-dependency-tree', {
     lockFile: true,
-    targetFile,
+    targetFiles,
   });
 
-  const lockFileType = targetFile.endsWith('yarn.lock') ?
+  const lockFileType = targetFiles[0] ?
     lockFileParser.LockfileType.yarn : lockFileParser.LockfileType.npm;
 
   const resolveModuleSpinnerLabel = `Analyzing npm dependencies for ${lockFileFullPath}`;
