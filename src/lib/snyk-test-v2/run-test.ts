@@ -1,11 +1,9 @@
 import * as _ from 'lodash';
 import * as fs from 'fs';
-import pathUtil = require('path');
 import moduleToObject = require('snyk-module');
 import * as depGraphLib from '@snyk/dep-graph';
 import analytics = require('../analytics');
 import * as config from '../config';
-import detect = require('../../lib/detect');
 import plugins = require('../plugins');
 import {ModuleInfo} from '../module-info';
 import {isCI} from '../is-ci';
@@ -17,7 +15,7 @@ import {DepTree, TestOptions} from '../types';
 import gemfileLockToDependencies = require('../../lib/plugins/rubygems/gemfile-lock-to-dependencies');
 import {
   convertTestDepGraphResultToLegacy, AnnotatedIssue, LegacyVulnApiResult,
-  TestDepGraphResponse, DockerIssue,
+  TestDepGraphResponse,
 } from './legacy';
 import {Options} from '../types';
 import {
