@@ -223,6 +223,7 @@ async function discover(options) {
     const searchPath = getSearchPath();
     targetFiles = findGlobs(searchPath);
     res = await testV2(searchPath, targetFiles, options);
+
   } catch (error) {
     failed = true;
 
