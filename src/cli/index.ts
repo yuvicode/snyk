@@ -184,10 +184,12 @@ async function discover(args) {
   let res;
   let failed = false;
   let exitCode = EXIT_CODES.ERROR;
+  let targetFiles: string[];
 
   try {
     // TODO: find globs
-
+    targetFiles = findGlobs(args);
+    res = await runCommand(args, targetFiles);
 
   } catch (error) {
     failed = true;

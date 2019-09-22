@@ -140,7 +140,3 @@ function detectPackageManagerFromFile(file) {
   }
   return DETECTABLE_PACKAGE_MANAGERS[key];
 }
-
-function detectPackageManagerFromRegistry(registry) {
-  return registry;
-}
