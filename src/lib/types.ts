@@ -23,7 +23,7 @@ export type DepTree = legacyApi.DepTree;
 
 export type ShowVulnPaths = 'none' | 'some' | 'all';
 
-export interface TestOptions {
+export interface TestOptions extends Options {
   traverseNodeModules: boolean;
   interactive: boolean;
   'prune-repeated-subdependencies'?: boolean;
@@ -58,7 +58,7 @@ export interface Options {
 }
 
 // TODO(kyegupov): catch accessing ['undefined-properties'] via noImplicitAny
-export interface MonitorOptions {
+export interface MonitorOptions extends Options {
   id?: string;
   docker?: boolean;
   file?: string;
