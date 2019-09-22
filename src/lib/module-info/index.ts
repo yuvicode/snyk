@@ -6,13 +6,13 @@ const debug = Debug('snyk-module-info');
 
 export function ModuleInfo(plugin, policy) {
   return {
-    async inspect(root, targetFile, options): Promise<pluginApi.SinglePackageResult> {
+    async inspect(root, targetFile, options): Promise<pluginApi.SinglePackageResult[]> {
       const pluginOptions = _.merge({
         args: options._doubleDashArgs,
       }, options);
 
       debug('calling plugin inspect()', {root, targetFile, pluginOptions});
-      const info = await plugin.inspect(root, targetFile, pluginOptions);
+      const info = await plugin.inspect(root, [targetFile], pluginOptions);
       debug('plugin inspect() done');
 
       // attach policy if not provided by plugin

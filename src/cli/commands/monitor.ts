@@ -128,16 +128,16 @@ async function monitor(...args0: MethodArgs): Promise<any> {
 
       // TODO: the type should depend on allSubProjects flag
       const inspectResult: pluginApi.InspectResult = await promiseOrCleanup(
-          moduleInfo.inspect(path, targetFile, { ...options }),
+          moduleInfo.inspect(path, [targetFile], { ...options }),
           spinner.clear(analyzingDepsSpinnerLabel));
 
-      analytics.add('pluginName', inspectResult.plugin.name);
+      analytics.add('pluginName', inspectResult[0].plugin.name);
 
       await spinner.clear(analyzingDepsSpinnerLabel)(inspectResult);
 
       await spinner(postingMonitorSpinnerLabel);
-      if (inspectResult.plugin.packageManager) {
-        packageManager = inspectResult.plugin.packageManager;
+      if (inspectResult[0].plugin.packageManager) {
+        packageManager = inspectResult[0].plugin.packageManager;
       }
       const meta: MonitorMeta = {
         'method': 'cli',
@@ -158,14 +158,14 @@ async function monitor(...args0: MethodArgs): Promise<any> {
       let perSubProjectResults: pluginApi.SinglePackageResult[] = [];
       let advertiseSubprojectsCount: number | null = null;
       if (pluginApi.isMultiResult(inspectResult)) {
-        perSubProjectResults = inspectResult.scannedProjects.map(
-          (scannedProject) => ({plugin: inspectResult.plugin, package: scannedProject.depTree}));
+        perSubProjectResults = inspectResult[0].scannedProjects.map(
+          (scannedProject) => ({plugin: inspectResult[0].plugin, package: scannedProject.depTree}));
       } else {
         if (!options['gradle-sub-project']
-          && inspectResult.plugin.meta
-          && inspectResult.plugin.meta.allSubProjectNames
-          && inspectResult.plugin.meta.allSubProjectNames.length > 1) {
-          advertiseSubprojectsCount = inspectResult.plugin.meta.allSubProjectNames.length;
+          && inspectResult[0].plugin.meta
+          && inspectResult[0].plugin.meta.allSubProjectNames
+          && inspectResult[0].plugin.meta.allSubProjectNames.length > 1) {
+          advertiseSubprojectsCount = inspectResult[0].plugin.meta.allSubProjectNames.length;
         }
         perSubProjectResults = [inspectResult];
       }

@@ -31,6 +31,8 @@ import { SupportedPackageManagers } from '../package-managers';
 import { countPathsToGraphRoot, pruneGraph } from '../prune';
 import { legacyPlugin as pluginApi } from '@snyk/cli-interface';
 import { AuthFailedError } from '../errors/authentication-failed-error';
+import { inspect } from '../plugins/rubygems';
+import { SinglePackageResult, MultiProjectResult } from '@snyk/cli-interface/legacy/plugin';
 
 // tslint:disable-next-line:no-var-requires
 const debug = require('debug')('snyk');
@@ -227,37 +229,46 @@ async function getDepsFromPlugin(root, options: Options): Promise<pluginApi.Mult
   }
   const plugin = plugins.loadPlugin(options.packageManager, options);
   const moduleInfo = ModuleInfo(plugin, options.policy);
-  const inspectRes: pluginApi.InspectResult =
-    await moduleInfo.inspect(root, options.file, { ...options });
+  const inspectResArray: pluginApi.InspectResult[] =
+    await moduleInfo.inspect(root, [options.file], { ...options });
 
-  if (!pluginApi.isMultiResult(inspectRes)) {
-    if (!inspectRes.package) {
-      // something went wrong if both are not present...
-      throw Error(`error getting dependencies from ${options.packageManager} ` +
-                  'plugin: neither \'package\' nor \'scannedProjects\' were found');
+  const inspectResults: MultiProjectResult[] = [];
+  for (const index of Object.keys(inspectResArray)) {
+    const inspectRes = inspectResArray[index];
+    if (!pluginApi.isMultiResult(inspectRes)) {
+      inspectResults.push(coherseToMultiResult(inspectRes, options));
+    } else {
+      // We are using "options" to store some information returned from plugin that we need to use later,
+      // but don't want to send to Registry in the Payload.
+      // TODO(kyegupov): decouple inspect and payload so that we don't need this hack
+      (options as any).subProjectNames = inspectRes.scannedProjects
+        .map((scannedProject) => scannedProject.depTree.name);
+      inspectResults.push(inspectRes);
     }
-    if (!inspectRes.package.targetFile && inspectRes.plugin) {
-      inspectRes.package.targetFile = inspectRes.plugin.targetFile;
-    }
-    // We are using "options" to store some information returned from plugin that we need to use later,
-    // but don't want to send to Registry in the Payload.
-    // TODO(kyegupov): decouple inspect and payload so that we don't need this hack
-    if (inspectRes.plugin.meta
-      && inspectRes.plugin.meta.allSubProjectNames
-      && inspectRes.plugin.meta.allSubProjectNames.length > 1) {
-      options.advertiseSubprojectsCount = inspectRes.plugin.meta.allSubProjectNames.length;
-    }
-    return {
-      plugin: inspectRes.plugin,
-      scannedProjects: [{depTree: inspectRes.package}],
-    };
-  } else {
-    // We are using "options" to store some information returned from plugin that we need to use later,
-    // but don't want to send to Registry in the Payload.
-    // TODO(kyegupov): decouple inspect and payload so that we don't need this hack
-    (options as any).subProjectNames = inspectRes.scannedProjects.map((scannedProject) => scannedProject.depTree.name);
-    return inspectRes;
   }
+}
+
+function coherseToMultiResult(inspectRes, options): MultiProjectResult {
+  if (!inspectRes.package) {
+    // something went wrong if both are not present...
+    throw Error(`error getting dependencies from ${options.packageManager} ` +
+                'plugin: neither \'package\' nor \'scannedProjects\' were found');
+  }
+  if (!inspectRes.package.targetFile && inspectRes.plugin) {
+    inspectRes.package.targetFile = inspectRes.plugin.targetFile;
+  }
+  // We are using "options" to store some information returned from plugin that we need to use later,
+  // but don't want to send to Registry in the Payload.
+  // TODO(kyegupov): decouple inspect and payload so that we don't need this hack
+  if (inspectRes.plugin.meta
+    && inspectRes.plugin.meta.allSubProjectNames
+    && inspectRes.plugin.meta.allSubProjectNames.length > 1) {
+    options.advertiseSubprojectsCount = inspectRes.plugin.meta.allSubProjectNames.length;
+  }
+  return {
+    plugin: inspectRes.plugin,
+    scannedProjects: [{depTree: inspectRes.package}],
+  };
 }
 
 // Payload to send to the Registry for scanning a package from the local filesystem.
