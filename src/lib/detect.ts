@@ -21,6 +21,7 @@ const DETECTABLE_FILES: string[] = [
   'requirements.txt',
   'Gopkg.lock',
   'go.mod',
+  'project.json',
   'vendor/vendor.json',
   'obj/project.assets.json',
   'project.assets.json',

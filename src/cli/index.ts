@@ -16,6 +16,8 @@ import ansiEscapes = require('ansi-escapes');
 import {isPathToPackageFile} from '../lib/detect';
 import {updateCheck} from '../lib/updater';
 import { MissingTargetFileError, FileFlagBadInputError } from '../lib/errors';
+import { Options } from '../lib/plugins/types';
+import { getAllSupportedManifestFiles } from '../lib/project-types';
 
 const debug = Debug('snyk');
 const EXIT_CODES = {
@@ -23,8 +25,8 @@ const EXIT_CODES = {
   ERROR: 2,
 };
 
-async function runCommand(args: Args, targetFiles: string[]) {
-  const result = await args.method(targetFiles, ...args.options._);
+async function runCommand(args: Args) {
+  const result = await args.method(...args.options._);
   const res = analytics({
     args: args.options._,
     command: args.command,
@@ -144,18 +146,7 @@ async function main() {
     } else if (typeof args.options.file === 'boolean') {
       throw new FileFlagBadInputError();
     }
-
-    // detect all targetFiles
-    let targetFiles: string[];
-
-    if (args.options.file) {
-      targetFiles = [args.options.file];
-    } else {
-      targetFiles = findGlobs(args);
-    }
-
-    // checkPaths(targetFiles);
-    res = await runCommand(args, targetFiles);
+    res = await runCommand(args);
   } catch (error) {
     failed = true;
 
@@ -180,26 +171,34 @@ function handleResponse(args, exitCode, failed) {
 
 }
 
-async function discover(args) {
+function findGlobs(): string[] {
+  return getAllSupportedManifestFiles();
+}
+
+function getSearchPath() {
+  return process.cwd();
+}
+
+async function discover(options) {
   let res;
   let failed = false;
   let exitCode = EXIT_CODES.ERROR;
   let targetFiles: string[];
 
   try {
-    // TODO: find globs
-    targetFiles = findGlobs(args);
-    res = await runCommand(args, targetFiles);
+    const searchPath = getSearchPath();
+    targetFiles = findGlobs();
+    // call snyk test
 
   } catch (error) {
     failed = true;
 
-    const response = await handleError(args, error);
+    const response = await handleError(options, error);
     res = response.res;
     exitCode = response.exitCode;
   }
 
-  handleResponse(args, exitCode, failed);
+  handleResponse(options, exitCode, failed);
 
 }
 

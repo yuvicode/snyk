@@ -9,6 +9,7 @@ export interface InspectResult {
 
 export interface Options {
   file?: string;
+  folder?: string;
   docker?: boolean;
   traverseNodeModules?: boolean;
   dev?: boolean;
