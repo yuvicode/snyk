@@ -10,7 +10,7 @@ import {SEVERITIES} from '../../../lib/snyk-test/common';
 import * as Debug from 'debug';
 import {Options, TestOptions, ShowVulnPaths} from '../../../lib/types';
 import {isLocalFolder} from '../../../lib/detect';
-import { MethodArgs } from '../../args';
+import {Method, MethodArgs} from '../../args';
 import { LegacyVulnApiResult, SEVERITY, GroupedVuln, VulnMetaData } from '../../../lib/snyk-test/legacy';
 import { formatIssues } from './formatters/legacy-format-issue';
 import { WIZARD_SUPPORTED_PACKAGE_MANAGERS } from '../../../lib/package-managers';
@@ -29,7 +29,7 @@ const showVulnPathsMapping: Record<string, ShowVulnPaths> = {
 
 // TODO: avoid using `as any` whenever it's possible
 
-async function test(...args: MethodArgs): Promise<string> {
+async function test(targetFiles: string[], ...args: MethodArgs): Promise<string> {
   const resultOptions = [] as any[];
   let results = [] as any[];
   let options = {} as any as Options & TestOptions;

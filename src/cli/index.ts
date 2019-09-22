@@ -23,8 +23,8 @@ const EXIT_CODES = {
   ERROR: 2,
 };
 
-async function runCommand(args: Args) {
-  const result = await args.method(...args.options._);
+async function runCommand(args: Args, targetFiles: string[]) {
+  const result = await args.method(targetFiles, ...args.options._);
   const res = analytics({
     args: args.options._,
     command: args.command,
@@ -140,8 +140,17 @@ async function main() {
       throw new FileFlagBadInputError();
     }
 
-    checkPaths(args);
-    res = await runCommand(args);
+    // detect all targetFiles
+    let targetFiles: string[];
+
+    if (args.options.file) {
+      targetFiles = [args.options.file];
+    } else {
+      targetFiles = findGlobs(args);
+    }
+
+    // checkPaths(targetFiles);
+    res = await runCommand(args, targetFiles);
   } catch (error) {
     failed = true;
 

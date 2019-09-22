@@ -94,6 +94,7 @@ export function detectPackageManager(root, options) {
     }
   } else {
     debug('specified parameter is not a folder, trying to lookup as repo');
+    // TODO get rid of this (not used anywhere)
     const registry = options.registry || 'npm';
     packageManager = detectPackageManagerFromRegistry(registry);
   }
