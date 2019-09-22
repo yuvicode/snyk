@@ -133,6 +133,11 @@ async function main() {
   let res;
   let failed = false;
   let exitCode = EXIT_CODES.ERROR;
+
+  if (args.options.allProjects) {
+    return discover(args);
+  }
+
   try {
     if (args.options.file && typeof args.options.file === 'string' && (args.options.file as string).match(/\.sln$/)) {
       sln.updateArgs(args);
@@ -159,6 +164,11 @@ async function main() {
     exitCode = response.exitCode;
   }
 
+  handleResponse(args, exitCode, failed);
+  return res;
+}
+
+function handleResponse(args, exitCode, failed) {
   if (!args.options.json) {
     console.log(alerts.displayAlerts());
   }
@@ -168,7 +178,27 @@ async function main() {
     process.exitCode = exitCode;
   }
 
-  return res;
+}
+
+async function discover(args) {
+  let res;
+  let failed = false;
+  let exitCode = EXIT_CODES.ERROR;
+
+  try {
+    // TODO: find globs
+
+
+  } catch (error) {
+    failed = true;
+
+    const response = await handleError(args, error);
+    res = response.res;
+    exitCode = response.exitCode;
+  }
+
+  handleResponse(args, exitCode, failed);
+
 }
 
 const cli = main().catch((e) => {
