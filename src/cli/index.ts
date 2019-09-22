@@ -208,8 +208,8 @@ async function discover(options) {
   try {
     const searchPath = getSearchPath();
     targetFiles = findGlobs();
-    res = await runTest(args, targetFiles, searchPath);
-
+    console.log('targetFiles', targetFiles);
+    res = await testV2(searchPath, targetFiles, options);
   } catch (error) {
     failed = true;
 
