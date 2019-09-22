@@ -80,7 +80,7 @@ export async function runTest(root: string,
         res = convertTestDepGraphResultToLegacy(
           res as any as TestDepGraphResponse, // Double "as" required by Typescript for dodgy assertions
           depGraph,
-          packageManager,
+          depGraph.pkgManager.name,
           options.severityThreshold);
 
         // For Node.js: inject additional information (for remediation etc.) into the response.
@@ -132,7 +132,7 @@ export async function runTest(root: string,
     }
 
     throw new FailedToRunTestError(
-      err.userMessage || err.message || `Failed to test ${packageManager} project`,
+      err.userMessage || err.message || 'Failed to test project',
       err.code,
     );
   } finally {
@@ -232,8 +232,9 @@ async function getDepsFromPlugin(root, options: Options): Promise<pluginApi.Mult
 }
 
 
-async function getDiscoveryResult(supportedPackageManagers: SupportedPackageManagers[],
-                                  handlers: DepsDiscoveryHandler[],)
+// async function getDiscoveryResult(supportedPackageManagers: SupportedPackageManagers[],
+//                                   handlers: DepsDiscoveryHandler[])
+// {}
 
 // Payload to send to the Registry for scanning a package from the local filesystem.
 async function assembleLocalPayloads(root, targetFiles: string[], options: Options & TestOptions): Promise<Payload[]> {

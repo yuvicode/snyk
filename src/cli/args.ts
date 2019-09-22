@@ -25,7 +25,7 @@ function dashToCamelCase(dash) {
 // Last item is ArgsOptions, the rest are strings (positional arguments, e.g. paths)
 export type MethodArgs = Array<string | ArgsOptions>;
 
-export type Method = (targetFiles?: string[], ...args: MethodArgs) => Promise<string>;
+export type Method = (...args: MethodArgs) => Promise<string>;
 
 export interface Args {
   command: string;
@@ -161,6 +161,7 @@ export function args(rawArgv: string[]): Args {
     'severity-threshold',
     'strict-out-of-sync',
     'all-sub-projects',
+    'all-projects',
     'sub-project',
     'gradle-sub-project',
   ]) {

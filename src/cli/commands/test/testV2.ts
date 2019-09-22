@@ -26,7 +26,7 @@ const showVulnPathsMapping: Record<string, ShowVulnPaths> = {
 
 export async function testV2(root: string,
                              targetFiles: string[],
-                             options: TestOptions,
+                             options: TestOptions & Options,
                              policy?: string): Promise<string> {
   const resultOptions = [] as any[];
   let results = [] as any[];

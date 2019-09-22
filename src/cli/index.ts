@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as Debug from 'debug';
+import * as fs from 'then-fs';
+import * as pathLib from 'path';
 
 // assert supported node runtime version
 import * as runtime from './runtime';
@@ -45,24 +47,24 @@ async function runCommand(args: Args) {
   return res;
 }
 
-async function runTest(args: Args, targetFiles: string[]) {
-  const result = await testV2(targetFiles, ...args.options._);
-  const res = analytics({
-    args: args.options._,
-    command: 'testV2',
-  });
+// async function runTest(args: Args, targetFiles: string[]) {
+//   const result = await testV2(targetFiles, args);
+//   const res = analytics({
+//     args: args.options._,
+//     command: 'testV2',
+//   });
 
-  if (result && !args.options.quiet) {
-    if (args.options.copy) {
-      copy(result);
-      console.log('Result copied to clipboard');
-    } else {
-      console.log(result);
-    }
-  }
+//   if (result && !args.options.quiet) {
+//     if (args.options.copy) {
+//       copy(result);
+//       console.log('Result copied to clipboard');
+//     } else {
+//       console.log(result);
+//     }
+//   }
 
-  return res;
-}
+//   return res;
+// }
 
 async function handleError(args, error) {
   spinner.clearAll();
@@ -191,8 +193,20 @@ function handleResponse(args, exitCode, failed) {
 
 }
 
-function findGlobs(): string[] {
-  return getAllSupportedManifestFiles();
+function fileExists(root, file) {
+  return file && fs.existsSync(root) &&
+    fs.existsSync(pathLib.resolve(root, file));
+}
+
+function findGlobs(searchPath: string): string[] {
+  const manifestFiles = getAllSupportedManifestFiles();
+  const foundManifests: string[] = [];
+  for (const file of manifestFiles) {
+    if (fileExists(searchPath, file)) {
+      foundManifests.push(file);
+    }
+  }
+  return foundManifests;
 }
 
 function getSearchPath() {
@@ -207,8 +221,7 @@ async function discover(options) {
 
   try {
     const searchPath = getSearchPath();
-    targetFiles = findGlobs();
-    console.log('targetFiles', targetFiles);
+    targetFiles = findGlobs(searchPath);
     res = await testV2(searchPath, targetFiles, options);
   } catch (error) {
     failed = true;
