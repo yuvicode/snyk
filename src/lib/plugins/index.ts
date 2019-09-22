@@ -59,3 +59,7 @@ export function loadPlugin(packageManager: SupportedPackageManagers,
     }
   }
 }
+
+export function getPlugins(): types.Plugin[] {
+    return [nodejsPlugin, rubygemsPlugin];
+}
