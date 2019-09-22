@@ -6,7 +6,7 @@ const debug = Debug('snyk-module-info');
 
 export function ModuleInfo(plugin, policy) {
   return {
-    async inspect(root, targetFile, options): Promise<pluginApi.SinglePackageResult> {
+    async inspect(root, targetFile, options): Promise<pluginApi.SinglePackageResult[]> {
       const pluginOptions = _.merge({
         args: options._doubleDashArgs,
       }, options);

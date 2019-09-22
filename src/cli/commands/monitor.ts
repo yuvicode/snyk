@@ -128,9 +128,8 @@ async function monitor(...args0: MethodArgs): Promise<any> {
 
       // TODO: the type should depend on allSubProjects flag
       const inspectResult: pluginApi.InspectResult = await promiseOrCleanup(
-          moduleInfo.inspect(path, targetFile, { ...options }),
+          moduleInfo.inspect(path, [targetFile], { ...options }),
           spinner.clear(analyzingDepsSpinnerLabel));
-
       analytics.add('pluginName', inspectResult.plugin.name);
 
       await spinner.clear(analyzingDepsSpinnerLabel)(inspectResult);

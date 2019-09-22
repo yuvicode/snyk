@@ -22,5 +22,5 @@ export interface Options {
 }
 
 export interface Plugin {
-  inspect: (root: string, targetFile: string, options?: Options) => Promise<InspectResult>;
+  inspect: (root: string, targetFiles: string[], options?: Options) => Promise<InspectResult | void>;
 }

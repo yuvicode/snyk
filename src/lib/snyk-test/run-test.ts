@@ -227,7 +227,7 @@ async function getDepsFromPlugin(root, options: Options): Promise<pluginApi.Mult
   const plugin = plugins.loadPlugin(options.packageManager, options);
   const moduleInfo = ModuleInfo(plugin, options.policy);
   const inspectRes: pluginApi.InspectResult =
-    await moduleInfo.inspect(root, options.file, { ...options });
+    await moduleInfo.inspect(root, [options.file], { ...options });
 
   if (!pluginApi.isMultiResult(inspectRes)) {
     if (!inspectRes.package) {

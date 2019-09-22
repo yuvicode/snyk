@@ -30,6 +30,7 @@ import { legacyPlugin as pluginApi } from '@snyk/cli-interface';
 import { AuthFailedError } from '../errors/authentication-failed-error';
 import {Plugin} from '../plugins/types';
 import {SupportedPackageManagers} from '../package-managers';
+import * as rubygemsPlugin from '../plugins/rubygems';
 
 // tslint:disable-next-line:no-var-requires
 const debug = require('debug')('snyk');
@@ -183,6 +184,7 @@ function handleTestHttpErrorResponse(res, body) {
 
 function assemblePayloads(root: string, targetFiles: string[], options: Options & TestOptions): Promise<Payload[]> {
   const isLocal = fs.existsSync(root);
+  console.log('assemblePayloads ', targetFiles);
   analytics.add('local', isLocal);
   if (isLocal) {
     return assembleLocalPayloads(root, targetFiles, options);
@@ -192,41 +194,36 @@ function assemblePayloads(root: string, targetFiles: string[], options: Options 
 
 async function getDiscoveryResult(
   root: string,
-  targetFiles: string[], options): Promise<pluginApi.MultiProjectResult[]> {
-  const results: pluginApi.MultiProjectResult[] = [];
-  for (const plugin of plugins.getPlugins()) {
-    const moduleInfo = ModuleInfo(plugin, options.policy);
-    const inspectRes: pluginApi.InspectResult = await moduleInfo.inspect(root, targetFiles, { ...options });
+  targetFiles: string[], options): Promise<pluginApi.SinglePackageResult[]> {
+  const results: pluginApi.SinglePackageResult[] = [];
+  console.log('targetFiles', targetFiles);
+  console.log('root', root);
+  console.log('rubygemsPlugin', rubygemsPlugin);
 
-    if (!pluginApi.isMultiResult(inspectRes)) {
-      if (!inspectRes.package) {
-        // something went wrong if both are not present...
-        throw Error(`error getting dependencies from ${options.packageManager} ` +
-          'plugin: neither \'package\' nor \'scannedProjects\' were found');
-      }
-      if (!inspectRes.package.targetFile && inspectRes.plugin) {
-        inspectRes.package.targetFile = inspectRes.plugin.targetFile;
-      }
-      // We are using "options" to store some information returned from plugin that we need to use later,
-      // but don't want to send to Registry in the Payload.
-      // TODO(kyegupov): decouple inspect and payload so that we don't need this hack
-      if (inspectRes.plugin.meta
-        && inspectRes.plugin.meta.allSubProjectNames
-        && inspectRes.plugin.meta.allSubProjectNames.length > 1) {
-        options.advertiseSubprojectsCount = inspectRes.plugin.meta.allSubProjectNames.length;
-      }
-      results.push({
-        plugin: inspectRes.plugin,
-        scannedProjects: [{depTree: inspectRes.package}],
-      });
-    } else {
-      // We are using "options" to store some information returned from plugin that we need to use later,
-      // but don't want to send to Registry in the Payload.
-      // TODO(kyegupov): decouple inspect and payload so that we don't need this hack
-      (options as any).subProjectNames =
-        inspectRes.scannedProjects.map((scannedProject) => scannedProject.depTree.name);
-      results.push(inspectRes);
-    }
+  for (const plugin of [rubygemsPlugin]) {
+    console.log('******* plugin', plugin)
+
+    const moduleInfo = ModuleInfo(plugin, options.policy);
+    console.log('******* moduleInfo', moduleInfo)
+
+    const inspectRes: pluginApi.InspectResult[] = await moduleInfo.inspect(root, targetFiles, options);
+    console.log('******* inspectRes', inspectRes);
+    results.push(...inspectRes)
+
+    // if (!pluginApi.isMultiResult(inspectRes)) {
+
+    //   results.push({
+    //     plugin: inspectRes.plugin,
+    //     scannedProjects: [{depTree: inspectRes.package}],
+    //   });
+    // } else {
+    //   // We are using "options" to store some information returned from plugin that we need to use later,
+    //   // but don't want to send to Registry in the Payload.
+    //   // TODO(kyegupov): decouple inspect and payload so that we don't need this hack
+    //   (options as any).subProjectNames =
+    //     inspectRes.scannedProjects.map((scannedProject) => scannedProject.depTree.name);
+    //   results.push(inspectRes);
+    // }
   }
   return results;
 }

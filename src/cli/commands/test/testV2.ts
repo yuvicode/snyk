@@ -55,6 +55,7 @@ export async function testV2(root: string,
   let res;
 
   try {
+    console.log('textV2 targetFiles', targetFiles)
     res = await test(root, targetFiles, testOpts) as LegacyVulnApiResult[];
   } catch (error) {
     // Possible error cases:

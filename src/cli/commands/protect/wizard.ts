@@ -535,7 +535,7 @@ function processAnswers(answers, policy, options) {
         options.traverseNodeModules = false;
       }
 
-      return info.inspect(cwd, targetFile, options)
+      return info.inspect(cwd, [targetFile], options)
         .then((inspectRes) => spinner(lbl).then(() => inspectRes))
         .then((inspectRes) => snykMonitor(cwd, meta as MonitorMeta, inspectRes))
         // clear spinner in case of success or failure
