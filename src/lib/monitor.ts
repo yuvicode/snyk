@@ -27,7 +27,6 @@ interface MonitorBody {
   package?: DepTree;
   depGraph?: depGraphLib.DepGraph;
   target: {};
-  targetFileRelativePath: string;
   targetFile: string;
 }
 
@@ -213,11 +212,9 @@ export async function monitor(
           },
           policy: policy ? policy.toString() : undefined,
           package: pkg,
-          // we take the targetFile from the plugin,
-          // because we want to send it only for specific package-managers
           target,
-          targetFile: pluginMeta.targetFile,
-          targetFileRelativePath,
+          // we take the targetFile from the plugin if provided
+          targetFile: pluginMeta.targetFile || targetFile,
         } as MonitorBody,
         gzip: true,
         method: 'PUT',
