@@ -56,7 +56,7 @@ export const updateArgs = (args) => {
   debug('valid project folders in solution: ', projectFolders);
 
   if (foldersWithSupportedProjects.length === 0) {
-    throw NoSupportedManifestsFoundError([...projectFolders]);
+    throw new NoSupportedManifestsFoundError([...projectFolders]);
   }
 
   // delete the file option as the solution has now been parsed

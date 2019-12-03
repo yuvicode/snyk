@@ -178,7 +178,7 @@ async function runTest(
     // handling denial from registry because of the feature flag
     // currently done for go.mod
     if (error.code === 403 && error.message.includes('Feature not allowed')) {
-      throw NoSupportedManifestsFoundError([root]);
+      throw new NoSupportedManifestsFoundError([root]);
     }
 
     throw new FailedToRunTestError(
@@ -259,7 +259,7 @@ async function getDepsFromPlugin(
 ): Promise<pluginApi.MultiProjectResult> {
   options.file = options.file || detect.detectPackageFile(root);
   if (!options.docker && !(options.file || options.packageManager)) {
-    throw NoSupportedManifestsFoundError([...root]);
+    throw new NoSupportedManifestsFoundError([...root]);
   }
   const plugin = plugins.loadPlugin(options.packageManager, options);
   const moduleInfo = ModuleInfo(plugin, options.policy);

@@ -109,7 +109,7 @@ export function detectPackageManager(root, options) {
     packageManager = detectPackageManagerFromRegistry(registry);
   }
   if (!packageManager) {
-    throw NoSupportedManifestsFoundError([root]);
+    throw new NoSupportedManifestsFoundError([root]);
   }
   return packageManager;
 }
