@@ -144,14 +144,18 @@ export function fakeServer(root, apikey) {
 
   server.put(root + '/monitor/:registry/graph', (req, res, next) => {
     res.send({
-      id: 'test',
+      id: 'monitor',
+      uri: `${req.params.registry}/graph/some/project-id`,
+      isMonitored: true,
     });
     return next();
   });
 
   server.put(root + '/monitor/:registry', (req, res, next) => {
     res.send({
-      id: 'test',
+      id: 'monitor',
+      uri: `${req.params.registry}/some/project-id`,
+      isMonitored: true,
     });
     return next();
   });
