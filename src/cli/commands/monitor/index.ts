@@ -24,7 +24,6 @@ import { maybePrintDeps } from '../../../lib/print-deps';
 import * as analytics from '../../../lib/analytics';
 import { legacyPlugin as pluginApi } from '@snyk/cli-interface';
 import { formatMonitorOutput } from './formatters/format-monitor-response';
-import { processJsonMonitorResponse } from './process-json-monitor';
 import { GoodResult, BadResult } from './types';
 import { getDepsFromPlugin } from '../../../lib/plugins/get-deps-from-plugin';
 import { extractPackageManager } from '../../../lib/plugins/extract-package-manager';
@@ -32,6 +31,7 @@ import { MultiProjectResultCustom } from '../../../lib/plugins/get-multi-plugin-
 import { getSubProjectCount } from '../../../lib/plugins/get-sub-project-count';
 import { convertSingleResultToMultiCustom } from '../../../lib/plugins/convert-single-splugin-res-to-multi-custom';
 import { convertMultiResultToMultiCustom } from '../../../lib/plugins/convert-multi-plugin-res-to-multi-custom';
+import { processJsonMonitorResponse } from './process-json-monitor';
 
 const SEPARATOR = '\n-------------------------------------------------------\n';
 const debug = Debug('snyk');
@@ -147,8 +147,6 @@ async function monitor(...args0: MethodArgs): Promise<any> {
           options as MonitorOptions & Options,
         );
         analytics.add('packageManager', packageManager);
-        maybePrintDeps(options, projectDeps.depTree);
-
         debug(`Processing ${projectDeps.depTree.name}...`);
         maybePrintDeps(options, projectDeps.depTree);
         // TODO: not always correct for multi scan,
