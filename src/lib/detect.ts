@@ -41,6 +41,7 @@ export const AUTO_DETECTABLE_FILES: string[] = [
   'packages.config',
   'project.json',
   'project.assets.json',
+  'manifake.json',
 ];
 
 // when file is specified with --file, we look it up here
@@ -74,6 +75,7 @@ const DETECTABLE_PACKAGE_MANAGERS: {
   'CocoaPods.podfile.yaml': 'cocoapods',
   'CocoaPods.podfile': 'cocoapods',
   Podfile: 'cocoapods',
+  'manifake.json': 'cpp',
 };
 
 export function isPathToPackageFile(path) {

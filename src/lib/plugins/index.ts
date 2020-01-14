@@ -9,6 +9,7 @@ import * as nugetPlugin from 'snyk-nuget-plugin';
 import * as phpPlugin from 'snyk-php-plugin';
 import * as nodejsPlugin from './nodejs-plugin';
 import * as cocoapodsPlugin from '@snyk/snyk-cocoapods-plugin';
+import * as cppPlugin from './cpp';
 import * as types from './types';
 import { SupportedPackageManagers } from '../package-managers';
 import { UnsupportedPackageManagerError } from '../errors';
@@ -53,6 +54,9 @@ export function loadPlugin(
     }
     case 'paket': {
       return nugetPlugin;
+    }
+    case 'cpp': {
+      return cppPlugin;
     }
     case 'composer': {
       return phpPlugin;

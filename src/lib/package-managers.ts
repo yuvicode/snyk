@@ -12,6 +12,10 @@ export type SupportedPackageManagers =
   | 'nuget'
   | 'paket'
   | 'composer'
+  | 'cpp'
+  | 'rpm'
+  | 'apk'
+  | 'deb'
   | 'cocoapods';
 
 export const SUPPORTED_PACKAGE_MANAGER_NAME: {
@@ -31,6 +35,10 @@ export const SUPPORTED_PACKAGE_MANAGER_NAME: {
   paket: 'Paket',
   composer: 'Composer',
   cocoapods: 'CocoaPods',
+  rpm: 'rpm',
+  apk: 'apk',
+  deb: 'deb',
+  cpp: 'C / C++',
 };
 
 export const WIZARD_SUPPORTED_PACKAGE_MANAGERS: SupportedPackageManagers[] = [
