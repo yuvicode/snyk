@@ -12,6 +12,7 @@ export async function inspect(
   return {
     plugin: {
       name: 'cpp',
+      groupId: 'manifake',
     },
     scannedProjects: [
       {
@@ -44,22 +45,11 @@ export async function inspect(
       },
       {
         targetFile,
-        packageManager: 'upstream',
+        packageManager: 'deb',
         depTree: {
           targetFile,
           name: 'hello',
           dependencies: {
-            'apt/libapt-pkg5.0': {
-              version: '1.6.3ubuntu0.1',
-              dependencies: {
-                'bzip2/libbz2-1.0': {
-                  version: '1.0.6-8.1',
-                },
-              },
-            },
-            'bzip2/libbz2-1.0': {
-              version: '1.0.6-8.1',
-            },
             'iproute/iproute': {
               name: 'iproute/iproute',
               version: '20120521-3+b3',

@@ -154,6 +154,7 @@ export async function monitor(
             name: pkg.name,
             version: pkg.version,
             org: config.org ? decodeURIComponent(config.org) : undefined,
+            groupId: pluginMeta.groupId,
             pluginName: pluginMeta.name,
             pluginRuntime: pluginMeta.runtime,
             missingDeps: treeMissingDeps,

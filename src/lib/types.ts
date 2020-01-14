@@ -4,7 +4,8 @@ import { SEVERITY } from './snyk-test/legacy';
 import { FailOn } from './snyk-test/common';
 
 export interface PluginMetadata {
-  name: string;
+  name?: string;
+  groupId: string;
   packageFormatVersion?: string;
   packageManager: SupportedPackageManagers;
   imageLayers?: any;
