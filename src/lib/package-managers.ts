@@ -12,7 +12,8 @@ export type SupportedPackageManagers =
   | 'nuget'
   | 'paket'
   | 'composer'
-  | 'cocoapods';
+  | 'cocoapods'
+  | 'clojure';
 
 export const SUPPORTED_PACKAGE_MANAGER_NAME: {
   readonly [packageManager in SupportedPackageManagers]: string;
@@ -31,6 +32,7 @@ export const SUPPORTED_PACKAGE_MANAGER_NAME: {
   paket: 'Paket',
   composer: 'Composer',
   cocoapods: 'CocoaPods',
+  clojure: 'Clojure',
 };
 
 export const WIZARD_SUPPORTED_PACKAGE_MANAGERS: SupportedPackageManagers[] = [

@@ -29,6 +29,8 @@ const DETECTABLE_FILES: string[] = [
   'composer.lock',
   'Podfile',
   'Podfile.lock',
+  'project.clj',
+  'deps.edn',
 ];
 
 export const AUTO_DETECTABLE_FILES: string[] = [
@@ -71,6 +73,8 @@ const DETECTABLE_PACKAGE_MANAGERS: {
   'CocoaPods.podfile.yaml': 'cocoapods',
   'CocoaPods.podfile': 'cocoapods',
   Podfile: 'cocoapods',
+  'project.clj': 'clojure',
+  'deps.edn': 'clojure',
 };
 
 export function isPathToPackageFile(path) {
