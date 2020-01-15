@@ -25,6 +25,7 @@ import { filterOutMissingDeps } from './filter-out-missing-deps';
 import { dropEmptyDeps } from './drop-empty-deps';
 import { pruneTree } from './prune-dep-tree';
 import { pluckPolicies } from '../policy';
+import { getEnvs } from '../get-env';
 
 const debug = Debug('snyk');
 
@@ -68,6 +69,8 @@ export async function monitor(
 ): Promise<MonitorResult> {
   apiTokenExists();
   let treeMissingDeps: string[] = [];
+  console.log("#### monitor");
+  const envs = getEnvs();
 
   const packageManager = meta.packageManager;
   analytics.add('packageManager', packageManager);
@@ -137,6 +140,9 @@ export async function monitor(
   }
 
   pkg = dropEmptyDeps(pkg);
+  console.log("#### envs:", envs);
+  console.log("#### result:", envs['INTEGRATION_PLUGIN_NAME'] || pluginMeta.name);
+
 
   // TODO(kyegupov): async/await
   return new Promise((resolve, reject) => {
@@ -154,7 +160,7 @@ export async function monitor(
             name: pkg.name,
             version: pkg.version,
             org: config.org ? decodeURIComponent(config.org) : undefined,
-            pluginName: pluginMeta.name,
+            pluginName: envs['INTEGRATION_PLUGIN_NAME'] || pluginMeta.name,
             pluginRuntime: pluginMeta.runtime,
             missingDeps: treeMissingDeps,
             dockerImageId: pluginMeta.dockerImageId,
