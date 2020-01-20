@@ -16,7 +16,7 @@ async function protectFunc(
 ) {
   const protectOptions = { ...options };
   protectOptions.loose = true; // replace missing policies with empty ones
-  protectOptions.vulnEndpoint = '/vuln/npm/patches';
+  // protectOptions.vulnEndpoint = '/vuln/npm/patches';
   // TODO: fix this by providing better patch support for yarn
   // yarn hoists packages up a tree so we can't assume their location
   // on disk without traversing node_modules

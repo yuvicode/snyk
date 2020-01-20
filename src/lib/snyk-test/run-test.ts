@@ -353,7 +353,7 @@ async function assembleLocalPayloads(
       const targetFile =
         scannedProject.targetFile || deps.plugin.targetFile || options.file;
 
-      let body: PayloadBody = {
+      const body: PayloadBody = {
         // WARNING: be careful changing this as it affects project uniqueness
         targetFile: deps.plugin.targetFile,
         projectNameOverride: options.projectName,
@@ -366,38 +366,40 @@ async function assembleLocalPayloads(
         target: await projectMetadata.getInfo(pkg, options),
       };
 
-      if (options.vulnEndpoint) {
-        // options.vulnEndpoint is only used by `snyk protect` (i.e. local filesystem tests).
-        body = { ...body, ...pkg };
-      } else {
-        // Graphs are more compact and robust representations.
-        // Legacy parts of the code are still using trees, but will eventually be fully migrated.
-        debug('converting dep-tree to dep-graph', {
-          name: pkg.name,
-          targetFile: scannedProject.targetFile || options.file,
-        });
-        let depGraph = await depGraphLib.legacy.depTreeToGraph(
-          pkg,
-          packageManager!,
-        );
+      // if (options.vulnEndpoint) {
+      //   options.vulnEndpoint is only used by `snyk protect` (i.e. local filesystem tests).
+      // body = { ...body, ...pkg };
+      // } else {
+      //
+      // }
 
-        debug('done converting dep-tree to dep-graph', {
-          uniquePkgsCount: depGraph.getPkgs().length,
-        });
-        if (options['prune-repeated-subdependencies'] && packageManager) {
-          debug('Trying to prune the graph');
-          const prePruneDepCount = countPathsToGraphRoot(depGraph);
-          debug('pre prunedPathsCount: ' + prePruneDepCount);
+      // Graphs are more compact and robust representations.
+      // Legacy parts of the code are still using trees, but will eventually be fully migrated.
+      debug('converting dep-tree to dep-graph', {
+        name: pkg.name,
+        targetFile: scannedProject.targetFile || options.file,
+      });
+      let depGraph = await depGraphLib.legacy.depTreeToGraph(
+        pkg,
+        packageManager!,
+      );
 
-          depGraph = await pruneGraph(depGraph, packageManager);
+      debug('done converting dep-tree to dep-graph', {
+        uniquePkgsCount: depGraph.getPkgs().length,
+      });
+      if (options['prune-repeated-subdependencies'] && packageManager) {
+        debug('Trying to prune the graph');
+        const prePruneDepCount = countPathsToGraphRoot(depGraph);
+        debug('pre prunedPathsCount: ' + prePruneDepCount);
 
-          analytics.add('prePrunedPathsCount', prePruneDepCount);
-          const postPruneDepCount = countPathsToGraphRoot(depGraph);
-          debug('post prunedPathsCount: ' + postPruneDepCount);
-          analytics.add('postPrunedPathsCount', postPruneDepCount);
-        }
-        body.depGraph = depGraph;
+        depGraph = await pruneGraph(depGraph, packageManager);
+
+        analytics.add('prePrunedPathsCount', prePruneDepCount);
+        const postPruneDepCount = countPathsToGraphRoot(depGraph);
+        debug('post prunedPathsCount: ' + postPruneDepCount);
+        analytics.add('postPrunedPathsCount', postPruneDepCount);
       }
+      body.depGraph = depGraph;
 
       const payload: Payload = {
         method: 'POST',
