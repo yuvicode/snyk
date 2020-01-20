@@ -102,6 +102,7 @@ export interface MonitorResult {
   uri: string;
   isMonitored: boolean;
   trialStarted: boolean;
+  vulns: any;
 }
 
 export interface SpinnerOptions {

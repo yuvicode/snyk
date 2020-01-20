@@ -53,7 +53,12 @@ export function formatMonitorOutput(
             manageUrl +
             '\n\n',
         )
-      : '');
+      : '') +
+      // This bit prints out few props from vulns collection passed from registry,
+      // we will need a bit more sophisticated mapping to display it with strResult :-)
+      '\n\n' +
+      `Found ${res.vulns.length} vulnerable paths: \n\n` +
+      res.vulns.map((v) => `Name: ${v.name}, Version: ${v.version}, Severity: ${v.severity}`).join('\n');
 
   return options.json
     ? JSON.stringify(
