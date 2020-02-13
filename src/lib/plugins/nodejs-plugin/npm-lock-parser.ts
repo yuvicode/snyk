@@ -1,7 +1,6 @@
 import * as baseDebug from 'debug';
 const debug = baseDebug('snyk');
 import * as path from 'path';
-import * as spinner from '../../spinner';
 import * as analytics from '../../analytics';
 import * as fs from 'fs';
 import * as lockFileParser from 'snyk-nodejs-lockfile-parser';
@@ -53,19 +52,12 @@ export async function parse(
     ? lockFileParser.LockfileType.yarn
     : lockFileParser.LockfileType.npm;
 
-  const resolveModuleSpinnerLabel = `Analyzing npm dependencies for ${lockFileFullPath}`;
-  debug(resolveModuleSpinnerLabel);
-  try {
-    await spinner(resolveModuleSpinnerLabel);
-    const strictOutOfSync = options.strictOutOfSync !== false;
-    return lockFileParser.buildDepTree(
-      manifestFile,
-      lockFile,
-      options.dev,
-      lockFileType,
-      strictOutOfSync,
-    );
-  } finally {
-    await spinner.clear(resolveModuleSpinnerLabel);
-  }
+  const strictOutOfSync = options.strictOutOfSync !== false;
+  return lockFileParser.buildDepTree(
+    manifestFile,
+    lockFile,
+    options.dev,
+    lockFileType,
+    strictOutOfSync,
+  );
 }

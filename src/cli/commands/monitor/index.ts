@@ -30,7 +30,7 @@ import { getSubProjectCount } from '../../../lib/plugins/get-sub-project-count';
 import { extractPackageManager } from '../../../lib/plugins/extract-package-manager';
 import { MultiProjectResultCustom } from '../../../lib/plugins/get-multi-plugin-result';
 import { convertMultiResultToMultiCustom } from '../../../lib/plugins/convert-multi-plugin-res-to-multi-custom';
-import { convertSingleResultToMultiCustom } from '../../../lib/plugins/convert-single-splugin-res-to-multi-custom';
+import { convertSingleResultToMultiCustom } from '../../../lib/plugins/convert-single-plugin-res-to-multi-custom';
 
 const SEPARATOR = '\n-------------------------------------------------------\n';
 const debug = Debug('snyk');
@@ -104,29 +104,17 @@ async function monitor(...args0: MethodArgs): Promise<any> {
         pathUtil.join(path, targetFile || ''),
       );
 
-      const analyzingDepsSpinnerLabel =
-        'Analyzing ' +
-        (packageManager ? packageManager : analysisType) +
-        ' dependencies for ' +
-        displayPath;
-
-      await spinner(analyzingDepsSpinnerLabel);
-
       // Scan the project dependencies via a plugin
 
       analytics.add('pluginOptions', options);
-      debug('getDepsFromPlugin ...');
 
       // each plugin will be asked to scan once per path
       // some return single InspectResult & newer ones return Multi
-      const inspectResult = await promiseOrCleanup(
-        getDepsFromPlugin(path, {
-          ...options,
-          path,
-          packageManager,
-        }),
-        spinner.clear(analyzingDepsSpinnerLabel),
-      );
+      const inspectResult = await getDepsFromPlugin(path, {
+        ...options,
+        path,
+        packageManager,
+      });
 
       analytics.add('pluginName', inspectResult.plugin.name);
 
@@ -157,7 +145,6 @@ async function monitor(...args0: MethodArgs): Promise<any> {
         maybePrintDeps(options, projectDeps.depTree);
 
         debug(`Processing ${projectDeps.depTree.name}...`);
-        maybePrintDeps(options, projectDeps.depTree);
 
         const tFile = projectDeps.targetFile || targetFile;
         const targetFileRelativePath = tFile
@@ -191,8 +178,6 @@ async function monitor(...args0: MethodArgs): Promise<any> {
     } catch (err) {
       // push this error, the loop continues
       results.push({ ok: false, data: err, path });
-    } finally {
-      spinner.clearAll();
     }
   }
   // Part 2: process the output from the Registry

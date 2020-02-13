@@ -1,10 +1,10 @@
 import * as fs from 'fs';
 import * as _ from 'lodash';
-import * as path from 'path';
 import * as debugModule from 'debug';
 import * as pathUtil from 'path';
 import * as moduleToObject from 'snyk-module';
 import * as depGraphLib from '@snyk/dep-graph';
+import { Spinner } from 'cli-spinner';
 
 import {
   TestResult,
@@ -37,7 +37,6 @@ import { getDepsFromPlugin } from '../plugins/get-deps-from-plugin';
 import { ScannedProjectCustom } from '../plugins/get-multi-plugin-result';
 
 import request = require('../request');
-import spinner = require('../spinner');
 import { extractPackageManager } from '../plugins/extract-package-manager';
 import { getSubProjectCount } from '../plugins/get-sub-project-count';
 
@@ -83,9 +82,12 @@ async function runTest(
   options: Options & TestOptions,
 ): Promise<TestResult[]> {
   const results: TestResult[] = [];
-  const spinnerLbl = 'Querying vulnerabilities database...';
+  const spinner = new Spinner('Finding projects...');
+  spinner.setSpinnerString('|/-\\');
+  spinner.start();
   try {
     const payloads = await assemblePayloads(root, options);
+
     for (const payload of payloads) {
       const payloadPolicy = payload.body && payload.body.policy;
       const depGraph = payload.body && payload.body.depGraph;
@@ -97,6 +99,9 @@ async function runTest(
         _.get(payload, 'body.originalProjectName');
       const foundProjectCount = _.get(payload, 'body.foundProjectCount');
       const displayTargetFile = _.get(payload, 'body.displayTargetFile');
+      spinner.setSpinnerTitle(
+        `Detected ${pkgManager} project: ${displayTargetFile}`,
+      );
 
       let dockerfilePackages;
       if (
@@ -106,10 +111,10 @@ async function runTest(
       ) {
         dockerfilePackages = payload.body.docker.dockerfilePackages;
       }
-      await spinner(spinnerLbl);
       analytics.add('depGraph', !!depGraph);
       analytics.add('isDocker', !!(payload.body && payload.body.docker));
       // Type assertion might be a lie, but we are correcting that below
+      spinner.setSpinnerTitle('Querying vulnerabilities database...');
       let res = (await sendTestPayload(payload)) as LegacyVulnApiResult;
 
       // TODO: docker doesn't have a package manager
@@ -199,8 +204,15 @@ async function runTest(
       };
       results.push(result);
     }
+    spinner.stop();
     return results;
   } catch (error) {
+    spinner.setSpinnerTitle(
+      error.userMessage ||
+        error.message ||
+        `Failed to test ${packageManager} project`,
+    );
+
     debug('Error running test', { error });
     // handling denial from registry because of the feature flag
     // currently done for go.mod
@@ -215,7 +227,7 @@ async function runTest(
       error.code,
     );
   } finally {
-    spinner.clear<void>(spinnerLbl)();
+    spinner.stop(true);
   }
 }
 
@@ -283,175 +295,156 @@ async function assembleLocalPayloads(
   root,
   options: Options & TestOptions,
 ): Promise<Payload[]> {
-  // For --all-projects packageManager is yet undefined here. Use 'all'
-  const analysisType =
-    (options.docker ? 'docker' : options.packageManager) || 'all';
-  const spinnerLbl =
-    'Analyzing ' +
-    analysisType +
-    ' dependencies for ' +
-    (path.relative('.', path.join(root, options.file || '')) ||
-      path.relative('..', '.') + ' project dir');
+  const payloads: Payload[] = [];
 
-  try {
-    const payloads: Payload[] = [];
-
-    await spinner(spinnerLbl);
-    const deps = await getDepsFromPlugin(root, options);
-    analytics.add('pluginName', deps.plugin.name);
-    const javaVersion = _.get(
-      deps.plugin,
-      'meta.versionBuildInfo.metaBuildVersion.javaVersion',
-      null,
-    );
-    const mvnVersion = _.get(
-      deps.plugin,
-      'meta.versionBuildInfo.metaBuildVersion.mvnVersion',
-      null,
-    );
-    if (javaVersion) {
-      analytics.add('javaVersion', javaVersion);
-    }
-    if (mvnVersion) {
-      analytics.add('mvnVersion', mvnVersion);
-    }
-
-    for (const scannedProject of deps.scannedProjects) {
-      const pkg = scannedProject.depTree;
-      if (options['print-deps']) {
-        await spinner.clear<void>(spinnerLbl)();
-        maybePrintDeps(options, pkg);
-      }
-      const project = scannedProject as ScannedProjectCustom;
-      const packageManager = extractPackageManager(project, deps, options);
-
-      if (pkg.docker) {
-        const baseImageFromDockerfile = pkg.docker.baseImage;
-        if (!baseImageFromDockerfile && options['base-image']) {
-          pkg.docker.baseImage = options['base-image'];
-        }
-
-        if (baseImageFromDockerfile && deps.plugin && deps.plugin.imageLayers) {
-          analytics.add('BaseImage', baseImageFromDockerfile);
-          analytics.add('imageLayers', deps.plugin.imageLayers);
-        }
-      }
-
-      let policyLocations: string[] = [options['policy-path'] || root];
-      if (options.docker) {
-        policyLocations = policyLocations.filter((loc) => {
-          return loc !== root;
-        });
-      } else if (
-        packageManager &&
-        ['npm', 'yarn'].indexOf(packageManager) > -1
-      ) {
-        policyLocations = policyLocations.concat(pluckPolicies(pkg));
-      }
-      debug('policies found', policyLocations);
-
-      analytics.add('policies', policyLocations.length);
-      analytics.add('packageManager', packageManager);
-      addPackageAnalytics(pkg);
-
-      let policy;
-      if (policyLocations.length > 0) {
-        try {
-          policy = await snyk.policy.load(policyLocations, options);
-        } catch (err) {
-          // note: inline catch, to handle error from .load
-          //   if the .snyk file wasn't found, it is fine
-          if (err.code !== 'ENOENT') {
-            throw err;
-          }
-        }
-      }
-
-      // todo: normalize what target file gets used across plugins and functions
-      const targetFile =
-        scannedProject.targetFile || deps.plugin.targetFile || options.file;
-
-      // Forcing options.path to be a string as pathUtil requires is to be stringified
-      const targetFileRelativePath = targetFile
-        ? pathUtil.join(pathUtil.resolve(`${options.path}`), targetFile)
-        : '';
-
-      let body: PayloadBody = {
-        // WARNING: be careful changing this as it affects project uniqueness
-        targetFile: project.plugin.targetFile,
-
-        // TODO: Remove relativePath prop once we gather enough ruby related logs
-        targetFileRelativePath: `${targetFileRelativePath}`, // Forcing string
-        projectNameOverride: options.projectName,
-        originalProjectName: pkg.name,
-        policy: policy && policy.toString(),
-        foundProjectCount: getSubProjectCount(deps),
-        displayTargetFile: targetFile,
-        docker: pkg.docker,
-        hasDevDependencies: (pkg as any).hasDevDependencies,
-        target: await projectMetadata.getInfo(pkg, options),
-      };
-
-      if (options.vulnEndpoint) {
-        // options.vulnEndpoint is only used by `snyk protect` (i.e. local filesystem tests).
-        body = { ...body, ...pkg };
-      } else {
-        // Graphs are more compact and robust representations.
-        // Legacy parts of the code are still using trees, but will eventually be fully migrated.
-        debug('converting dep-tree to dep-graph', {
-          name: pkg.name,
-          targetFile: scannedProject.targetFile || options.file,
-        });
-        let depGraph = await depGraphLib.legacy.depTreeToGraph(
-          pkg,
-          packageManager!,
-        );
-
-        debug('done converting dep-tree to dep-graph', {
-          uniquePkgsCount: depGraph.getPkgs().length,
-        });
-        if (options['prune-repeated-subdependencies'] && packageManager) {
-          debug('Trying to prune the graph');
-          const prePruneDepCount = countPathsToGraphRoot(depGraph);
-          debug('pre prunedPathsCount: ' + prePruneDepCount);
-
-          depGraph = await pruneGraph(depGraph, packageManager);
-
-          analytics.add('prePrunedPathsCount', prePruneDepCount);
-          const postPruneDepCount = countPathsToGraphRoot(depGraph);
-          debug('post prunedPathsCount: ' + postPruneDepCount);
-          analytics.add('postPrunedPathsCount', postPruneDepCount);
-        }
-        body.depGraph = depGraph;
-      }
-
-      const payload: Payload = {
-        method: 'POST',
-        url: config.API + (options.vulnEndpoint || '/test-dep-graph'),
-        json: true,
-        headers: {
-          'x-is-ci': isCI(),
-          authorization: 'token ' + (snyk as any).api,
-        },
-        qs: common.assembleQueryString(options),
-        body,
-      };
-
-      if (packageManager && ['yarn', 'npm'].indexOf(packageManager) !== -1) {
-        const isLockFileBased =
-          targetFile &&
-          (targetFile.endsWith('package-lock.json') ||
-            targetFile.endsWith('yarn.lock'));
-        if (!isLockFileBased || options.traverseNodeModules) {
-          payload.modules = pkg as DepTreeFromResolveDeps; // See the output of resolve-deps
-        }
-      }
-      payloads.push(payload);
-    }
-    return payloads;
-  } finally {
-    await spinner.clear<void>(spinnerLbl)();
+  const deps = await getDepsFromPlugin(root, options);
+  analytics.add('pluginName', deps.plugin.name);
+  const javaVersion = _.get(
+    deps.plugin,
+    'meta.versionBuildInfo.metaBuildVersion.javaVersion',
+    null,
+  );
+  const mvnVersion = _.get(
+    deps.plugin,
+    'meta.versionBuildInfo.metaBuildVersion.mvnVersion',
+    null,
+  );
+  if (javaVersion) {
+    analytics.add('javaVersion', javaVersion);
   }
+  if (mvnVersion) {
+    analytics.add('mvnVersion', mvnVersion);
+  }
+
+  for (const scannedProject of deps.scannedProjects) {
+    const pkg = scannedProject.depTree;
+    if (options['print-deps']) {
+      maybePrintDeps(options, pkg);
+    }
+    const project = scannedProject as ScannedProjectCustom;
+    const packageManager = extractPackageManager(project, deps, options);
+
+    if (pkg.docker) {
+      const baseImageFromDockerfile = pkg.docker.baseImage;
+      if (!baseImageFromDockerfile && options['base-image']) {
+        pkg.docker.baseImage = options['base-image'];
+      }
+
+      if (baseImageFromDockerfile && deps.plugin && deps.plugin.imageLayers) {
+        analytics.add('BaseImage', baseImageFromDockerfile);
+        analytics.add('imageLayers', deps.plugin.imageLayers);
+      }
+    }
+
+    let policyLocations: string[] = [options['policy-path'] || root];
+    if (options.docker) {
+      policyLocations = policyLocations.filter((loc) => {
+        return loc !== root;
+      });
+    } else if (packageManager && ['npm', 'yarn'].indexOf(packageManager) > -1) {
+      policyLocations = policyLocations.concat(pluckPolicies(pkg));
+    }
+    debug('policies found', policyLocations);
+
+    analytics.add('policies', policyLocations.length);
+    analytics.add('packageManager', packageManager);
+    addPackageAnalytics(pkg);
+
+    let policy;
+    if (policyLocations.length > 0) {
+      try {
+        policy = await snyk.policy.load(policyLocations, options);
+      } catch (err) {
+        // note: inline catch, to handle error from .load
+        //   if the .snyk file wasn't found, it is fine
+        if (err.code !== 'ENOENT') {
+          throw err;
+        }
+      }
+    }
+
+    // todo: normalize what target file gets used across plugins and functions
+    const targetFile =
+      scannedProject.targetFile || deps.plugin.targetFile || options.file;
+
+    // Forcing options.path to be a string as pathUtil requires is to be stringified
+    const targetFileRelativePath = targetFile
+      ? pathUtil.join(pathUtil.resolve(`${options.path}`), targetFile)
+      : '';
+
+    let body: PayloadBody = {
+      // WARNING: be careful changing this as it affects project uniqueness
+      targetFile: project.plugin.targetFile,
+
+      // TODO: Remove relativePath prop once we gather enough ruby related logs
+      targetFileRelativePath: `${targetFileRelativePath}`, // Forcing string
+      projectNameOverride: options.projectName,
+      originalProjectName: pkg.name,
+      policy: policy && policy.toString(),
+      foundProjectCount: getSubProjectCount(deps),
+      displayTargetFile: targetFile,
+      docker: pkg.docker,
+      hasDevDependencies: (pkg as any).hasDevDependencies,
+      target: await projectMetadata.getInfo(pkg, options),
+    };
+
+    if (options.vulnEndpoint) {
+      // options.vulnEndpoint is only used by `snyk protect` (i.e. local filesystem tests).
+      body = { ...body, ...pkg };
+    } else {
+      // Graphs are more compact and robust representations.
+      // Legacy parts of the code are still using trees, but will eventually be fully migrated.
+      debug('converting dep-tree to dep-graph', {
+        name: pkg.name,
+        targetFile: scannedProject.targetFile || options.file,
+      });
+      let depGraph = await depGraphLib.legacy.depTreeToGraph(
+        pkg,
+        packageManager!,
+      );
+
+      debug('done converting dep-tree to dep-graph', {
+        uniquePkgsCount: depGraph.getPkgs().length,
+      });
+      if (options['prune-repeated-subdependencies'] && packageManager) {
+        debug('Trying to prune the graph');
+        const prePruneDepCount = countPathsToGraphRoot(depGraph);
+        debug('pre prunedPathsCount: ' + prePruneDepCount);
+
+        depGraph = await pruneGraph(depGraph, packageManager);
+
+        analytics.add('prePrunedPathsCount', prePruneDepCount);
+        const postPruneDepCount = countPathsToGraphRoot(depGraph);
+        debug('post prunedPathsCount: ' + postPruneDepCount);
+        analytics.add('postPrunedPathsCount', postPruneDepCount);
+      }
+      body.depGraph = depGraph;
+    }
+
+    const payload: Payload = {
+      method: 'POST',
+      url: config.API + (options.vulnEndpoint || '/test-dep-graph'),
+      json: true,
+      headers: {
+        'x-is-ci': isCI(),
+        authorization: 'token ' + (snyk as any).api,
+      },
+      qs: common.assembleQueryString(options),
+      body,
+    };
+
+    if (packageManager && ['yarn', 'npm'].indexOf(packageManager) !== -1) {
+      const isLockFileBased =
+        targetFile &&
+        (targetFile.endsWith('package-lock.json') ||
+          targetFile.endsWith('yarn.lock'));
+      if (!isLockFileBased || options.traverseNodeModules) {
+        payload.modules = pkg as DepTreeFromResolveDeps; // See the output of resolve-deps
+      }
+    }
+    payloads.push(payload);
+  }
+  return payloads;
 }
 
 // Payload to send to the Registry for scanning a remote package.

@@ -6,7 +6,7 @@ import { TestOptions, Options, MonitorOptions, PluginMetadata } from '../types';
 import { detectPackageManagerFromFile } from '../detect';
 import { SupportedPackageManagers } from '../package-managers';
 import { getSinglePluginResult } from './get-single-plugin-result';
-import { convertSingleResultToMultiCustom } from './convert-single-splugin-res-to-multi-custom';
+import { convertSingleResultToMultiCustom } from './convert-single-plugin-res-to-multi-custom';
 import { convertMultiResultToMultiCustom } from './convert-multi-plugin-res-to-multi-custom';
 
 export interface ScannedProjectCustom

@@ -11,18 +11,16 @@ import {
   detectPackageManagerFromFile,
 } from '../detect';
 import analytics = require('../analytics');
-import { convertSingleResultToMultiCustom } from './convert-single-splugin-res-to-multi-custom';
+import { convertSingleResultToMultiCustom } from './convert-single-plugin-res-to-multi-custom';
 import { convertMultiResultToMultiCustom } from './convert-multi-plugin-res-to-multi-custom';
 
 const debug = debugModule('snyk');
 
-// Force getDepsFromPlugin to return scannedProjects for processing
 export async function getDepsFromPlugin(
   root: string,
   options: Options & (TestOptions | MonitorOptions),
 ): Promise<pluginApi.MultiProjectResult> {
   let inspectRes: pluginApi.InspectResult;
-
   if (options.allProjects) {
     const levelsDeep = options.detectionDepth;
     const ignore = options.exclude ? options.exclude.split(',') : [];
@@ -39,7 +37,11 @@ export async function getDepsFromPlugin(
     if (targetFiles.length === 0) {
       throw NoSupportedManifestsFoundError([root]);
     }
-    inspectRes = await getMultiPluginResult(root, options, targetFiles);
+    inspectRes = await getMultiPluginResult(
+      root,
+      options,
+      targetFiles,
+    );
     const analyticData = {
       scannedProjects: inspectRes.scannedProjects.length,
       targetFiles,
@@ -53,6 +55,7 @@ export async function getDepsFromPlugin(
     return inspectRes;
   }
 
+  // old style test
   // TODO: is this needed for the auto detect handling above?
   // don't override options.file if scanning multiple files at once
   if (!options.scanAllUnmanaged) {
