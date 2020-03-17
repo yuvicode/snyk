@@ -1,0 +1,4006 @@
+[
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --bold --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=40 \"Linking C static library libz.a\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-DZLIB_DLL",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-fPIC",
+            "-o",
+            "CMakeFiles/zlib.dir/inffast.o",
+            "-c",
+            "/root/tracer/zlib/inffast.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/zutil.o",
+            "-c",
+            "/root/tracer/zlib/zutil.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "ZLIB_DLL",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/trees.c",
+            "-quiet",
+            "-dumpbase",
+            "trees.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlib.dir/trees.o",
+            "-fPIC",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccWXTnOZ.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/example.dir/test/example.o",
+            "/tmp/cczbmNPp.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=1 \"Building C object CMakeFiles/example.dir/test/example.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/lusr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--bold",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=8",
+            "Linking C executable minigzip64"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/gzread.o",
+            "-c",
+            "/root/tracer/zlib/gzread.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=37",
+            "Building C object CMakeFiles/zlibstatic.dir/trees.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlib.dir/infback.o",
+            "/tmp/ccp4vrBO.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=10",
+            "Building C object CMakeFiles/zlib.dir/compress.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "ZLIB_DLL",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/gzclose.c",
+            "-quiet",
+            "-dumpbase",
+            "gzclose.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlib.dir/gzclose.o",
+            "-fPIC",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccjqRGEy.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/zutil.o",
+            "/tmp/ccwtUaJ5.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-P",
+            "CMakeFiles/zlibstatic.dir/cmake_clean_target.cmake"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/inflate.o",
+            "/tmp/ccenNPtB.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=14 \"Building C object CMakeFiles/zlib.dir/gzlib.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/gzread.o",
+            "/tmp/cc59Gdcz.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_link_script",
+            "CMakeFiles/minigzip.dir/link.txt",
+            "--verbose="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_link_script",
+            "CMakeFiles/example.dir/link.txt",
+            "--verbose="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-DZLIB_DLL",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-fPIC",
+            "-o",
+            "CMakeFiles/zlib.dir/zutil.o",
+            "-c",
+            "/root/tracer/zlib/zutil.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=14",
+            "Building C object CMakeFiles/zlib.dir/gzlib.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=38",
+            "Building C object CMakeFiles/zlibstatic.dir/uncompr.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-DZLIB_DLL",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-fPIC",
+            "-o",
+            "CMakeFiles/zlib.dir/inftrees.o",
+            "-c",
+            "/root/tracer/zlib/inftrees.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --bold --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=24 \"Linking C shared library libz.so\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/uncompr.o",
+            "-c",
+            "/root/tracer/zlib/uncompr.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "ZLIB_DLL",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/gzread.c",
+            "-quiet",
+            "-dumpbase",
+            "gzread.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlib.dir/gzread.o",
+            "-fPIC",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccLEQYnG.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/gzlib.o",
+            "/tmp/cc2Q9R2r.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=32 \"Building C object CMakeFiles/zlibstatic.dir/gzwrite.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/inflate.o",
+            "-c",
+            "/root/tracer/zlib/inflate.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/collect2",
+        "args": [
+            "-plugin",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so",
+            "-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper",
+            "-plugin-opt=-fresolution=/tmp/cc5FG9PP.res",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "-plugin-opt=-pass-through=-lc",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "--build-id",
+            "--eh-frame-hdr",
+            "-m",
+            "elf_x86_64",
+            "--hash-style=gnu",
+            "--as-needed",
+            "-export-dynamic",
+            "-dynamic-linker",
+            "/lib64/ld-linux-x86-64.so.2",
+            "-pie",
+            "-z",
+            "now",
+            "-z",
+            "relro",
+            "-o",
+            "example64",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib",
+            "-L/lib/x86_64-linux-gnu",
+            "-L/lib/../lib",
+            "-L/usr/lib/x86_64-linux-gnu",
+            "-L/usr/lib/../lib",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../..",
+            "CMakeFiles/example64.dir/test/example.o",
+            "-rpath",
+            "/root/tracer/zlib/build",
+            "libz.so.1.2.11",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "-lc",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "ZLIB_DLL",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/compress.c",
+            "-quiet",
+            "-dumpbase",
+            "compress.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlib.dir/compress.o",
+            "-fPIC",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccWNRbqg.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/gzclose.o",
+            "/tmp/ccrv7FWq.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/ld",
+        "args": [
+            "-plugin",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so",
+            "-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper",
+            "-plugin-opt=-fresolution=/tmp/ccxzGDYu.res",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "-plugin-opt=-pass-through=-lc",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "--build-id",
+            "--eh-frame-hdr",
+            "-m",
+            "elf_x86_64",
+            "--hash-style=gnu",
+            "--as-needed",
+            "-export-dynamic",
+            "-dynamic-linker",
+            "/lib64/ld-linux-x86-64.so.2",
+            "-pie",
+            "-z",
+            "now",
+            "-z",
+            "relro",
+            "-o",
+            "example",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib",
+            "-L/lib/x86_64-linux-gnu",
+            "-L/lib/../lib",
+            "-L/usr/lib/x86_64-linux-gnu",
+            "-L/usr/lib/../lib",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../..",
+            "CMakeFiles/example.dir/test/example.o",
+            "-rpath",
+            "/root/tracer/zlib/build",
+            "libz.so.1.2.11",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "-lc",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlib.dir/inffast.o",
+            "/tmp/ccfkFuIV.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=25 \"Building C object CMakeFiles/zlibstatic.dir/adler32.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/collect2",
+        "args": [
+            "-plugin",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so",
+            "-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper",
+            "-plugin-opt=-fresolution=/tmp/ccxzGDYu.res",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "-plugin-opt=-pass-through=-lc",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "--build-id",
+            "--eh-frame-hdr",
+            "-m",
+            "elf_x86_64",
+            "--hash-style=gnu",
+            "--as-needed",
+            "-export-dynamic",
+            "-dynamic-linker",
+            "/lib64/ld-linux-x86-64.so.2",
+            "-pie",
+            "-z",
+            "now",
+            "-z",
+            "relro",
+            "-o",
+            "example",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib",
+            "-L/lib/x86_64-linux-gnu",
+            "-L/lib/../lib",
+            "-L/usr/lib/x86_64-linux-gnu",
+            "-L/usr/lib/../lib",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../..",
+            "CMakeFiles/example.dir/test/example.o",
+            "-rpath",
+            "/root/tracer/zlib/build",
+            "libz.so.1.2.11",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "-lc",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=23",
+            "Building C object CMakeFiles/zlib.dir/zutil.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "cd /root/tracer/zlib/build && /usr/bin/cmake -E cmake_depends \"Unix Makefiles\" /root/tracer/zlib /root/tracer/zlib /root/tracer/zlib/build /root/tracer/zlib/build /root/tracer/zlib/build/CMakeFiles/minigzip64.dir/DependInfo.cmake --color="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40",
+            "Built target zlibstatic"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/deflate.o",
+            "-c",
+            "/root/tracer/zlib/deflate.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlib.dir/compress.o",
+            "/tmp/ccWNRbqg.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24",
+            "Built target zlib"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/inftrees.o",
+            "-c",
+            "/root/tracer/zlib/inftrees.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/collect2",
+        "args": [
+            "-plugin",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so",
+            "-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper",
+            "-plugin-opt=-fresolution=/tmp/ccODHWkE.res",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "-plugin-opt=-pass-through=-lc",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "--build-id",
+            "--eh-frame-hdr",
+            "-m",
+            "elf_x86_64",
+            "--hash-style=gnu",
+            "--as-needed",
+            "-export-dynamic",
+            "-dynamic-linker",
+            "/lib64/ld-linux-x86-64.so.2",
+            "-pie",
+            "-z",
+            "now",
+            "-z",
+            "relro",
+            "-o",
+            "minigzip",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib",
+            "-L/lib/x86_64-linux-gnu",
+            "-L/lib/../lib",
+            "-L/usr/lib/x86_64-linux-gnu",
+            "-L/usr/lib/../lib",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../..",
+            "CMakeFiles/minigzip.dir/test/minigzip.o",
+            "-rpath",
+            "/root/tracer/zlib/build",
+            "libz.so.1.2.11",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "-lc",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "ZLIB_DLL",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/deflate.c",
+            "-quiet",
+            "-dumpbase",
+            "deflate.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlib.dir/deflate.o",
+            "-fPIC",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/cceCy1mn.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=29",
+            "Building C object CMakeFiles/zlibstatic.dir/gzclose.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=7 \"Building C object CMakeFiles/minigzip64.dir/test/minigzip.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=37 \"Building C object CMakeFiles/zlibstatic.dir/trees.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_link_script",
+            "CMakeFiles/example64.dir/link.txt",
+            "--verbose="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/test/example.c",
+            "-quiet",
+            "-dumpbase",
+            "example.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/example.dir/test/example.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/cczbmNPp.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=7,8 \"Built target minigzip64\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/gzread.c",
+            "-quiet",
+            "-dumpbase",
+            "gzread.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlibstatic.dir/gzread.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/cc59Gdcz.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=9",
+            "Building C object CMakeFiles/zlib.dir/adler32.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/infback.o",
+            "-c",
+            "/root/tracer/zlib/infback.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--bold",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=4",
+            "Linking C executable example64"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=15 \"Building C object CMakeFiles/zlib.dir/gzread.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "ZLIB_DLL",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/adler32.c",
+            "-quiet",
+            "-dumpbase",
+            "adler32.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlib.dir/adler32.o",
+            "-fPIC",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccb4Mz8e.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/minigzip.dir/test/minigzip.o",
+            "/tmp/ccGmGYdz.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlib.dir/zutil.o",
+            "/tmp/cc40lepd.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-DZLIB_DLL",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-fPIC",
+            "-o",
+            "CMakeFiles/zlib.dir/gzlib.o",
+            "-c",
+            "/root/tracer/zlib/gzlib.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-DZLIB_DLL",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-fPIC",
+            "-o",
+            "CMakeFiles/zlib.dir/uncompr.o",
+            "-c",
+            "/root/tracer/zlib/uncompr.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=10 \"Building C object CMakeFiles/zlib.dir/compress.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --bold --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=4 \"Linking C executable example64\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/inftrees.o",
+            "/tmp/ccgUHA3M.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-rdynamic",
+            "CMakeFiles/example.dir/test/example.o",
+            "-o",
+            "example",
+            "-Wl,-rpath,/root/tracer/zlib/build",
+            "libz.so.1.2.11"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--bold",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=40",
+            "Linking C static library libz.a"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=27",
+            "Building C object CMakeFiles/zlibstatic.dir/crc32.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "ZLIB_DLL",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/gzwrite.c",
+            "-quiet",
+            "-dumpbase",
+            "gzwrite.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlib.dir/gzwrite.o",
+            "-fPIC",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccUoISMJ.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/gzwrite.o",
+            "-c",
+            "/root/tracer/zlib/gzwrite.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=31 \"Building C object CMakeFiles/zlibstatic.dir/gzread.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/example.dir/test/example.o",
+            "-c",
+            "/root/tracer/zlib/test/example.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/adler32.c",
+            "-quiet",
+            "-dumpbase",
+            "adler32.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlibstatic.dir/adler32.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccJC5ZM0.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=20",
+            "Building C object CMakeFiles/zlib.dir/inffast.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/gzwrite.c",
+            "-quiet",
+            "-dumpbase",
+            "gzwrite.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlibstatic.dir/gzwrite.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/cc0v0PrH.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_depends",
+            "Unix Makefiles",
+            "/root/tracer/zlib",
+            "/root/tracer/zlib",
+            "/root/tracer/zlib/build",
+            "/root/tracer/zlib/build",
+            "/root/tracer/zlib/build/CMakeFiles/example.dir/DependInfo.cmake",
+            "--color="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "ZLIB_DLL",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/inflate.c",
+            "-quiet",
+            "-dumpbase",
+            "inflate.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlib.dir/inflate.o",
+            "-fPIC",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccYCoHdH.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_progress_start",
+            "/root/tracer/zlib/build/CMakeFiles",
+            "/root/tracer/zlib/build/CMakeFiles/progress.marks"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=22",
+            "Building C object CMakeFiles/zlib.dir/uncompr.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlib.dir/adler32.o",
+            "/tmp/ccb4Mz8e.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=35",
+            "Building C object CMakeFiles/zlibstatic.dir/inftrees.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=19 \"Building C object CMakeFiles/zlib.dir/inftrees.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=13 \"Building C object CMakeFiles/zlib.dir/gzclose.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --bold --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=6 \"Linking C executable minigzip\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "cd /root/tracer/zlib/build && /usr/bin/cmake -E cmake_depends \"Unix Makefiles\" /root/tracer/zlib /root/tracer/zlib /root/tracer/zlib/build /root/tracer/zlib/build /root/tracer/zlib/build/CMakeFiles/zlibstatic.dir/DependInfo.cmake --color="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "make",
+        "args": [
+            "-f",
+            "CMakeFiles/zlib.dir/build.make",
+            "CMakeFiles/zlib.dir/build"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_depends",
+            "Unix Makefiles",
+            "/root/tracer/zlib",
+            "/root/tracer/zlib",
+            "/root/tracer/zlib/build",
+            "/root/tracer/zlib/build",
+            "/root/tracer/zlib/build/CMakeFiles/example64.dir/DependInfo.cmake",
+            "--color="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=5",
+            "Building C object CMakeFiles/minigzip.dir/test/minigzip.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "ZLIB_DLL",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/inftrees.c",
+            "-quiet",
+            "-dumpbase",
+            "inftrees.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlib.dir/inftrees.o",
+            "-fPIC",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccmyB6iU.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "ZLIB_DLL",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/uncompr.c",
+            "-quiet",
+            "-dumpbase",
+            "uncompr.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlib.dir/uncompr.o",
+            "-fPIC",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccxMIP76.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-DZLIB_DLL",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-fPIC",
+            "-o",
+            "CMakeFiles/zlib.dir/gzread.o",
+            "-c",
+            "/root/tracer/zlib/gzread.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=1,2 \"Built target example\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/test/minigzip.c",
+            "-quiet",
+            "-dumpbase",
+            "minigzip.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/minigzip.dir/test/minigzip.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccGmGYdz.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_link_script",
+            "CMakeFiles/zlibstatic.dir/link.txt",
+            "--verbose="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/inffast.o",
+            "-c",
+            "/root/tracer/zlib/inffast.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/minigzip64.dir/test/minigzip.o",
+            "/tmp/ccbRFs3J.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "make",
+        "args": [
+            "-f",
+            "CMakeFiles/example64.dir/build.make",
+            "CMakeFiles/example64.dir/build"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/uncompr.o",
+            "/tmp/ccTGsOA2.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=30 \"Building C object CMakeFiles/zlibstatic.dir/gzlib.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=9 \"Building C object CMakeFiles/zlib.dir/adler32.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/trees.o",
+            "/tmp/ccS3eaNV.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=21 \"Building C object CMakeFiles/zlib.dir/trees.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/inffast.o",
+            "/tmp/ccLcdqJP.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "make",
+        "args": [
+            "-f",
+            "CMakeFiles/zlibstatic.dir/build.make",
+            "CMakeFiles/zlibstatic.dir/build"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "make",
+        "args": [
+            "-f",
+            "CMakeFiles/minigzip64.dir/build.make",
+            "CMakeFiles/minigzip64.dir/depend"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=3,4",
+            "Built target example64"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "make",
+        "args": [
+            "-f",
+            "CMakeFiles/zlib.dir/build.make",
+            "CMakeFiles/zlib.dir/depend"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlib.dir/gzread.o",
+            "/tmp/ccLEQYnG.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/collect2",
+        "args": [
+            "-plugin",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so",
+            "-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper",
+            "-plugin-opt=-fresolution=/tmp/ccphz8PO.res",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "-plugin-opt=-pass-through=-lc",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "--build-id",
+            "--eh-frame-hdr",
+            "-m",
+            "elf_x86_64",
+            "--hash-style=gnu",
+            "--as-needed",
+            "-export-dynamic",
+            "-dynamic-linker",
+            "/lib64/ld-linux-x86-64.so.2",
+            "-pie",
+            "-z",
+            "now",
+            "-z",
+            "relro",
+            "-o",
+            "minigzip64",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib",
+            "-L/lib/x86_64-linux-gnu",
+            "-L/lib/../lib",
+            "-L/usr/lib/x86_64-linux-gnu",
+            "-L/usr/lib/../lib",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../..",
+            "CMakeFiles/minigzip64.dir/test/minigzip.o",
+            "-rpath",
+            "/root/tracer/zlib/build",
+            "libz.so.1.2.11",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "-lc",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=21",
+            "Building C object CMakeFiles/zlib.dir/trees.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_depends",
+            "Unix Makefiles",
+            "/root/tracer/zlib",
+            "/root/tracer/zlib",
+            "/root/tracer/zlib/build",
+            "/root/tracer/zlib/build",
+            "/root/tracer/zlib/build/CMakeFiles/zlib.dir/DependInfo.cmake",
+            "--color="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/compress.o",
+            "/tmp/ccS06du6.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--bold",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=24",
+            "Linking C shared library libz.so"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=12",
+            "Building C object CMakeFiles/zlib.dir/deflate.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/adler32.o",
+            "/tmp/ccJC5ZM0.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "cd /root/tracer/zlib/build && /usr/bin/cmake -E cmake_depends \"Unix Makefiles\" /root/tracer/zlib /root/tracer/zlib /root/tracer/zlib/build /root/tracer/zlib/build /root/tracer/zlib/build/CMakeFiles/zlib.dir/DependInfo.cmake --color="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=29 \"Building C object CMakeFiles/zlibstatic.dir/gzclose.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/gzlib.o",
+            "-c",
+            "/root/tracer/zlib/gzlib.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=3",
+            "Building C object CMakeFiles/example64.dir/test/example.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/inftrees.c",
+            "-quiet",
+            "-dumpbase",
+            "inftrees.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlibstatic.dir/inftrees.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccgUHA3M.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-DZLIB_DLL",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-fPIC",
+            "-o",
+            "CMakeFiles/zlib.dir/compress.o",
+            "-c",
+            "/root/tracer/zlib/compress.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=39",
+            "Building C object CMakeFiles/zlibstatic.dir/zutil.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=22 \"Building C object CMakeFiles/zlib.dir/uncompr.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=5 \"Building C object CMakeFiles/minigzip.dir/test/minigzip.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=16 \"Building C object CMakeFiles/zlib.dir/gzwrite.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=34",
+            "Building C object CMakeFiles/zlibstatic.dir/infback.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-H/root/tracer/zlib",
+            "-B/root/tracer/zlib/build",
+            "--check-build-system",
+            "CMakeFiles/Makefile.cmake",
+            "0"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "ZLIB_DLL",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/gzlib.c",
+            "-quiet",
+            "-dumpbase",
+            "gzlib.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlib.dir/gzlib.o",
+            "-fPIC",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/cci1mxoB.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/crc32.c",
+            "-quiet",
+            "-dumpbase",
+            "crc32.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlibstatic.dir/crc32.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccZBwCwc.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/zutil.c",
+            "-quiet",
+            "-dumpbase",
+            "zutil.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlibstatic.dir/zutil.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccwtUaJ5.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "ZLIB_DLL",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/crc32.c",
+            "-quiet",
+            "-dumpbase",
+            "crc32.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlib.dir/crc32.o",
+            "-fPIC",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccDGHpmj.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/ld",
+        "args": [
+            "-plugin",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so",
+            "-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper",
+            "-plugin-opt=-fresolution=/tmp/ccphz8PO.res",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "-plugin-opt=-pass-through=-lc",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "--build-id",
+            "--eh-frame-hdr",
+            "-m",
+            "elf_x86_64",
+            "--hash-style=gnu",
+            "--as-needed",
+            "-export-dynamic",
+            "-dynamic-linker",
+            "/lib64/ld-linux-x86-64.so.2",
+            "-pie",
+            "-z",
+            "now",
+            "-z",
+            "relro",
+            "-o",
+            "minigzip64",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib",
+            "-L/lib/x86_64-linux-gnu",
+            "-L/lib/../lib",
+            "-L/usr/lib/x86_64-linux-gnu",
+            "-L/usr/lib/../lib",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../..",
+            "CMakeFiles/minigzip64.dir/test/minigzip.o",
+            "-rpath",
+            "/root/tracer/zlib/build",
+            "libz.so.1.2.11",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "-lc",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=17 \"Building C object CMakeFiles/zlib.dir/inflate.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=33 \"Building C object CMakeFiles/zlibstatic.dir/inflate.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=17",
+            "Building C object CMakeFiles/zlib.dir/inflate.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "make",
+        "args": [
+            "-f",
+            "CMakeFiles/minigzip.dir/build.make",
+            "CMakeFiles/minigzip.dir/depend"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "ZLIB_DLL",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/inffast.c",
+            "-quiet",
+            "-dumpbase",
+            "inffast.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlib.dir/inffast.o",
+            "-fPIC",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccfkFuIV.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/inflate.c",
+            "-quiet",
+            "-dumpbase",
+            "inflate.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlibstatic.dir/inflate.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccenNPtB.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=3,4 \"Built target example64\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/gzclose.c",
+            "-quiet",
+            "-dumpbase",
+            "gzclose.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlibstatic.dir/gzclose.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccrv7FWq.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "cd /root/tracer/zlib/build && /usr/bin/cmake -E cmake_depends \"Unix Makefiles\" /root/tracer/zlib /root/tracer/zlib /root/tracer/zlib/build /root/tracer/zlib/build /root/tracer/zlib/build/CMakeFiles/minigzip.dir/DependInfo.cmake --color="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/adler32.o",
+            "-c",
+            "/root/tracer/zlib/adler32.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/compress.o",
+            "-c",
+            "/root/tracer/zlib/compress.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "make",
+        "args": [
+            "-f",
+            "CMakeFiles/minigzip64.dir/build.make",
+            "CMakeFiles/minigzip64.dir/build"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=7",
+            "Building C object CMakeFiles/minigzip64.dir/test/minigzip.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-DZLIB_DLL",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-fPIC",
+            "-o",
+            "CMakeFiles/zlib.dir/trees.o",
+            "-c",
+            "/root/tracer/zlib/trees.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/crc32.o",
+            "-c",
+            "/root/tracer/zlib/crc32.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-DZLIB_DLL",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-fPIC",
+            "-o",
+            "CMakeFiles/zlib.dir/inflate.o",
+            "-c",
+            "/root/tracer/zlib/inflate.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=35 \"Building C object CMakeFiles/zlibstatic.dir/inftrees.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-rdynamic",
+            "CMakeFiles/example64.dir/test/example.o",
+            "-o",
+            "example64",
+            "-Wl,-rpath,/root/tracer/zlib/build",
+            "libz.so.1.2.11"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-D_FILE_OFFSET_BITS=64",
+            "-o",
+            "CMakeFiles/minigzip64.dir/test/minigzip.o",
+            "-c",
+            "/root/tracer/zlib/test/minigzip.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=26",
+            "Building C object CMakeFiles/zlibstatic.dir/compress.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=36",
+            "Building C object CMakeFiles/zlibstatic.dir/inffast.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/ld",
+        "args": [
+            "-plugin",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so",
+            "-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper",
+            "-plugin-opt=-fresolution=/tmp/cc5FG9PP.res",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "-plugin-opt=-pass-through=-lc",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "--build-id",
+            "--eh-frame-hdr",
+            "-m",
+            "elf_x86_64",
+            "--hash-style=gnu",
+            "--as-needed",
+            "-export-dynamic",
+            "-dynamic-linker",
+            "/lib64/ld-linux-x86-64.so.2",
+            "-pie",
+            "-z",
+            "now",
+            "-z",
+            "relro",
+            "-o",
+            "example64",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib",
+            "-L/lib/x86_64-linux-gnu",
+            "-L/lib/../lib",
+            "-L/usr/lib/x86_64-linux-gnu",
+            "-L/usr/lib/../lib",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../..",
+            "CMakeFiles/example64.dir/test/example.o",
+            "-rpath",
+            "/root/tracer/zlib/build",
+            "libz.so.1.2.11",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "-lc",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/trees.o",
+            "-c",
+            "/root/tracer/zlib/trees.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/gzclose.o",
+            "-c",
+            "/root/tracer/zlib/gzclose.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/uncompr.c",
+            "-quiet",
+            "-dumpbase",
+            "uncompr.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlibstatic.dir/uncompr.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccTGsOA2.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/compress.c",
+            "-quiet",
+            "-dumpbase",
+            "compress.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlibstatic.dir/compress.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccS06du6.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_depends",
+            "Unix Makefiles",
+            "/root/tracer/zlib",
+            "/root/tracer/zlib",
+            "/root/tracer/zlib/build",
+            "/root/tracer/zlib/build",
+            "/root/tracer/zlib/build/CMakeFiles/minigzip64.dir/DependInfo.cmake",
+            "--color="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_progress_start",
+            "/root/tracer/zlib/build/CMakeFiles",
+            "0"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=28",
+            "Building C object CMakeFiles/zlibstatic.dir/deflate.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--bold",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=2",
+            "Linking C executable example"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/inffast.c",
+            "-quiet",
+            "-dumpbase",
+            "inffast.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlibstatic.dir/inffast.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccLcdqJP.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=16",
+            "Building C object CMakeFiles/zlib.dir/gzwrite.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/gzwrite.o",
+            "/tmp/cc0v0PrH.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=39 \"Building C object CMakeFiles/zlibstatic.dir/zutil.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=18 \"Building C object CMakeFiles/zlib.dir/infback.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlib.dir/inftrees.o",
+            "/tmp/ccmyB6iU.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-DZLIB_DLL",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-fPIC",
+            "-o",
+            "CMakeFiles/zlib.dir/adler32.o",
+            "-c",
+            "/root/tracer/zlib/adler32.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --bold --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=8 \"Linking C executable minigzip64\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/trees.c",
+            "-quiet",
+            "-dumpbase",
+            "trees.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlibstatic.dir/trees.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccS3eaNV.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --bold --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=2 \"Linking C executable example\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-o",
+            "CMakeFiles/minigzip.dir/test/minigzip.o",
+            "-c",
+            "/root/tracer/zlib/test/minigzip.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=11",
+            "Building C object CMakeFiles/zlib.dir/crc32.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/deflate.c",
+            "-quiet",
+            "-dumpbase",
+            "deflate.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlibstatic.dir/deflate.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/cccXxhnf.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/collect2",
+        "args": [
+            "-plugin",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so",
+            "-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper",
+            "-plugin-opt=-fresolution=/tmp/cca96I2h.res",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "-plugin-opt=-pass-through=-lc",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "--build-id",
+            "--eh-frame-hdr",
+            "-m",
+            "elf_x86_64",
+            "--hash-style=gnu",
+            "--as-needed",
+            "-shared",
+            "-z",
+            "relro",
+            "-o",
+            "libz.so.1.2.11",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib",
+            "-L/lib/x86_64-linux-gnu",
+            "-L/lib/../lib",
+            "-L/usr/lib/x86_64-linux-gnu",
+            "-L/usr/lib/../lib",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../..",
+            "--version-script",
+            "/root/tracer/zlib/zlib.map",
+            "-soname",
+            "libz.so.1",
+            "CMakeFiles/zlib.dir/adler32.o",
+            "CMakeFiles/zlib.dir/compress.o",
+            "CMakeFiles/zlib.dir/crc32.o",
+            "CMakeFiles/zlib.dir/deflate.o",
+            "CMakeFiles/zlib.dir/gzclose.o",
+            "CMakeFiles/zlib.dir/gzlib.o",
+            "CMakeFiles/zlib.dir/gzread.o",
+            "CMakeFiles/zlib.dir/gzwrite.o",
+            "CMakeFiles/zlib.dir/inflate.o",
+            "CMakeFiles/zlib.dir/infback.o",
+            "CMakeFiles/zlib.dir/inftrees.o",
+            "CMakeFiles/zlib.dir/inffast.o",
+            "CMakeFiles/zlib.dir/trees.o",
+            "CMakeFiles/zlib.dir/uncompr.o",
+            "CMakeFiles/zlib.dir/zutil.o",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "-lc",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=32",
+            "Building C object CMakeFiles/zlibstatic.dir/gzwrite.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 \"Built target zlib\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlib.dir/gzclose.o",
+            "/tmp/ccjqRGEy.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "ZLIB_DLL",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/infback.c",
+            "-quiet",
+            "-dumpbase",
+            "infback.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlib.dir/infback.o",
+            "-fPIC",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccp4vrBO.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=1,2",
+            "Built target example"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_symlink_library",
+            "libz.so.1.2.11",
+            "libz.so.1",
+            "libz.so"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-DZLIB_DLL",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-fPIC",
+            "-o",
+            "CMakeFiles/zlib.dir/deflate.o",
+            "-c",
+            "/root/tracer/zlib/deflate.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=19",
+            "Building C object CMakeFiles/zlib.dir/inftrees.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=34 \"Building C object CMakeFiles/zlibstatic.dir/infback.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_depends",
+            "Unix Makefiles",
+            "/root/tracer/zlib",
+            "/root/tracer/zlib",
+            "/root/tracer/zlib/build",
+            "/root/tracer/zlib/build",
+            "/root/tracer/zlib/build/CMakeFiles/zlibstatic.dir/DependInfo.cmake",
+            "--color="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=18",
+            "Building C object CMakeFiles/zlib.dir/infback.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-D_FILE_OFFSET_BITS=64",
+            "-o",
+            "CMakeFiles/example64.dir/test/example.o",
+            "-c",
+            "/root/tracer/zlib/test/example.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/example64.dir/test/example.o",
+            "/tmp/ccb0zGVH.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "make",
+        "args": [
+            "-f",
+            "CMakeFiles/zlibstatic.dir/build.make",
+            "CMakeFiles/zlibstatic.dir/depend"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "make",
+        "args": [
+            "-f",
+            "CMakeFiles/example64.dir/build.make",
+            "CMakeFiles/example64.dir/depend"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "cd /root/tracer/zlib/build && /usr/bin/cmake -E cmake_depends \"Unix Makefiles\" /root/tracer/zlib /root/tracer/zlib /root/tracer/zlib/build /root/tracer/zlib/build /root/tracer/zlib/build/CMakeFiles/example.dir/DependInfo.cmake --color="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-DZLIB_DLL",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-fPIC",
+            "-o",
+            "CMakeFiles/zlib.dir/infback.o",
+            "-c",
+            "/root/tracer/zlib/infback.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=33",
+            "Building C object CMakeFiles/zlibstatic.dir/inflate.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-fPIC",
+            "-Wl,--version-script,/root/tracer/zlib/zlib.map",
+            "-shared",
+            "-Wl,-soname,libz.so.1",
+            "-o",
+            "libz.so.1.2.11",
+            "CMakeFiles/zlib.dir/adler32.o",
+            "CMakeFiles/zlib.dir/compress.o",
+            "CMakeFiles/zlib.dir/crc32.o",
+            "CMakeFiles/zlib.dir/deflate.o",
+            "CMakeFiles/zlib.dir/gzclose.o",
+            "CMakeFiles/zlib.dir/gzlib.o",
+            "CMakeFiles/zlib.dir/gzread.o",
+            "CMakeFiles/zlib.dir/gzwrite.o",
+            "CMakeFiles/zlib.dir/inflate.o",
+            "CMakeFiles/zlib.dir/infback.o",
+            "CMakeFiles/zlib.dir/inftrees.o",
+            "CMakeFiles/zlib.dir/inffast.o",
+            "CMakeFiles/zlib.dir/trees.o",
+            "CMakeFiles/zlib.dir/uncompr.o",
+            "CMakeFiles/zlib.dir/zutil.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=11 \"Building C object CMakeFiles/zlib.dir/crc32.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_link_script",
+            "CMakeFiles/minigzip64.dir/link.txt",
+            "--verbose="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=7,8",
+            "Built target minigzip64"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=1",
+            "Building C object CMakeFiles/example.dir/test/example.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "-D",
+            "_FILE_OFFSET_BITS=64",
+            "/root/tracer/zlib/test/minigzip.c",
+            "-quiet",
+            "-dumpbase",
+            "minigzip.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/minigzip64.dir/test/minigzip.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccbRFs3J.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-DZLIB_DLL",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-fPIC",
+            "-o",
+            "CMakeFiles/zlib.dir/gzwrite.o",
+            "-c",
+            "/root/tracer/zlib/gzwrite.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/ld",
+        "args": [
+            "-plugin",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so",
+            "-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper",
+            "-plugin-opt=-fresolution=/tmp/ccODHWkE.res",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "-plugin-opt=-pass-through=-lc",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "--build-id",
+            "--eh-frame-hdr",
+            "-m",
+            "elf_x86_64",
+            "--hash-style=gnu",
+            "--as-needed",
+            "-export-dynamic",
+            "-dynamic-linker",
+            "/lib64/ld-linux-x86-64.so.2",
+            "-pie",
+            "-z",
+            "now",
+            "-z",
+            "relro",
+            "-o",
+            "minigzip",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib",
+            "-L/lib/x86_64-linux-gnu",
+            "-L/lib/../lib",
+            "-L/usr/lib/x86_64-linux-gnu",
+            "-L/usr/lib/../lib",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../..",
+            "CMakeFiles/minigzip.dir/test/minigzip.o",
+            "-rpath",
+            "/root/tracer/zlib/build",
+            "libz.so.1.2.11",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "-lc",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/crc32.o",
+            "/tmp/ccZBwCwc.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/infback.o",
+            "/tmp/ccTSiuXH.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlib.dir/crc32.o",
+            "/tmp/ccDGHpmj.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=3 \"Building C object CMakeFiles/example64.dir/test/example.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-DZLIB_DLL",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-fPIC",
+            "-o",
+            "CMakeFiles/zlib.dir/gzclose.o",
+            "-c",
+            "/root/tracer/zlib/gzclose.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=23 \"Building C object CMakeFiles/zlib.dir/zutil.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "make",
+        "args": [
+            "-f",
+            "CMakeFiles/example.dir/build.make",
+            "CMakeFiles/example.dir/build"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=25",
+            "Building C object CMakeFiles/zlibstatic.dir/adler32.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlib.dir/gzwrite.o",
+            "/tmp/ccUoISMJ.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=36 \"Building C object CMakeFiles/zlibstatic.dir/inffast.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "touch_nocreate",
+            "libz.so"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlib.dir/deflate.o",
+            "/tmp/cceCy1mn.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40 \"Built target zlibstatic\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/ld",
+        "args": [
+            "-plugin",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so",
+            "-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper",
+            "-plugin-opt=-fresolution=/tmp/cca96I2h.res",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "-plugin-opt=-pass-through=-lc",
+            "-plugin-opt=-pass-through=-lgcc",
+            "-plugin-opt=-pass-through=-lgcc_s",
+            "--build-id",
+            "--eh-frame-hdr",
+            "-m",
+            "elf_x86_64",
+            "--hash-style=gnu",
+            "--as-needed",
+            "-shared",
+            "-z",
+            "relro",
+            "-o",
+            "libz.so.1.2.11",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib",
+            "-L/lib/x86_64-linux-gnu",
+            "-L/lib/../lib",
+            "-L/usr/lib/x86_64-linux-gnu",
+            "-L/usr/lib/../lib",
+            "-L/usr/lib/gcc/x86_64-linux-gnu/7/../../..",
+            "--version-script",
+            "/root/tracer/zlib/zlib.map",
+            "-soname",
+            "libz.so.1",
+            "CMakeFiles/zlib.dir/adler32.o",
+            "CMakeFiles/zlib.dir/compress.o",
+            "CMakeFiles/zlib.dir/crc32.o",
+            "CMakeFiles/zlib.dir/deflate.o",
+            "CMakeFiles/zlib.dir/gzclose.o",
+            "CMakeFiles/zlib.dir/gzlib.o",
+            "CMakeFiles/zlib.dir/gzread.o",
+            "CMakeFiles/zlib.dir/gzwrite.o",
+            "CMakeFiles/zlib.dir/inflate.o",
+            "CMakeFiles/zlib.dir/infback.o",
+            "CMakeFiles/zlib.dir/inftrees.o",
+            "CMakeFiles/zlib.dir/inffast.o",
+            "CMakeFiles/zlib.dir/trees.o",
+            "CMakeFiles/zlib.dir/uncompr.o",
+            "CMakeFiles/zlib.dir/zutil.o",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "-lc",
+            "-lgcc",
+            "--push-state",
+            "--as-needed",
+            "-lgcc_s",
+            "--pop-state",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/ranlib",
+        "args": [
+            "libz.a"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlib.dir/gzlib.o",
+            "/tmp/cci1mxoB.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "make",
+        "args": [
+            "-f",
+            "CMakeFiles/example.dir/build.make",
+            "CMakeFiles/example.dir/depend"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlib.dir/uncompr.o",
+            "/tmp/ccxMIP76.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "make",
+        "args": [
+            "-f",
+            "CMakeFiles/minigzip.dir/build.make",
+            "CMakeFiles/minigzip.dir/build"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-rdynamic",
+            "CMakeFiles/minigzip64.dir/test/minigzip.o",
+            "-o",
+            "minigzip64",
+            "-Wl,-rpath,/root/tracer/zlib/build",
+            "libz.so.1.2.11"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=13",
+            "Building C object CMakeFiles/zlib.dir/gzclose.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/ar",
+        "args": [
+            "qc",
+            "libz.a",
+            "CMakeFiles/zlibstatic.dir/adler32.o",
+            "CMakeFiles/zlibstatic.dir/compress.o",
+            "CMakeFiles/zlibstatic.dir/crc32.o",
+            "CMakeFiles/zlibstatic.dir/deflate.o",
+            "CMakeFiles/zlibstatic.dir/gzclose.o",
+            "CMakeFiles/zlibstatic.dir/gzlib.o",
+            "CMakeFiles/zlibstatic.dir/gzread.o",
+            "CMakeFiles/zlibstatic.dir/gzwrite.o",
+            "CMakeFiles/zlibstatic.dir/inflate.o",
+            "CMakeFiles/zlibstatic.dir/infback.o",
+            "CMakeFiles/zlibstatic.dir/inftrees.o",
+            "CMakeFiles/zlibstatic.dir/inffast.o",
+            "CMakeFiles/zlibstatic.dir/trees.o",
+            "CMakeFiles/zlibstatic.dir/uncompr.o",
+            "CMakeFiles/zlibstatic.dir/zutil.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=5,6",
+            "Built target minigzip"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/gzlib.c",
+            "-quiet",
+            "-dumpbase",
+            "gzlib.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlibstatic.dir/gzlib.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/cc2Q9R2r.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-DZLIB_DLL",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-I/root/tracer/zlib/build",
+            "-I/root/tracer/zlib",
+            "-fPIC",
+            "-o",
+            "CMakeFiles/zlib.dir/crc32.o",
+            "-c",
+            "/root/tracer/zlib/crc32.c"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=12 \"Building C object CMakeFiles/zlib.dir/deflate.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=15",
+            "Building C object CMakeFiles/zlib.dir/gzread.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/infback.c",
+            "-quiet",
+            "-dumpbase",
+            "infback.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlibstatic.dir/infback.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccTSiuXH.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--bold",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=6",
+            "Linking C executable minigzip"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_link_script",
+            "CMakeFiles/zlib.dir/link.txt",
+            "--verbose="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=28 \"Building C object CMakeFiles/zlibstatic.dir/deflate.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "cd /root/tracer/zlib/build && /usr/bin/cmake -E cmake_depends \"Unix Makefiles\" /root/tracer/zlib /root/tracer/zlib /root/tracer/zlib/build /root/tracer/zlib/build /root/tracer/zlib/build/CMakeFiles/example64.dir/DependInfo.cmake --color="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=31",
+            "Building C object CMakeFiles/zlibstatic.dir/gzread.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cc",
+        "args": [
+            "-rdynamic",
+            "CMakeFiles/minigzip.dir/test/minigzip.o",
+            "-o",
+            "minigzip",
+            "-Wl,-rpath,/root/tracer/zlib/build",
+            "libz.so.1.2.11"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlib.dir/trees.o",
+            "/tmp/ccWXTnOZ.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_echo_color",
+            "--switch=",
+            "--green",
+            "--progress-dir=/root/tracer/zlib/build/CMakeFiles",
+            "--progress-num=30",
+            "Building C object CMakeFiles/zlibstatic.dir/gzlib.o"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=20 \"Building C object CMakeFiles/zlib.dir/inffast.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=38 \"Building C object CMakeFiles/zlibstatic.dir/uncompr.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "ZLIB_DLL",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "/root/tracer/zlib/zutil.c",
+            "-quiet",
+            "-dumpbase",
+            "zutil.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/zlib.dir/zutil.o",
+            "-fPIC",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/cc40lepd.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=26 \"Building C object CMakeFiles/zlibstatic.dir/compress.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=5,6 \"Built target minigzip\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "args": [
+            "-quiet",
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "-imultiarch",
+            "x86_64-linux-gnu",
+            "-D",
+            "_LARGEFILE64_SOURCE=1",
+            "-D",
+            "_FILE_OFFSET_BITS=64",
+            "/root/tracer/zlib/test/example.c",
+            "-quiet",
+            "-dumpbase",
+            "example.c",
+            "-mtune=generic",
+            "-march=x86-64",
+            "-auxbase-strip",
+            "CMakeFiles/example64.dir/test/example.o",
+            "-fstack-protector-strong",
+            "-Wformat",
+            "-Wformat-security",
+            "-o",
+            "/tmp/ccb0zGVH.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlibstatic.dir/deflate.o",
+            "/tmp/cccXxhnf.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/bin/sh",
+        "args": [
+            "-c",
+            "/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/root/tracer/zlib/build/CMakeFiles --progress-num=27 \"Building C object CMakeFiles/zlibstatic.dir/crc32.o\""
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "as",
+        "args": [
+            "-I",
+            "/root/tracer/zlib/build",
+            "-I",
+            "/root/tracer/zlib",
+            "--64",
+            "-o",
+            "CMakeFiles/zlib.dir/inflate.o",
+            "/tmp/ccYCoHdH.s"
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "/usr/bin/cmake",
+        "args": [
+            "-E",
+            "cmake_depends",
+            "Unix Makefiles",
+            "/root/tracer/zlib",
+            "/root/tracer/zlib",
+            "/root/tracer/zlib/build",
+            "/root/tracer/zlib/build",
+            "/root/tracer/zlib/build/CMakeFiles/minigzip.dir/DependInfo.cmake",
+            "--color="
+        ]
+    },
+    {
+        "pwd": "/root/tracer/zlib/build",
+        "cmd": "make",
+        "args": [
+            "-f",
+            "CMakeFiles/Makefile2",
+            "all"
+        ]
+    }
+]

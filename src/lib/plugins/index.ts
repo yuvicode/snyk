@@ -8,20 +8,19 @@ import * as goPlugin from 'snyk-go-plugin';
 import * as nugetPlugin from 'snyk-nuget-plugin';
 import * as phpPlugin from 'snyk-php-plugin';
 import * as nodejsPlugin from './nodejs-plugin';
+import * as snykProjectPlugin from './snyk-project';
 import * as cocoapodsPlugin from '@snyk/snyk-cocoapods-plugin';
 import * as types from './types';
-import { SupportedPackageManagers } from '../package-managers';
+import { SupportedProjectTypes } from '../package-managers';
 import { UnsupportedPackageManagerError } from '../errors';
 
 export function loadPlugin(
-  packageManager: SupportedPackageManagers | undefined,
+  projectType: SupportedProjectTypes | undefined,
   options: types.Options = {},
 ): types.Plugin {
-  if (options.docker) {
-    return dockerPlugin;
-  }
-
-  switch (packageManager) {
+  switch (projectType) {
+    case 'docker': 
+      return dockerPlugin;
     case 'npm': {
       return nodejsPlugin;
     }
@@ -43,6 +42,8 @@ export function loadPlugin(
     case 'pip': {
       return pythonPlugin;
     }
+    case 'cpp':
+      return snykProjectPlugin;
     case 'golangdep':
     case 'gomodules':
     case 'govendor': {
@@ -61,7 +62,7 @@ export function loadPlugin(
       return cocoapodsPlugin;
     }
     default: {
-      throw new UnsupportedPackageManagerError(packageManager);
+      throw new UnsupportedPackageManagerError(projectType);
     }
   }
 }

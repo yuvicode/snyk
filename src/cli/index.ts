@@ -219,7 +219,7 @@ async function main() {
     }
 
     checkPaths(args);
-
+    console.log('***** runCommand args', args)
     res = await runCommand(args);
   } catch (error) {
     failed = true;

@@ -1,0 +1,751 @@
+[
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/inflate.c"
+        ],
+        "output": "/tmp/ccljpe0j.s"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccxrr8TL.s"
+        ],
+        "output": "CMakeFiles/zlibstatic.dir/compress.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccT1V6Xe.s"
+        ],
+        "output": "CMakeFiles/zlib.dir/deflate.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccisO75X.s"
+        ],
+        "output": "CMakeFiles/zlib.dir/adler32.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccIasCir.s"
+        ],
+        "output": "CMakeFiles/zlibstatic.dir/infback.o"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/gzlib.c"
+        ],
+        "output": "/tmp/cc9LPGfb.s"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccBwO7Ls.s"
+        ],
+        "output": "CMakeFiles/minigzip64.dir/test/minigzip.o"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/infback.c"
+        ],
+        "output": "/tmp/cc4kBOUD.s"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccOAS1YJ.s"
+        ],
+        "output": "CMakeFiles/zlibstatic.dir/adler32.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccpwOIR5.s"
+        ],
+        "output": "CMakeFiles/zlib.dir/zutil.o"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/crc32.c"
+        ],
+        "output": "/tmp/ccAigPAR.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/gzread.c"
+        ],
+        "output": "/tmp/ccYhnjcg.s"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccYhnjcg.s"
+        ],
+        "output": "CMakeFiles/zlibstatic.dir/gzread.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/cc9LPGfb.s"
+        ],
+        "output": "CMakeFiles/zlibstatic.dir/gzlib.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccNRKMun.s"
+        ],
+        "output": "CMakeFiles/zlib.dir/gzread.o"
+    },
+    {
+        "cmd": "/usr/bin/ld",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so",
+            "/lib64/ld-linux-x86-64.so.2",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o",
+            "CMakeFiles/minigzip.dir/test/minigzip.o",
+            "libz.so.1.2.11",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o"
+        ],
+        "output": "minigzip",
+        "libs": [
+            "gcc",
+            "gcc_s",
+            "c",
+            "gcc",
+            "gcc_s"
+        ],
+        "paths": [
+            "/usr/lib/gcc/x86_64-linux-gnu/7",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib",
+            "/lib/x86_64-linux-gnu",
+            "/lib/../lib",
+            "/usr/lib/x86_64-linux-gnu",
+            "/usr/lib/../lib",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../.."
+        ],
+        "soname": null
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccqzEsMq.s"
+        ],
+        "output": "CMakeFiles/zlib.dir/gzwrite.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccuSLUu5.s"
+        ],
+        "output": "CMakeFiles/zlibstatic.dir/gzclose.o"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/gzwrite.c"
+        ],
+        "output": "/tmp/ccJXy6Yn.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/test/example.c"
+        ],
+        "output": "/tmp/cceEaZOh.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/crc32.c"
+        ],
+        "output": "/tmp/ccgsM7q6.s"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/cceEaZOh.s"
+        ],
+        "output": "CMakeFiles/example.dir/test/example.o"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/gzlib.c"
+        ],
+        "output": "/tmp/ccWfGZfh.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/inffast.c"
+        ],
+        "output": "/tmp/ccm0GOgQ.s"
+    },
+    {
+        "cmd": "/usr/bin/ld",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so",
+            "/lib64/ld-linux-x86-64.so.2",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o",
+            "CMakeFiles/minigzip64.dir/test/minigzip.o",
+            "libz.so.1.2.11",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o"
+        ],
+        "output": "minigzip64",
+        "libs": [
+            "gcc",
+            "gcc_s",
+            "c",
+            "gcc",
+            "gcc_s"
+        ],
+        "paths": [
+            "/usr/lib/gcc/x86_64-linux-gnu/7",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib",
+            "/lib/x86_64-linux-gnu",
+            "/lib/../lib",
+            "/usr/lib/x86_64-linux-gnu",
+            "/usr/lib/../lib",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../.."
+        ],
+        "soname": null
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/inflate.c"
+        ],
+        "output": "/tmp/ccxrijqw.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/inftrees.c"
+        ],
+        "output": "/tmp/ccL7LEPs.s"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccAigPAR.s"
+        ],
+        "output": "CMakeFiles/zlibstatic.dir/crc32.o"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/test/example.c"
+        ],
+        "output": "/tmp/ccm5UT9C.s"
+    },
+    {
+        "cmd": "/usr/bin/ld",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so",
+            "/lib64/ld-linux-x86-64.so.2",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o",
+            "CMakeFiles/example64.dir/test/example.o",
+            "libz.so.1.2.11",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o"
+        ],
+        "output": "example64",
+        "libs": [
+            "gcc",
+            "gcc_s",
+            "c",
+            "gcc",
+            "gcc_s"
+        ],
+        "paths": [
+            "/usr/lib/gcc/x86_64-linux-gnu/7",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib",
+            "/lib/x86_64-linux-gnu",
+            "/lib/../lib",
+            "/usr/lib/x86_64-linux-gnu",
+            "/usr/lib/../lib",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../.."
+        ],
+        "soname": null
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/infback.c"
+        ],
+        "output": "/tmp/ccIasCir.s"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccL7LEPs.s"
+        ],
+        "output": "CMakeFiles/zlibstatic.dir/inftrees.o"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/inftrees.c"
+        ],
+        "output": "/tmp/ccT3aY0L.s"
+    },
+    {
+        "cmd": "/usr/bin/ld",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so",
+            "/lib64/ld-linux-x86-64.so.2",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o",
+            "CMakeFiles/example.dir/test/example.o",
+            "libz.so.1.2.11",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o"
+        ],
+        "output": "example",
+        "libs": [
+            "gcc",
+            "gcc_s",
+            "c",
+            "gcc",
+            "gcc_s"
+        ],
+        "paths": [
+            "/usr/lib/gcc/x86_64-linux-gnu/7",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib",
+            "/lib/x86_64-linux-gnu",
+            "/lib/../lib",
+            "/usr/lib/x86_64-linux-gnu",
+            "/usr/lib/../lib",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../.."
+        ],
+        "soname": null
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/trees.c"
+        ],
+        "output": "/tmp/ccttVNvA.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/gzclose.c"
+        ],
+        "output": "/tmp/ccuSLUu5.s"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccO3HA0n.s"
+        ],
+        "output": "CMakeFiles/zlib.dir/gzclose.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccrBzc63.s"
+        ],
+        "output": "CMakeFiles/zlib.dir/compress.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccWfGZfh.s"
+        ],
+        "output": "CMakeFiles/zlib.dir/gzlib.o"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/adler32.c"
+        ],
+        "output": "/tmp/ccOAS1YJ.s"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccgsM7q6.s"
+        ],
+        "output": "CMakeFiles/zlib.dir/crc32.o"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/uncompr.c"
+        ],
+        "output": "/tmp/ccCrbfCM.s"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccDZ5rGV.s"
+        ],
+        "output": "CMakeFiles/zlibstatic.dir/deflate.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccljpe0j.s"
+        ],
+        "output": "CMakeFiles/zlibstatic.dir/inflate.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccttVNvA.s"
+        ],
+        "output": "CMakeFiles/zlibstatic.dir/trees.o"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/gzclose.c"
+        ],
+        "output": "/tmp/ccO3HA0n.s"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccm5UT9C.s"
+        ],
+        "output": "CMakeFiles/example64.dir/test/example.o"
+    },
+    {
+        "cmd": "/usr/bin/ld",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o",
+            "CMakeFiles/zlib.dir/adler32.o",
+            "CMakeFiles/zlib.dir/compress.o",
+            "CMakeFiles/zlib.dir/crc32.o",
+            "CMakeFiles/zlib.dir/deflate.o",
+            "CMakeFiles/zlib.dir/gzclose.o",
+            "CMakeFiles/zlib.dir/gzlib.o",
+            "CMakeFiles/zlib.dir/gzread.o",
+            "CMakeFiles/zlib.dir/gzwrite.o",
+            "CMakeFiles/zlib.dir/inflate.o",
+            "CMakeFiles/zlib.dir/infback.o",
+            "CMakeFiles/zlib.dir/inftrees.o",
+            "CMakeFiles/zlib.dir/inffast.o",
+            "CMakeFiles/zlib.dir/trees.o",
+            "CMakeFiles/zlib.dir/uncompr.o",
+            "CMakeFiles/zlib.dir/zutil.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o"
+        ],
+        "output": "libz.so.1.2.11",
+        "libs": [
+            "gcc",
+            "gcc_s",
+            "c",
+            "gcc",
+            "gcc_s"
+        ],
+        "paths": [
+            "/usr/lib/gcc/x86_64-linux-gnu/7",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib",
+            "/lib/x86_64-linux-gnu",
+            "/lib/../lib",
+            "/usr/lib/x86_64-linux-gnu",
+            "/usr/lib/../lib",
+            "/usr/lib/gcc/x86_64-linux-gnu/7/../../.."
+        ],
+        "soname": [
+            "libz.so.1"
+        ]
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccT3aY0L.s"
+        ],
+        "output": "CMakeFiles/zlib.dir/inftrees.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccCrbfCM.s"
+        ],
+        "output": "CMakeFiles/zlibstatic.dir/uncompr.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccknsSQ2.s"
+        ],
+        "output": "CMakeFiles/zlib.dir/uncompr.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccxrijqw.s"
+        ],
+        "output": "CMakeFiles/zlib.dir/inflate.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccp5qe8R.s"
+        ],
+        "output": "CMakeFiles/zlibstatic.dir/zutil.o"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/compress.c"
+        ],
+        "output": "/tmp/ccrBzc63.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/deflate.c"
+        ],
+        "output": "/tmp/ccT1V6Xe.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/trees.c"
+        ],
+        "output": "/tmp/ccH0RouR.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/zutil.c"
+        ],
+        "output": "/tmp/ccpwOIR5.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/gzread.c"
+        ],
+        "output": "/tmp/ccNRKMun.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/test/minigzip.c"
+        ],
+        "output": "/tmp/ccBwO7Ls.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/gzwrite.c"
+        ],
+        "output": "/tmp/ccqzEsMq.s"
+    },
+    {
+        "cmd": "/usr/bin/ar",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "CMakeFiles/zlibstatic.dir/adler32.o",
+            "CMakeFiles/zlibstatic.dir/compress.o",
+            "CMakeFiles/zlibstatic.dir/crc32.o",
+            "CMakeFiles/zlibstatic.dir/deflate.o",
+            "CMakeFiles/zlibstatic.dir/gzclose.o",
+            "CMakeFiles/zlibstatic.dir/gzlib.o",
+            "CMakeFiles/zlibstatic.dir/gzread.o",
+            "CMakeFiles/zlibstatic.dir/gzwrite.o",
+            "CMakeFiles/zlibstatic.dir/inflate.o",
+            "CMakeFiles/zlibstatic.dir/infback.o",
+            "CMakeFiles/zlibstatic.dir/inftrees.o",
+            "CMakeFiles/zlibstatic.dir/inffast.o",
+            "CMakeFiles/zlibstatic.dir/trees.o",
+            "CMakeFiles/zlibstatic.dir/uncompr.o",
+            "CMakeFiles/zlibstatic.dir/zutil.o"
+        ],
+        "output": "libz.a"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/inffast.c"
+        ],
+        "output": "/tmp/ccWowQ0y.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/adler32.c"
+        ],
+        "output": "/tmp/ccisO75X.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/uncompr.c"
+        ],
+        "output": "/tmp/ccknsSQ2.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/compress.c"
+        ],
+        "output": "/tmp/ccxrr8TL.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/test/minigzip.c"
+        ],
+        "output": "/tmp/ccxGQLUq.s"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccm0GOgQ.s"
+        ],
+        "output": "CMakeFiles/zlib.dir/inffast.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccWowQ0y.s"
+        ],
+        "output": "CMakeFiles/zlibstatic.dir/inffast.o"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/zutil.c"
+        ],
+        "output": "/tmp/ccp5qe8R.s"
+    },
+    {
+        "cmd": "/usr/lib/gcc/x86_64-linux-gnu/7/cc1",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/root/tracer/zlib/deflate.c"
+        ],
+        "output": "/tmp/ccDZ5rGV.s"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/cc4kBOUD.s"
+        ],
+        "output": "CMakeFiles/zlib.dir/infback.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccJXy6Yn.s"
+        ],
+        "output": "CMakeFiles/zlibstatic.dir/gzwrite.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccxGQLUq.s"
+        ],
+        "output": "CMakeFiles/minigzip.dir/test/minigzip.o"
+    },
+    {
+        "cmd": "as",
+        "pwd": "/root/tracer/zlib/build",
+        "inputs": [
+            "/tmp/ccH0RouR.s"
+        ],
+        "output": "CMakeFiles/zlib.dir/trees.o"
+    }
+]

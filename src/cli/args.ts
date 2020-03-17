@@ -153,7 +153,7 @@ export function args(rawArgv: string[]): Args {
 
   // TODO decide why we can't do this cart blanche...
   if (
-    ['protect', 'test', 'monitor', 'wizard', 'ignore', 'woof'].indexOf(
+    ['protect', 'test', 'monitor', 'wizard', 'ignore', 'woof', 'trace'].indexOf(
       command,
     ) !== -1
   ) {

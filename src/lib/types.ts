@@ -18,6 +18,11 @@ export interface TestOptions {
   showVulnPaths: ShowVulnPaths;
   failOn?: FailOn;
 }
+
+export interface TraceOptions {
+  command: string;
+  snykProjectJsonPath?: string;
+}
 export interface ProtectOptions {
   loose: boolean;
 }

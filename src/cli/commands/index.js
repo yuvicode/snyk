@@ -15,6 +15,7 @@ const commands = {
   policy: hotload('./policy'),
   protect: hotload('./protect'),
   test: hotload('./test'),
+  trace: hotload('./trace'),
   'test-unpublished': hotload('./unpublished'),
   version: hotload('./version'),
   wizard: hotload('./protect/wizard'),

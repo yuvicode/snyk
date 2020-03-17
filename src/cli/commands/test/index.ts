@@ -95,7 +95,7 @@ async function test(...args: MethodArgs): Promise<string> {
     let res;
 
     try {
-      res = await snyk.test(path, testOpts);
+      res = await snyk.test(test, testOpts);
     } catch (error) {
       // Possible error cases:
       // - the test found some vulns. `error.message` is a

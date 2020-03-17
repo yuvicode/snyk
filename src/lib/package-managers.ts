@@ -14,6 +14,9 @@ export type SupportedPackageManagers =
   | 'composer'
   | 'cocoapods';
 
+export type SupportedProjectTypes = SupportedPackageManagers | 'cpp' | 'docker';
+
+
 export const SUPPORTED_PACKAGE_MANAGER_NAME: {
   readonly [packageManager in SupportedPackageManagers]: string;
 } = {

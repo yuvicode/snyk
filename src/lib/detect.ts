@@ -3,7 +3,7 @@ import * as pathLib from 'path';
 import * as debugLib from 'debug';
 import * as _ from 'lodash';
 import { NoSupportedManifestsFoundError } from './errors';
-import { SupportedPackageManagers } from './package-managers';
+import { SupportedPackageManagers, SupportedProjectTypes } from './package-managers';
 
 const debug = debugLib('snyk-detect');
 
@@ -29,6 +29,7 @@ const DETECTABLE_FILES: string[] = [
   'composer.lock',
   'Podfile',
   'Podfile.lock',
+  'snyk-project.json'
 ];
 
 export const AUTO_DETECTABLE_FILES: string[] = [
@@ -54,7 +55,7 @@ export const AUTO_DETECTABLE_FILES: string[] = [
 
 // when file is specified with --file, we look it up here
 const DETECTABLE_PACKAGE_MANAGERS: {
-  [name: string]: SupportedPackageManagers;
+  [name: string]: SupportedProjectTypes;
 } = {
   Gemfile: 'rubygems',
   'Gemfile.lock': 'rubygems',
