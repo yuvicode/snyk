@@ -11,7 +11,7 @@ import {
   detectPackageManagerFromFile,
 } from '../detect';
 import analytics = require('../analytics');
-import { convertSingleResultToMultiCustom } from './convert-single-splugin-res-to-multi-custom';
+import { convertSingleResultToMultiCustom } from './convert-single-plugin-res-to-multi-custom';
 import { convertMultiResultToMultiCustom } from './convert-multi-plugin-res-to-multi-custom';
 
 const debug = debugModule('snyk');

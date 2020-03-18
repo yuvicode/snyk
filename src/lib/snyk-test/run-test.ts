@@ -41,6 +41,7 @@ import request = require('../request');
 import spinner = require('../spinner');
 import { extractPackageManager } from '../plugins/extract-package-manager';
 import { getSubProjectCount } from '../plugins/get-sub-project-count';
+import { Plugin, PluginMetadata } from '@snyk/cli-interface/legacy/plugin';
 
 const debug = debugModule('snyk');
 
@@ -310,22 +311,7 @@ async function assembleLocalPayloads(
     await spinner(spinnerLbl);
     const deps = await getDepsFromPlugin(root, options);
     analytics.add('pluginName', deps.plugin.name);
-    const javaVersion = _.get(
-      deps.plugin,
-      'meta.versionBuildInfo.metaBuildVersion.javaVersion',
-      null,
-    );
-    const mvnVersion = _.get(
-      deps.plugin,
-      'meta.versionBuildInfo.metaBuildVersion.mvnVersion',
-      null,
-    );
-    if (javaVersion) {
-      analytics.add('javaVersion', javaVersion);
-    }
-    if (mvnVersion) {
-      analytics.add('mvnVersion', mvnVersion);
-    }
+    sendJavaAnalytics(deps.plugin);
 
     for (const scannedProject of deps.scannedProjects) {
       const pkg = scannedProject.depTree;
@@ -486,6 +472,25 @@ async function assembleRemotePayloads(root, options): Promise<Payload[]> {
       },
     },
   ];
+}
+
+function sendJavaAnalytics(plugin: PluginMetadata): void {
+  const javaVersion = _.get(
+    plugin,
+    'meta.versionBuildInfo.metaBuildVersion.javaVersion',
+    null,
+  );
+  const mvnVersion = _.get(
+    plugin,
+    'meta.versionBuildInfo.metaBuildVersion.mvnVersion',
+    null,
+  );
+  if (javaVersion) {
+    analytics.add('javaVersion', javaVersion);
+  }
+  if (mvnVersion) {
+    analytics.add('mvnVersion', mvnVersion);
+  }
 }
 
 function addPackageAnalytics(module): void {

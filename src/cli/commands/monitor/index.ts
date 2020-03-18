@@ -29,7 +29,7 @@ import { getSubProjectCount } from '../../../lib/plugins/get-sub-project-count';
 import { extractPackageManager } from '../../../lib/plugins/extract-package-manager';
 import { MultiProjectResultCustom } from '../../../lib/plugins/get-multi-plugin-result';
 import { convertMultiResultToMultiCustom } from '../../../lib/plugins/convert-multi-plugin-res-to-multi-custom';
-import { convertSingleResultToMultiCustom } from '../../../lib/plugins/convert-single-splugin-res-to-multi-custom';
+import { convertSingleResultToMultiCustom } from '../../../lib/plugins/convert-single-plugin-res-to-multi-custom';
 import { PluginMetadata } from '@snyk/cli-interface/legacy/plugin';
 
 const SEPARATOR = '\n-------------------------------------------------------\n';
