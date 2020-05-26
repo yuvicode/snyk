@@ -1,15 +1,18 @@
-const protect = (module.exports = {
+const protect = {
   ignore: require('./ignore'),
   update: require('./update').update,
   install: require('./update').install,
   installDev: require('./update').installDev,
   patch: require('./patch'),
   patchesForPackage: require('./patches-for-package'),
-  generatePolicy: generatePolicy,
-});
+  generatePolicy,
+};
 
-const debug = require('debug')('snyk');
-const _ = require('@snyk/lodash');
+export = protect;
+
+import * as debugModule from 'debug';
+import * as _ from '@snyk/lodash';
+const debug = debugModule('snyk');
 
 function generatePolicy(policy, tasks, live, packageManager) {
   const promises = ['ignore', 'update', 'patch']
@@ -30,7 +33,7 @@ function generatePolicy(policy, tasks, live, packageManager) {
     results.unshift(policy);
     const newPolicy = _.merge(...results);
 
-    debug(JSON.stringify(newPolicy, '', 2));
+    debug(JSON.stringify(newPolicy, null, 2));
 
     return newPolicy;
   });
