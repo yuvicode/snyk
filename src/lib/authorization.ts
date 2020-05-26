@@ -1,8 +1,8 @@
-const snyk = require('./');
-const request = require('./request');
-const config = require('./config');
+import * as snyk from './';
+import request = require('./request');
+import * as config from './config';
 
-function actionAllowed(action, options) {
+export function actionAllowed(action, options) {
   const org = options.org || config.org || null;
   return new Promise((resolve, reject) => {
     request(
@@ -27,7 +27,3 @@ function actionAllowed(action, options) {
     );
   });
 }
-
-module.exports = {
-  actionAllowed: actionAllowed,
-};

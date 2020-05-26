@@ -1,4 +1,4 @@
-const snyk = require('../../lib');
+import * as snyk from '../../lib';
 
 module.exports = function config(method, ...args) {
   const key = args[0];
@@ -42,7 +42,7 @@ module.exports = function config(method, ...args) {
       res = 'config cleared';
     } else if (!method) {
       res = Object.keys(snyk.config.all)
-        .sort((a, b) => a.toLowerCase() < b.toLowerCase())
+        .sort((a, b) => a.toLowerCase() < b.toLowerCase() ? 1 : 0)
         .reduce((acc, curr) => {
           acc += curr + ': ' + snyk.config.all[curr] + '\n';
           return acc;

@@ -1,7 +1,7 @@
-const config = require('../config');
-const chalk = require('chalk');
-const { SEVERITIES } = require('../snyk-test/common');
-const analytics = require('../analytics');
+import * as config from '../config';
+import chalk from 'chalk';
+import { SEVERITIES } from '../snyk-test/common';
+import * as analytics from '../analytics';
 
 const errors = {
   connect: 'Check your network connection, failed to connect to Snyk API',
@@ -64,40 +64,44 @@ const codes = {
   INVALID_SEVERITY_THRESHOLD: errors.invalidSeverityThreshold,
 };
 
-module.exports = function error(command) {
-  const e = new Error('Unknown command "' + command + '"');
+export function error(command) {
+  const e: any = new Error('Unknown command "' + command + '"');
   e.code = 'UNKNOWN_COMMAND';
   return Promise.reject(e);
-};
+}
 
-module.exports.message = function(error) {
-  let message = error; // defaults to a string (which is super unlikely)
-  if (error instanceof Error) {
-    if (error.code === 'VULNS') {
-      return error.message;
-    }
+export function message(inError) {
+  let message = inError; // defaults to a string (which is super unlikely)
+  if (!(inError instanceof Error)) {
+    return message;
+  }
 
-    // try to lookup the error string based either on the error code OR
-    // the actual error.message (which can be "Unauthorized" for instance),
-    // otherwise send the error message back
+  const error: any = inError;
+
+  if (error.code === 'VULNS') {
+    return error.message;
+  }
+
+  // try to lookup the error string based either on the error code OR
+  // the actual error.message (which can be "Unauthorized" for instance),
+  // otherwise send the error message back
+  message =
+    error.userMessage ||
+    codes[error.code || error.message] ||
+    errors[error.code || error.message];
+  if (message) {
+    message = message.replace(/(%s)/g, error.message).trim();
+    message = chalk.bold.red(message);
+  } else if (error.code) {
+    // means it's a code error
     message =
-      error.userMessage ||
-      codes[error.code || error.message] ||
-      errors[error.code || error.message];
-    if (message) {
-      message = message.replace(/(%s)/g, error.message).trim();
-      message = chalk.bold.red(message);
-    } else if (error.code) {
-      // means it's a code error
-      message =
-        'An unknown error occurred. Please run with `-d` and include full trace ' +
-        'when reporting to Snyk';
-      analytics.add('unknown-error-code', JSON.stringify(error));
-    } else {
-      // should be one of ours
-      message = error.message;
-    }
+      'An unknown error occurred. Please run with `-d` and include full trace ' +
+      'when reporting to Snyk';
+    analytics.add('unknown-error-code', JSON.stringify(error));
+  } else {
+    // should be one of ours
+    message = error.message;
   }
 
   return message;
-};
+}

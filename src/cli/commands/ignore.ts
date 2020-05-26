@@ -28,7 +28,7 @@ function ignore(options) {
     .then(() => {
       return authorization.actionAllowed('cliIgnore', options);
     })
-    .then((cliIgnoreAuthorization) => {
+    .then((cliIgnoreAuthorization: any) => {
       if (!cliIgnoreAuthorization.allowed) {
         debug('snyk ignore called when disallowed');
         console.log(chalk.bold.red(cliIgnoreAuthorization.reason));

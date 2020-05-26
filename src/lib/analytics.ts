@@ -1,17 +1,19 @@
-module.exports = analytics;
-module.exports.single = postAnalytics;
+export = analytics;
+analytics.single = postAnalytics;
 
-const snyk = require('../lib');
-const config = require('./config');
-const version = require('./version');
-const request = require('./request');
-const isCI = require('./is-ci').isCI;
-const debug = require('debug')('snyk');
-const os = require('os');
-const osName = require('os-name');
-const crypto = require('crypto');
-const uuid = require('uuid');
-const stripAnsi = require('strip-ansi');
+import * as snyk from '../lib';
+import * as config from './config';
+import * as version from './version';
+import request = require('./request');
+import { isCI } from './is-ci';
+import * as debugModule from 'debug';
+import * as os from 'os';
+import osName = require('os-name');
+import * as crypto from 'crypto';
+import * as uuid from 'uuid';
+import stripAnsi from 'strip-ansi';
+
+const debug = debugModule('snyk');
 
 const metadata = {};
 // analytics module is required at the beginning of the CLI run cycle
@@ -61,7 +63,7 @@ function postAnalytics(data) {
       const shasum = crypto.createHash('sha1');
       data.id = shasum.update(seed).digest('hex');
 
-      const headers = {};
+      const headers: any = {};
       if (snyk.api) {
         headers.authorization = 'token ' + snyk.api;
       }
@@ -69,7 +71,7 @@ function postAnalytics(data) {
       data.ci = isCI();
       data.durationMs = Date.now() - startTime;
 
-      const queryStringParams = {};
+      const queryStringParams: any = {};
       if (data.org) {
         queryStringParams.org = data.org;
       }

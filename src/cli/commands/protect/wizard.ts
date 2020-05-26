@@ -114,7 +114,7 @@ async function processWizardFlow(options) {
   }
 
   apiTokenExists();
-  const cliIgnoreAuthorization = await authorization.actionAllowed(
+  const cliIgnoreAuthorization: any = await authorization.actionAllowed(
     'cliIgnore',
     options,
   );
