@@ -27,7 +27,7 @@ async function test(root, options, callback) {
 
 function executeTest(root, options) {
   try {
-    if (!options.allProjects) {
+    if (!options.allProjects|| !options.yarnWorkspace) {
       options.packageManager = detect.detectPackageManager(root, options);
     }
     return run(root, options).then((results) => {
@@ -54,6 +54,7 @@ function run(root, options) {
     !(
       options.docker ||
       options.allProjects ||
+      options.yarnWorkspace ||
       pm.SUPPORTED_PACKAGE_MANAGER_NAME[packageManager]
     )
   ) {

@@ -3,7 +3,9 @@ import { legacyPlugin as pluginApi } from '@snyk/cli-interface';
 import { find } from '../find-files';
 import { Options, TestOptions, MonitorOptions } from '../types';
 import { NoSupportedManifestsFoundError } from '../errors';
-import { getMultiPluginResult } from './get-multi-plugin-result';
+import {
+  getMultiPluginResult,
+} from './get-multi-plugin-result';
 import { getSinglePluginResult } from './get-single-plugin-result';
 import {
   detectPackageFile,
@@ -13,6 +15,7 @@ import {
 import analytics = require('../analytics');
 import { convertSingleResultToMultiCustom } from './convert-single-splugin-res-to-multi-custom';
 import { convertMultiResultToMultiCustom } from './convert-multi-plugin-res-to-multi-custom';
+import { processYarnWorkspaces } from './nodejs-plugin/yarn-workspaces-parser';
 
 const debug = debugModule('snyk-test');
 
@@ -23,7 +26,23 @@ export async function getDepsFromPlugin(
 ): Promise<pluginApi.MultiProjectResult> {
   let inspectRes: pluginApi.InspectResult;
 
-  if (options.allProjects) {
+  if (options.yarnWorkspace) {
+    const levelsDeep = options.detectionDepth;
+    const ignore = options.exclude ? options.exclude.split(',') : [];
+    const targetFiles = await find(root, ignore, ['package.json'], levelsDeep);
+    debug(
+      `auto detect manifest files, found ${targetFiles.length}`,
+      targetFiles,
+    );
+    if (targetFiles.length === 0) {
+      throw NoSupportedManifestsFoundError([root]);
+    }
+    const result = await processYarnWorkspaces(root, targetFiles, {
+      strictOutOfSync: options.strictOutOfSync,
+      scanDevDependencies: options.dev,
+    });
+    return result;
+  } else if (options.allProjects) {
     const levelsDeep = options.detectionDepth;
     const ignore = options.exclude ? options.exclude.split(',') : [];
     const targetFiles = await find(

@@ -116,7 +116,7 @@ async function monitor(...args0: MethodArgs): Promise<any> {
       await validateMonitorPath(path, options.docker);
       let analysisType = 'all';
       let packageManager;
-      if (options.allProjects) {
+      if (options.allProjects || options.yarnWorkspace) {
         analysisType = 'all';
       } else if (options.docker) {
         analysisType = 'docker';

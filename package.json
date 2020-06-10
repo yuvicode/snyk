@@ -11,6 +11,7 @@
     "Contributor-Agreement.md",
     ".snyk"
   ],
+  "version": "1.338.0-yarn-workspaces",
   "directories": {
     "test": "test"
   },

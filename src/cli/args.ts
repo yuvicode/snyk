@@ -182,6 +182,7 @@ export function args(rawArgv: string[]): Args {
     'scan-all-unmanaged',
     'fail-on',
     'all-projects',
+    'yarn-workspaces',
     'detection-depth',
     'reachable-vulns',
   ]) {
