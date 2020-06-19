@@ -25,6 +25,7 @@ export async function pruneGraph(
   debug('isDenseGraph', isDenseGraph);
   analytics.add('prePrunePathsCount', prePrunePathsCount);
   if (isDenseGraph || pruneIsRequired) {
+    debug('Trying to prune the graph');
     const prunedTree = (await graphToDepTree(depGraph, packageManager, {
       deduplicateWithinTopLevelDeps: true,
     })) as DepTree;
