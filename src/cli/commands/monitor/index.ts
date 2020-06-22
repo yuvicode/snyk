@@ -241,7 +241,7 @@ async function monitor(...args0: MethodArgs): Promise<any> {
             res,
             options,
             projectName,
-            getSubProjectCount(inspectResult),
+            await getSubProjectCount(path, options, inspectResult),
           );
           // push a good result
           results.push({ ok: true, data: monOutput, path, projectName });

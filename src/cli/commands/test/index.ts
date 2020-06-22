@@ -394,8 +394,13 @@ function displayResult(
     projectType === 'gradle' && !options['gradle-sub-project'];
   if (advertiseGradleSubProjectsCount && foundProjectCount) {
     multiProjAdvice = chalk.bold.white(
-      `\n\nTip: This project has multiple sub-projects (${foundProjectCount}), ` +
+      `\n\nTip: This gradle project has multiple sub-projects (${foundProjectCount}), ` +
         'use --all-sub-projects flag to scan all sub-projects.',
+    );
+  } else {
+    multiProjAdvice = chalk.bold.white(
+      `\n\nTip: Discovered multiple supported manifests (${foundProjectCount}), ` +
+        'use --all-projects --detection-depth=4 flag to scan all of them.',
     );
   }
 

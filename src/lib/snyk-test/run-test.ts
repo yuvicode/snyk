@@ -455,7 +455,7 @@ async function assembleLocalPayloads(
         projectNameOverride: options.projectName,
         originalProjectName,
         policy: policy ? policy.toString() : undefined,
-        foundProjectCount: getSubProjectCount(deps),
+        foundProjectCount: await getSubProjectCount(root, options, deps),
         displayTargetFile: targetFile,
         docker: (pkg as DepTree).docker,
         hasDevDependencies: (pkg as any).hasDevDependencies,
