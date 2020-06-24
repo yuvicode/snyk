@@ -6,7 +6,7 @@ import { NoSupportedManifestsFoundError } from '../errors';
 import { getMultiPluginResult } from './get-multi-plugin-result';
 import { getSinglePluginResult } from './get-single-plugin-result';
 import {
-  detectPackageFile,
+  // detectPackageFile,
   AUTO_DETECTABLE_FILES,
   detectPackageManagerFromFile,
 } from '../detect';
@@ -55,9 +55,9 @@ export async function getDepsFromPlugin(
 
   // TODO: is this needed for the auto detect handling above?
   // don't override options.file if scanning multiple files at once
-  if (!options.scanAllUnmanaged) {
-    options.file = options.file || detectPackageFile(root);
-  }
+  // if (!options.scanAllUnmanaged) {
+  //   options.file = options.file || detectPackageFile(root);
+  // }
   if (!options.docker && !(options.file || options.packageManager)) {
     throw NoSupportedManifestsFoundError([...root]);
   }
