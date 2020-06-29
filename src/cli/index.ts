@@ -65,7 +65,7 @@ async function runCommand(args: Args) {
 
   // also save the json (in error.json) to file if option is set
   if (args.command === 'test') {
-    const jsonOutputFile = args.options['json-file-output'];
+    const jsonOutputFile = args.options.jsonFileOutput;
     if (jsonOutputFile) {
       const jsonOutputFileStr = jsonOutputFile as string;
       const fullOutputFilePath = getFullPath(jsonOutputFileStr);
@@ -114,7 +114,7 @@ async function handleError(args, error) {
   }
 
   // also save the json (in error.json) to file if `--json-file-output` option is set
-  const jsonOutputFile = args.options['json-file-output'];
+  const jsonOutputFile = args.options.jsonFileOutput;
   if (jsonOutputFile && error.jsonStringifiedResults) {
     const fullOutputFilePath = getFullPath(jsonOutputFile);
     saveJsonResultsToFile(
@@ -288,7 +288,7 @@ async function main() {
       throw new FileFlagBadInputError();
     }
 
-    if (args.options['json-file-output'] && args.command !== 'test') {
+    if (args.options.jsonFileOutput && args.command !== 'test') {
       throw new UnsupportedOptionCombinationError([
         args.command,
         'json-file-output',
@@ -297,7 +297,7 @@ async function main() {
 
     const jsonFileOptionSet: boolean = 'json-file-output' in args.options;
     if (jsonFileOptionSet) {
-      const jsonFileOutputValue = args.options['json-file-output'];
+      const jsonFileOutputValue = args.options.jsonFileOutput;
       if (!jsonFileOutputValue || typeof jsonFileOutputValue !== 'string') {
         throw new JsonFileOutputBadInputError();
       }

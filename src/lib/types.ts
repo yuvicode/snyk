@@ -62,6 +62,7 @@ export interface Options {
   allProjects?: boolean;
   detectionDepth?: number;
   exclude?: string;
+  jsonFileOutput?: boolean;
   // Used with the Docker plugin only. Allows requesting some experimental/unofficial features.
   experimental?: boolean;
 }

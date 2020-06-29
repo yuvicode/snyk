@@ -183,6 +183,7 @@ export function args(rawArgv: string[]): Args {
     'all-projects',
     'detection-depth',
     'reachable-vulns',
+    'json-file-output',
   ]) {
     if (argv[dashedArg]) {
       const camelCased = dashToCamelCase(dashedArg);
