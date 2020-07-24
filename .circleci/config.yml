@@ -79,6 +79,21 @@ commands:
       - run:
           name: NPM version
           command: npm --version
+  install_shellspec:
+    description: Installs shellspec
+    steps:
+      - run:
+          name: Fetch shellspec
+          command: |
+            curl -fsSL https://git.io/shellspec | sh -s -- -y
+            shellspec --version
+  run_shellspec:
+    steps:
+      - run:
+          working_directory: ~/snyk/test/smoke
+          name: Run shellspec
+          command: |
+            shellspec -f d
 
 jobs:
   common:
@@ -182,6 +197,14 @@ jobs:
       - run:
           name: Regression test in monitor command
           command: node ~/snyk/dist/cli/index.js monitor test/acceptance/workspaces/npm-package-no-vulns
+      - install_shellspec
+      - run:
+          name: Setup snyk alias for smoke tests
+          command: |
+            alias snyk="node ${HOME}/snyk/dist/cli/index.js"
+            alias
+            snyk --version
+      - run_shellspec
 
   release:
     <<: *defaults
