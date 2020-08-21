@@ -326,6 +326,7 @@ function validateUnsupportedOptionCombinations(
     'project-name': 'project-name',
     file: 'file',
     yarnWorkspaces: 'yarn-workspaces',
+    npmWorkspaces: 'npm-workspaces',
     packageManager: 'package-manager',
     docker: 'docker',
     allSubProjects: 'all-sub-projects',

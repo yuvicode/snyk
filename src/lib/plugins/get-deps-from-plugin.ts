@@ -17,11 +17,16 @@ import analytics = require('../analytics');
 import { convertSingleResultToMultiCustom } from './convert-single-splugin-res-to-multi-custom';
 import { convertMultiResultToMultiCustom } from './convert-multi-plugin-res-to-multi-custom';
 import { processYarnWorkspaces } from './nodejs-plugin/yarn-workspaces-parser';
+import { processNpmWorkspaces } from './nodejs-plugin/npm-workspaces-parser';
 
 const debug = debugModule('snyk-test');
 
 const multiProjectProcessors = {
   yarnWorkspaces: {
+    handler: processYarnWorkspaces,
+    files: ['package.json'],
+  },
+  npmWorkspaces: {
     handler: processYarnWorkspaces,
     files: ['package.json'],
   },

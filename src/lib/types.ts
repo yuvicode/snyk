@@ -21,6 +21,7 @@ export interface TestOptions {
   reachableVulns?: boolean;
   reachableVulnsTimeout?: number;
   yarnWorkspaces?: boolean;
+  npmWorkspaces?: boolean;
   testDepGraphDockerEndpoint?: string | null;
 }
 
@@ -96,6 +97,7 @@ export interface MonitorOptions {
   reachableVulns?: boolean;
   reachableVulnsTimeout?: number;
   yarnWorkspaces?: boolean;
+  npmWorkspaces?: boolean;
 }
 
 export interface MonitorMeta {
