@@ -169,6 +169,7 @@ export type SupportedUserReachableFacingCliArgs =
   | 'reachable-vulns'
   | 'reachable-timeout'
   | 'reachable-vulns-timeout'
+  | 'npm-workspaces'
   | 'integration-name'
   | 'integration-version';
 

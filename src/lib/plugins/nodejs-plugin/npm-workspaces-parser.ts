@@ -12,7 +12,7 @@ import {
   ScannedProjectCustom,
 } from '../get-multi-plugin-result';
 
-export async function processYarnWorkspaces(
+export async function processNpmWorkspaces(
   root: string,
   settings: {
     strictOutOfSync?: boolean;
@@ -22,7 +22,7 @@ export async function processYarnWorkspaces(
 ): Promise<MultiProjectResultCustom> {
   // the order of folders is important
   // must have the root level most folders at the top
-  const yarnTargetFiles: {
+  const npmTargetFiles: {
     [dir: string]: Array<{
       path: string;
       base: string;
@@ -35,30 +35,39 @@ export async function processYarnWorkspaces(
     .groupBy('dir')
     .value();
 
-  debug(`processing Yarn workspaces (${targetFiles.length})`);
-  if (Object.keys(yarnTargetFiles).length === 0) {
+  debug(`processing Npm lerna packages (${targetFiles.length})`);
+  if (Object.keys(npmTargetFiles).length === 0) {
     throw NoSupportedManifestsFoundError([root]);
   }
-  let yarnWorkspacesMap = {};
+  let npmWorkspacesMap = {};
   const yarnWorkspacesFilesMap = {};
   let isYarnWorkspacePackage = false;
   const result: MultiProjectResultCustom = {
     plugin: {
-      name: 'snyk-nodejs-yarn-workspaces',
+      name: 'snyk-nodejs-npm-lerna',
       runtime: process.version,
     },
     scannedProjects: [],
   };
   // the folders must be ordered highest first
-  for (const directory of Object.keys(yarnTargetFiles)) {
+  for (const directory of Object.keys(npmTargetFiles)) {
     const packageJsonFileName = pathUtil.join(directory, 'package.json');
+    const lernaFileName = pathUtil.join(directory, 'lerna.json');
+    let lernaFile;
+    try {
+      lernaFile = getFileContents(root, lernaFileName);
+    } catch (e) {
+      // nothing
+    }
     const packageJson = getFileContents(root, packageJsonFileName);
-    yarnWorkspacesMap = {
-      ...yarnWorkspacesMap,
-      ...getWorkspacesMap(packageJson),
-    };
-    for (const workspaceRoot of Object.keys(yarnWorkspacesMap)) {
-      const workspaces = yarnWorkspacesMap[workspaceRoot].workspaces || [];
+    if (lernaFile) {
+      npmWorkspacesMap = {
+        ...npmWorkspacesMap,
+        ...getWorkspacesMap(lernaFile),
+      };
+    }
+    for (const workspaceRoot of Object.keys(npmWorkspacesMap)) {
+      const workspaces = npmWorkspacesMap[workspaceRoot].workspaces || [];
       const match = workspaces
         .map((pattern) => {
           return packageJsonFileName.includes(pattern.replace(/\*/, ''));
@@ -77,22 +86,22 @@ export async function processYarnWorkspaces(
       const rootDir = path.dirname(
         yarnWorkspacesFilesMap[packageJsonFileName].root,
       );
-      const rootYarnLockfileName = path.join(rootDir, 'yarn.lock');
+      const rootLockfileName = path.join(rootDir, 'package-lock.json');
 
-      const yarnLock = await getFileContents(root, rootYarnLockfileName);
+      const packageLock = await getFileContents(root, rootLockfileName);
       const res = await lockFileParser.buildDepTree(
         packageJson.content,
-        yarnLock.content,
+        packageLock.content,
         settings.dev,
-        lockFileParser.LockfileType.yarn,
+        lockFileParser.LockfileType.npm,
         settings.strictOutOfSync !== false,
       );
       const project: ScannedProjectCustom = {
-        packageManager: 'yarn',
+        packageManager: 'npm',
         targetFile: path.relative(root, packageJson.name),
         depTree: res as any,
         plugin: {
-          name: 'snyk-nodejs-lockfile-parser',
+          name: 'snyk-nodejs-npm-lerna',
           runtime: process.version,
         },
       };
@@ -138,7 +147,7 @@ export function getWorkspacesMap(file: {
   }
 
   try {
-    const rootFileWorkspacesDefinitions = lockFileParser.getYarnWorkspaces(
+    const rootFileWorkspacesDefinitions = getNpmPackages(
       file.content,
     );
 
@@ -151,4 +160,22 @@ export function getWorkspacesMap(file: {
     debug('Failed to process a workspace', e.message);
   }
   return yarnWorkspacesMap;
+}
+
+
+export function getNpmPackages(content: string): string[] | false {
+  try {
+    const lernaJson = JSON.parse(content);
+    if (lernaJson.packages) {
+      const workspacesPackages = lernaJson.packages as string[];
+      const workspacesAlternateConfigPackages = (workspacesPackages as any)
+        .packages;
+      return [...(workspacesAlternateConfigPackages || workspacesPackages)];
+    }
+    return false;
+  } catch (e) {
+    throw new Error(
+      'package.json parsing failed with ' + `error ${e.message}`,
+    );
+  }
 }

@@ -199,6 +199,7 @@ export function args(rawArgv: string[]): Args {
     'fail-on',
     'all-projects',
     'yarn-workspaces',
+    'npm-workspaces',
     'detection-depth',
     'reachable',
     'reachable-vulns',

@@ -27,7 +27,7 @@ const multiProjectProcessors = {
     files: ['package.json'],
   },
   npmWorkspaces: {
-    handler: processYarnWorkspaces,
+    handler: processNpmWorkspaces,
     files: ['package.json'],
   },
   allProjects: {
@@ -44,7 +44,7 @@ export async function getDepsFromPlugin(
   let inspectRes: pluginApi.InspectResult;
 
   if (Object.keys(multiProjectProcessors).some((key) => options[key])) {
-    const scanType = options.yarnWorkspaces ? 'yarnWorkspaces' : 'allProjects';
+    const scanType = options.npmWorkspaces ? 'npmWorkspaces' : 'allProjects';
     const levelsDeep = options.detectionDepth;
     const ignore = options.exclude ? options.exclude.split(',') : [];
     const targetFiles = await find(
