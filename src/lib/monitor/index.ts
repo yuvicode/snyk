@@ -438,7 +438,7 @@ export async function monitorDepGraph(
         url: `${config.API}/monitor/${packageManager}/graph`,
         json: true,
       },
-      (error, res, body) => {
+      async (error, res, body) => {
         if (error) {
           return reject(error);
         }
@@ -447,6 +447,29 @@ export async function monitorDepGraph(
         } else {
           let err;
           const userMessage = body && body.userMessage;
+          // TODO: remove this workaround for older backend versions
+          // once no longer needed.
+          if (
+            res.statusCode === 422 &&
+            userMessage.includes("doesn't support graphs.")
+          ) {
+            const depTree = await depGraphLib.legacy.graphToDepTree(
+              scannedProject.depGraph!,
+              (scannedProject.depGraph?.pkgManager as unknown) as string,
+            );
+            delete scannedProject.depGraph;
+            scannedProject.depTree = depTree as DepTree;
+
+            return await monitorDepTree(
+              root,
+              meta,
+              scannedProject,
+              pluginMeta,
+              options,
+              targetFileRelativePath,
+              contributors,
+            );
+          }
           if (!userMessage && res.statusCode === 504) {
             err = new ConnectionTimeoutError();
           } else {
