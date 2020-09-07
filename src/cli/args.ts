@@ -208,6 +208,8 @@ export function args(rawArgv: string[]): Args {
     'integration-name',
     'integration-version',
     'prune-repeated-subdependencies',
+    'precomputed-callgraph',
+    'precomputed-classpath',
   ];
   for (const dashedArg of argumentsToTransform) {
     if (argv[dashedArg]) {
