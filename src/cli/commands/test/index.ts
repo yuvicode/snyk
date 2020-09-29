@@ -309,7 +309,10 @@ async function test(...args: MethodArgs): Promise<TestCommandResult> {
       options.isDockerUser
     ) {
       error.userMessage =
-        'You have reached your scan limit. Sign up to Snyk for additional free scans https://dockr.ly/3ePqVcp';
+        `You have reached the scan limit of 10 monthly scans 
+        without authentication. For additional monthly scans, 
+        please authenticate to Snyk by using the docker scan --login command. 
+        If you don’t have a Snyk account you will be able to create one for free.`;
     }
     throw error;
   }
