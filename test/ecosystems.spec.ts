@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as cppPlugin from 'snyk-cpp-plugin';
 import * as ecosystems from '../src/lib/ecosystems';
+import * as ecosystemsTypes from '../src/lib/ecosystems/types';
 import * as request from '../src/lib/request/promise';
 import { Options } from '../src/lib/types';
 import { TestCommandResult } from '../src/cli/commands/types';
@@ -72,7 +73,7 @@ describe('ecosystems', () => {
       const errorTxt = readFixture('error.txt');
       const testResult = readJsonFixture(
         'testResults.json',
-      ) as ecosystems.TestResult;
+      ) as ecosystemsTypes.TestResult;
       const stringifyTestResults = JSON.stringify([testResult], null, 2);
 
       beforeAll(() => {
