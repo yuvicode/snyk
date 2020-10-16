@@ -100,7 +100,7 @@ commands:
       - run: curl -fsSL https://git.io/shellspec | sh -s -- -y
       - run: sudo ln -s ${HOME}/.local/lib/shellspec/shellspec /usr/local/bin/shellspec
       - run: sudo apt-get install jq
-      - run: npm i -g npm
+      - run: sudo npm i -g npm
   show_node_version:
     description: Log Node and npm version
     steps:
