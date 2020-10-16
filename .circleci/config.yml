@@ -236,7 +236,7 @@ workflows:
       - test-windows:
           name: Windows Tests for Node v14 support
           context: nodejs-install
-          node_version: '14.14.0'
+          node_version: '14'
           requires:
             - Regression Test
           filters:
@@ -276,7 +276,7 @@ workflows:
       - test-unix:
           name: Unix Tests for Node v14 support
           context: nodejs-install
-          node_version: '14.14.0'
+          node_version: '14'
           requires:
             - Regression Test
           filters:
