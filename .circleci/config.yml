@@ -228,7 +228,7 @@ workflows:
       - regression-test:
           name: Regression Test
           context: nodejs-install
-          node_version: '14'
+          node_version: '8'
           filters:
             branches:
               ignore:
