@@ -1,12 +1,11 @@
 import { InspectResult } from '@snyk/cli-interface/legacy/plugin';
 import chalk from 'chalk';
-
 import * as snyk from '../index';
 import * as config from '../config';
 import { isCI } from '../is-ci';
 import { makeRequest } from '../request/promise';
 import { MonitorResult, Options } from '../types';
-import * as spinner from '../../lib/spinner';
+import * as ora from 'ora';
 import { getPlugin } from './plugins';
 import { BadResult, GoodResult } from '../../cli/commands/monitor/types';
 import { formatMonitorOutput } from '../../cli/commands/monitor/formatters/format-monitor-response';
@@ -36,11 +35,13 @@ export async function monitorEcosystem(
   const plugin = getPlugin(ecosystem);
   const scanResultsByPath: { [dir: string]: ScanResult[] } = {};
   for (const path of paths) {
+    const spinner = ora(`Scanning dependencies in ${path}`);
     try {
-      await spinner(`Analyzing dependencies in ${path}`);
+      spinner.start();
       options.path = path;
       const pluginResponse = await plugin.scan(options);
       scanResultsByPath[path] = pluginResponse.scanResults;
+      spinner.succeed();
     } catch (error) {
       if (
         ecosystem === 'docker' &&
@@ -52,7 +53,7 @@ export async function monitorEcosystem(
 
       throw error;
     } finally {
-      spinner.clearAll();
+      spinner.stop();
     }
   }
   const [monitorResults, errors] = await monitorDependencies(
@@ -91,7 +92,7 @@ async function monitorDependencies(
   const results: EcosystemMonitorResult[] = [];
   const errors: EcosystemMonitorError[] = [];
   for (const [path, scanResults] of Object.entries(scans)) {
-    await spinner(`Monitoring dependencies in ${path}`);
+    const spinner = ora(`Monitoring dependencies in ${path}`).start();
     for (const scanResult of scanResults) {
       const monitorDependenciesRequest = await generateMonitorDependenciesRequest(
         scanResult,
@@ -122,6 +123,7 @@ async function monitorDependencies(
           path,
           scanResult,
         });
+        spinner.succeed();
       } catch (error) {
         if (error.code === 401) {
           throw AuthFailedError();
@@ -129,6 +131,7 @@ async function monitorDependencies(
         if (error.code >= 400 && error.code < 500) {
           throw new MonitorError(error.code, error.message);
         }
+        spinner.fail('Could not monitor dependencies in ' + path);
         errors.push({
           error: 'Could not monitor dependencies in ' + path,
           path,
@@ -136,7 +139,6 @@ async function monitorDependencies(
         });
       }
     }
-    spinner.clearAll();
   }
   return [results, errors];
 }

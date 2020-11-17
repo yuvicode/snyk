@@ -4,7 +4,7 @@ import { isCI } from '../is-ci';
 import { makeRequest } from '../request/promise';
 import { Options } from '../types';
 import { TestCommandResult } from '../../cli/commands/types';
-import * as spinner from '../../lib/spinner';
+import * as ora from 'ora';
 import { Ecosystem, ScanResult, TestResult } from './types';
 import { getPlugin } from './plugins';
 import { TestDependenciesResponse } from '../snyk-test/legacy';
@@ -18,9 +18,11 @@ export async function testEcosystem(
   const plugin = getPlugin(ecosystem);
   const scanResultsByPath: { [dir: string]: ScanResult[] } = {};
   for (const path of paths) {
+    const spinner = ora(`Scanning dependencies in ${path}`).start();
     options.path = path;
     const pluginResponse = await plugin.scan(options);
     scanResultsByPath[path] = pluginResponse.scanResults;
+    spinner.succeed();
   }
   const [testResults, errors] = await testDependencies(
     scanResultsByPath,
@@ -54,7 +56,7 @@ async function testDependencies(
   const results: TestResult[] = [];
   const errors: string[] = [];
   for (const [path, scanResults] of Object.entries(scans)) {
-    await spinner(`Testing dependencies in ${path}`);
+    const spinner = ora(`Testing dependencies in ${path}`).start();
     for (const scanResult of scanResults) {
       const payload = {
         method: 'POST',
@@ -83,7 +85,7 @@ async function testDependencies(
         errors.push('Could not test dependencies in ' + path);
       }
     }
+    spinner.succeed();
   }
-  spinner.clearAll();
   return [results, errors];
 }
