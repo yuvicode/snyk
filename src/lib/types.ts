@@ -20,6 +20,7 @@ export interface TestOptions {
   failOn?: FailOn;
   reachableVulns?: boolean;
   reachableVulnsTimeout?: number;
+  reachableVulnsEngine?: string;
   yarnWorkspaces?: boolean;
   testDepGraphDockerEndpoint?: string | null;
   isDockerUser?: boolean;
