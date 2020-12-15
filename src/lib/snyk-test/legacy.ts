@@ -164,6 +164,7 @@ export interface LegacyVulnApiResult extends BasicResultData {
   filesystemPolicy?: boolean;
   uniqueCount?: any;
   remediation?: RemediationChanges;
+  dependencies?: any;
 }
 
 export interface BaseImageRemediation {

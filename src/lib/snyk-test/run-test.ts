@@ -369,6 +369,7 @@ async function parseRes(
     if (payload.modules) {
       res.dependencyCount =
         payload.modules.numDependencies || depGraph.getPkgs().length - 1;
+
       if (res.vulnerabilities) {
         res.vulnerabilities.forEach((vuln) => {
           if (payload.modules && payload.modules.pluck) {
@@ -427,6 +428,10 @@ async function parseRes(
   }
 
   res.uniqueCount = countUniqueVulns(res.vulnerabilities);
+
+  if (depGraph) {
+      res.dependencies = depGraph.getPkgs();
+  }
 
   return res;
 }
