@@ -7,6 +7,7 @@ import * as pathUtil from 'path';
 import { parsePackageString as moduleToObject } from 'snyk-module';
 import * as depGraphLib from '@snyk/dep-graph';
 import { IacScan } from './payload-schema';
+import PQueue from "p-queue";
 
 import {
   TestResult,
@@ -226,12 +227,12 @@ async function sendAndParseResults(
   options: Options & TestOptions,
 ): Promise<TestResult[]> {
   const results: TestResult[] = [];
-  const promises: Promise<TestResult>[] = [];
+  const queue = new PQueue({concurrency: 25});
   for (const payload of payloads) {
     await spinner.clear<void>(spinnerLbl)();
     await spinner(spinnerLbl);
     if (options.iac) {
-      promises.push(
+      queue.add(
         (async () => {
           const iacScan: IacScan = payload.body as IacScan;
           analytics.add('iac type', !!iacScan.type);
@@ -245,8 +246,8 @@ async function sendAndParseResults(
             projectName,
             options.severityThreshold,
           );
-          return result;
-        })(),
+          results.push(result);
+        })
       );
     } else {
       /** sendTestPayload() deletes the request.body from the payload once completed. */
@@ -298,8 +299,8 @@ async function sendAndParseResults(
     }
   }
 
-  if (promises.length) {
-    return await Promise.all(promises);
+  if (queue.pending) {
+    await queue.onIdle();
   }
   return results;
 }
@@ -471,6 +472,7 @@ function handleTestHttpErrorResponse(res, body) {
   const { statusCode } = res;
   let err;
   const userMessage = body && body.userMessage;
+  console.log(res);
   switch (statusCode) {
     case 401:
     case 403:
@@ -838,3 +840,5 @@ function countUniqueVulns(vulns: AnnotatedIssue[]): number {
   }
   return Object.keys(seen).length;
 }
+
+
