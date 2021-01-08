@@ -93,7 +93,7 @@ export = function makeRequest(
           url = url + '?' + querystring.stringify(payload.qs);
           delete payload.qs;
         }
-
+        const httpAgent = new Agent({ keepAlive: true, maxSockets: 10 });
         const options: needle.NeedleOptions = {
           json: payload.json,
           headers: payload.headers,
@@ -101,6 +101,7 @@ export = function makeRequest(
           // eslint-disable-next-line @typescript-eslint/camelcase
           follow_max: 5,
           family: payload.family,
+          agent: httpAgent,
         };
 
         const proxyUri = getProxyForUrl(url);
