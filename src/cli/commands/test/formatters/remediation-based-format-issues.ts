@@ -430,7 +430,11 @@ export function printPath(path: string[]) {
 }
 
 function formatExploitability(exploitability: EXPLOITABILITY): string {
-  return `[${exploitability}]`;
+  if (exploitability == EXPLOITABILITY.MAYBE_EXPLOITABLE) {
+    return chalk.magentaBright('[Maybe Exploitable]');
+  } else if (exploitability == EXPLOITABILITY.NOT_EXPLOITABLE) {
+    return chalk.greenBright('[Not Exploitable]');
+  }
 }
 
 export function formatIssue(
