@@ -526,7 +526,7 @@ export function formatIssue(
     originalSeverityStr = ` (originally ${titleCaseText(originalSeverity)})`;
   }
 
-  return (
+  let msg = (
     severitiesColourMapping[severity].colorFunc(
       `  ✗ ${chalk.bold(title)}${newBadge} [${titleCaseText(
         severity,
@@ -545,6 +545,12 @@ export function formatIssue(
       : '') +
     (note ? `${chalk.bold('\n    Note')}:\n    ${note}` : '')
   );
+
+  if (exploitability === EXPLOITABILITY.NOT_EXPLOITABLE) {
+    msg = chalk.dim(chalk.strikethrough(msg));
+  }
+
+  return msg;
 }
 
 function titleCaseText(text) {
