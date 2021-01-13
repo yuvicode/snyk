@@ -39,4 +39,5 @@ export interface Payload {
   body?: PayloadBody | IacScan | TestDependenciesRequest;
   qs?: object | null;
   modules?: DepTreeFromResolveDeps;
+  exploitability?: any;
 }

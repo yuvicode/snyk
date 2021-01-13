@@ -271,6 +271,7 @@ async function sendAndParseResults(
 
       const legacyRes = convertIssuesToAffectedPkgs(res);
 
+      // KOKO: make sure we have explloitaility here
       const result = await parseRes(
         depGraph,
         pkgManager,
@@ -280,6 +281,7 @@ async function sendAndParseResults(
         payloadPolicy,
         root,
         dockerfilePackages,
+        payload.exploitability,
       );
 
       results.push({
@@ -354,10 +356,19 @@ async function parseRes(
   payloadPolicy: string | undefined,
   root: string,
   dockerfilePackages: any,
+  exploitability: any,
 ): Promise<TestResult> {
   // TODO: docker doesn't have a package manager
   // so this flow will not be applicable
   // refactor to separate
+
+  for (const vuln of res.vulnerabilities) {
+    const expStatus = exploitability[vuln.id];
+    if (expStatus) {
+      (vuln as any).exploitability = expStatus;
+    }
+  }
+
   if (depGraph && pkgManager) {
     res = convertTestDepGraphResultToLegacy(
       (res as any) as TestDepGraphResponse, // Double "as" required by Typescript for dodgy assertions
@@ -430,7 +441,7 @@ async function parseRes(
   res.uniqueCount = countUniqueVulns(res.vulnerabilities);
 
   if (depGraph) {
-      res.dependencies = depGraph.getPkgs();
+    res.dependencies = depGraph.getPkgs();
   }
 
   return res;
@@ -764,6 +775,7 @@ async function assembleLocalPayloads(
         });
         body.callGraph = callGraph;
       }
+
       const reqUrl =
         config.API +
         (options.testDepGraphDockerEndpoint ||
@@ -779,6 +791,7 @@ async function assembleLocalPayloads(
         },
         qs: common.assembleQueryString(options),
         body,
+        exploitability: (scannedProject as any).exploitability,
       };
 
       if (packageManager && ['yarn', 'npm'].indexOf(packageManager) !== -1) {

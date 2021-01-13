@@ -24,6 +24,7 @@ export interface BasicVulnInfo {
   note: string | false;
   reachability?: REACHABILITY;
   sampleReachablePaths?: SampleReachablePaths;
+  exploitability?: string;
 }
 
 interface TopLevelPackageUpgrade {

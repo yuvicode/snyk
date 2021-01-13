@@ -68,6 +68,7 @@ export function formatIssuesWithRemediation(
       paths: vuln.list.map((v) => v.from),
       reachability: vuln.reachability,
       sampleReachablePaths: allReachablePaths,
+      exploitability: (vuln as any).exploitability,
     };
 
     if (vulnData.type === 'license') {
@@ -254,6 +255,7 @@ function thisUpgradeFixes(
         [],
         basicVulnInfo[id].reachability,
         basicVulnInfo[id].sampleReachablePaths,
+        basicVulnInfo[id].exploitability,
       ),
     )
     .join('\n');
@@ -424,6 +426,15 @@ export function printPath(path: string[]) {
   return path.slice(1).join(PATH_SEPARATOR);
 }
 
+export enum EXPLOITABILITY {
+  MAYBE_EXPLOITABLE = 'MaybeExploitable',
+  NOT_EXPLOITABLE = 'NotExploitable',
+}
+
+function formatExploitability(exploitability: EXPLOITABILITY): string {
+  return `[${exploitability}]`;
+}
+
 export function formatIssue(
   id: string,
   title: string,
@@ -437,6 +448,7 @@ export function formatIssue(
   legalInstructions?: LegalInstruction[],
   reachability?: REACHABILITY,
   sampleReachablePaths?: SampleReachablePaths,
+  exploitability?: EXPLOITABILITY,
 ): string {
   const severitiesColourMapping = {
     low: {
@@ -464,6 +476,10 @@ export function formatIssue(
   let reachabilityText = '';
   if (reachability) {
     reachabilityText = formatReachability(reachability);
+  }
+  let exploitabilityText = '';
+  if (exploitability) {
+    exploitabilityText = formatExploitability(exploitability);
   }
 
   let introducedBy = '';
