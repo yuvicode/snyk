@@ -3,8 +3,8 @@ import {
   LegalInstruction,
   REACHABILITY,
   SEVERITY,
+  EXPLOITABILITY,
 } from '../../../../lib/snyk-test/legacy';
-
 export interface SampleReachablePaths {
   pathCount: number;
   paths: CallPath[];
@@ -24,7 +24,7 @@ export interface BasicVulnInfo {
   note: string | false;
   reachability?: REACHABILITY;
   sampleReachablePaths?: SampleReachablePaths;
-  exploitability?: string;
+  exploitability?: EXPLOITABILITY;
 }
 
 interface TopLevelPackageUpgrade {

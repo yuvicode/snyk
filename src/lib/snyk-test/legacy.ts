@@ -29,6 +29,11 @@ export enum REACHABILITY {
   NO_INFO = 'no-info',
 }
 
+export enum EXPLOITABILITY {
+  MAYBE_EXPLOITABLE = 'MaybeExploitable',
+  NOT_EXPLOITABLE = 'NotExploitable',
+}
+
 export interface VulnMetaData {
   id: string;
   title: string;

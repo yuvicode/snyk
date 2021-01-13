@@ -10,6 +10,7 @@ import {
   PatchRemediation,
   PinRemediation,
   REACHABILITY,
+  EXPLOITABILITY,
   RemediationChanges,
   SEVERITY,
   UpgradeRemediation,
@@ -424,11 +425,6 @@ function constructUnfixableText(
 
 export function printPath(path: string[]) {
   return path.slice(1).join(PATH_SEPARATOR);
-}
-
-export enum EXPLOITABILITY {
-  MAYBE_EXPLOITABLE = 'MaybeExploitable',
-  NOT_EXPLOITABLE = 'NotExploitable',
 }
 
 function formatExploitability(exploitability: EXPLOITABILITY): string {
