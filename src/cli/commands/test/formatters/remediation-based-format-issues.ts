@@ -69,7 +69,7 @@ export function formatIssuesWithRemediation(
       paths: vuln.list.map((v) => v.from),
       reachability: vuln.reachability,
       sampleReachablePaths: allReachablePaths,
-      exploitability: (vuln as any).exploitability,
+      exploitability: (vuln.list[0] as any).exploitability,
     };
 
     if (vulnData.type === 'license') {
@@ -410,6 +410,8 @@ function constructUnfixableText(
         issueInfo.originalSeverity,
         [],
         issue.reachability,
+        undefined,
+        issueInfo.exploitability,
       ) + `${extraInfo}`,
     );
   }
@@ -525,6 +527,7 @@ export function formatIssue(
       )} Severity${originalSeverityStr}]`,
     ) +
     reachabilityText +
+    exploitabilityText +
     `[${config.ROOT}/vuln/${id}]` +
     name +
     reachableVia +

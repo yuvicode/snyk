@@ -22,7 +22,13 @@ function convertDepGraphResult(
   inspectRes: pluginApi.SinglePackageResult,
   packageManager: SupportedPackageManagers,
 ): MultiProjectResultCustom {
-  const { plugin, meta, dependencyGraph: depGraph, callGraph } = inspectRes;
+  const {
+    plugin,
+    meta,
+    dependencyGraph: depGraph,
+    callGraph,
+    exploitability,
+  } = inspectRes as any;
   return {
     plugin,
     scannedProjects: [
@@ -33,6 +39,7 @@ function convertDepGraphResult(
         meta,
         targetFile: plugin.targetFile,
         packageManager,
+        exploitability,
       },
     ],
   };
@@ -52,7 +59,13 @@ function convertDepTreeResult(
   ) {
     inspectRes.package.targetFile = inspectRes.plugin.targetFile;
   }
-  const { plugin, meta, package: depTree, callGraph } = inspectRes;
+  const {
+    plugin,
+    meta,
+    package: depTree,
+    callGraph,
+    exploitability,
+  } = inspectRes as any;
 
   if (depTree && !depTree.targetFile && plugin) {
     depTree.targetFile = plugin.targetFile;
@@ -68,6 +81,7 @@ function convertDepTreeResult(
         meta,
         targetFile: plugin.targetFile,
         packageManager,
+        exploitability,
       },
     ],
   };

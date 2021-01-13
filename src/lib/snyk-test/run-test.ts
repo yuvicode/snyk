@@ -271,7 +271,6 @@ async function sendAndParseResults(
 
       const legacyRes = convertIssuesToAffectedPkgs(res);
 
-      // KOKO: make sure we have explloitaility here
       const result = await parseRes(
         depGraph,
         pkgManager,
@@ -362,13 +361,6 @@ async function parseRes(
   // so this flow will not be applicable
   // refactor to separate
 
-  for (const vuln of res.vulnerabilities) {
-    const expStatus = exploitability[vuln.id];
-    if (expStatus) {
-      (vuln as any).exploitability = expStatus;
-    }
-  }
-
   if (depGraph && pkgManager) {
     res = convertTestDepGraphResultToLegacy(
       (res as any) as TestDepGraphResponse, // Double "as" required by Typescript for dodgy assertions
@@ -376,6 +368,14 @@ async function parseRes(
       pkgManager,
       options.severityThreshold,
     );
+
+    for (const vuln of res.vulnerabilities) {
+      const expStatus = exploitability[vuln.id];
+      if (expStatus) {
+        (vuln as any).exploitability = expStatus;
+      }
+    }
+
     // For Node.js: inject additional information (for remediation etc.) into the response.
     if (payload.modules) {
       res.dependencyCount =

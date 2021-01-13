@@ -20,6 +20,7 @@ export interface ScannedProjectCustom
   packageManager: SupportedPackageManagers;
   plugin: PluginMetadata;
   callGraph?: CallGraph;
+  exploitability?: any;
 }
 
 interface FailedProjectScanError {
