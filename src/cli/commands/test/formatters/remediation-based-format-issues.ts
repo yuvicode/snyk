@@ -430,11 +430,13 @@ export function printPath(path: string[]) {
 }
 
 function formatExploitability(exploitability: EXPLOITABILITY): string {
-  if (exploitability == EXPLOITABILITY.MAYBE_EXPLOITABLE) {
+  if (exploitability === EXPLOITABILITY.MAYBE_EXPLOITABLE) {
     return chalk.magentaBright('[Maybe Exploitable]');
-  } else if (exploitability == EXPLOITABILITY.NOT_EXPLOITABLE) {
+  } else if (exploitability === EXPLOITABILITY.NOT_EXPLOITABLE) {
     return chalk.greenBright('[Not Exploitable]');
   }
+
+  return '';
 }
 
 export function formatIssue(
