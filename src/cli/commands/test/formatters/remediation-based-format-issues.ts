@@ -431,7 +431,7 @@ export function printPath(path: string[]) {
 
 function formatExploitability(exploitability: EXPLOITABILITY): string {
   if (exploitability === EXPLOITABILITY.MAYBE_EXPLOITABLE) {
-    return chalk.magentaBright('[Maybe Exploitable]');
+    return chalk.magentaBright('[Likely Exploitable]');
   } else if (exploitability === EXPLOITABILITY.NOT_EXPLOITABLE) {
     return chalk.greenBright('[Not Exploitable]');
   }
@@ -526,7 +526,7 @@ export function formatIssue(
     originalSeverityStr = ` (originally ${titleCaseText(originalSeverity)})`;
   }
 
-  let msg = (
+  let msg =
     severitiesColourMapping[severity].colorFunc(
       `  ✗ ${chalk.bold(title)}${newBadge} [${titleCaseText(
         severity,
@@ -543,8 +543,7 @@ export function formatIssue(
           '\n    Legal instructions',
         )}:\n    ${legalLicenseInstructionsText}`
       : '') +
-    (note ? `${chalk.bold('\n    Note')}:\n    ${note}` : '')
-  );
+    (note ? `${chalk.bold('\n    Note')}:\n    ${note}` : '');
 
   if (exploitability === EXPLOITABILITY.NOT_EXPLOITABLE) {
     msg = chalk.dim(chalk.strikethrough(msg));
