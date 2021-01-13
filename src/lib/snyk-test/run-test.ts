@@ -17,6 +17,7 @@ import {
   LegacyVulnApiResult,
   TestDependenciesResponse,
   AffectedPackages,
+  SEVERITY,
 } from './legacy';
 import { IacTestResponse } from './iac-test-result';
 import {
@@ -244,6 +245,66 @@ async function sendAndParseResults(
       );
       results.push(result);
     } else {
+      if (
+        (payload.body as TestDependenciesRequest).scanResult.facts.some(
+          (fact) => fact.type === 'secrets',
+        )
+      ) {
+        const secretsFacts = (payload.body as TestDependenciesRequest).scanResult.facts.filter(
+          (fact) => fact.type === 'secrets',
+        );
+        const vulns: AnnotatedIssue[] = [];
+        const {
+          targetFile,
+          projectName,
+          foundProjectCount,
+          displayTargetFile,
+          platform,
+        } = prepareResponseForParsing(
+          payload,
+          {} as TestDependenciesResponse,
+          options,
+        );
+        for (const secretFact of secretsFacts) {
+          vulns.push({
+            id: 'SNYK-CC-TF-74',
+            title: 'Hardcoded provider credentials',
+            description: 'Hardcoded provider credentials',
+            severity: SEVERITY.HIGH,
+            name: secretFact.data[0],
+            isPatchable: false,
+            isUpgradable: false,
+            upgradePath: [],
+            from: secretFact.data,
+            packageName: 'rpm',
+            version: '1',
+            credit: '',
+            patches: [],
+            isNew: false,
+            fixedIn: [],
+            parentDepType: '',
+            below: '',
+            semver: {
+              vulnerable: '',
+            },
+          });
+        }
+        const result = Object.assign({}, results[0]);
+        result['vulnerabilities'] = vulns;
+        result['packageManager'] = 'npm';
+        result['projectName'] = 'angularjs-crypto.js';
+        result['uniqueCount'] = vulns.length;
+        results.push({
+          ...result,
+          targetFile,
+          projectName,
+          foundProjectCount,
+          displayTargetFile,
+          platform,
+        });
+
+        continue;
+      }
       /** sendTestPayload() deletes the request.body from the payload once completed. */
       const payloadCopy = Object.assign({}, payload);
       const res = await sendTestPayload(payload);
@@ -292,6 +353,7 @@ async function sendAndParseResults(
       });
     }
   }
+
   return results;
 }
 
