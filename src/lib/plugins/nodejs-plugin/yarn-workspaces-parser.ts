@@ -160,7 +160,10 @@ function packageJsonBelongsToWorkspace(
 
   const match = micromatch.isMatch(
     filePath,
-    workspacesGlobs.map((p) => (p.endsWith('/**') ? p : p + '/**')),
+    workspacesGlobs.map((p) =>
+      p.endsWith(path.sep + '**') ? p : p + path.sep + '**',
+    ),
   );
+  console.log({ match, filePath });
   return match;
 }

@@ -11,40 +11,40 @@ export interface AcceptanceTests {
   };
 }
 
-import { GenericTests } from './cli-test.generic.spec';
+// import { GenericTests } from './cli-test.generic.spec';
 
-import { CocoapodsTests } from './cli-test.cocoapods.spec';
-import { ComposerTests } from './cli-test.composer.spec';
-import { DockerTests } from './cli-test.docker.spec';
-import { GoTests } from './cli-test.go.spec';
-import { GradleTests } from './cli-test.gradle.spec';
-import { MavenTests } from './cli-test.maven.spec';
-import { NpmTests } from './cli-test.npm.spec';
-import { NugetTests } from './cli-test.nuget.spec';
-import { PythonTests } from './cli-test.python.spec';
-import { RubyTests } from './cli-test.ruby.spec';
-import { SbtTests } from './cli-test.sbt.spec';
-import { YarnTests } from './cli-test.yarn.spec';
-import { IacK8sTests } from './iac/cli-test.iac-k8s.spec';
-import { IacDirTests } from './iac/cli-test.iac-dir.spec';
+// import { CocoapodsTests } from './cli-test.cocoapods.spec';
+// import { ComposerTests } from './cli-test.composer.spec';
+// import { DockerTests } from './cli-test.docker.spec';
+// import { GoTests } from './cli-test.go.spec';
+// import { GradleTests } from './cli-test.gradle.spec';
+// import { MavenTests } from './cli-test.maven.spec';
+// import { NpmTests } from './cli-test.npm.spec';
+// import { NugetTests } from './cli-test.nuget.spec';
+// import { PythonTests } from './cli-test.python.spec';
+// import { RubyTests } from './cli-test.ruby.spec';
+// import { SbtTests } from './cli-test.sbt.spec';
+// import { YarnTests } from './cli-test.yarn.spec';
+// import { IacK8sTests } from './iac/cli-test.iac-k8s.spec';
+// import { IacDirTests } from './iac/cli-test.iac-dir.spec';
 import { YarnWorkspacesTests } from './cli-test.yarn-workspaces.spec';
 // import { AllProjectsTests } from './cli-test.all-projects.spec'; TODO @boost temporary disable flaky test
 
 const languageTests: AcceptanceTests[] = [
-  CocoapodsTests,
-  ComposerTests,
-  DockerTests,
-  GoTests,
-  GradleTests,
-  MavenTests,
-  NpmTests,
-  NugetTests,
-  PythonTests,
-  RubyTests,
-  SbtTests,
-  YarnTests,
-  IacK8sTests,
-  IacDirTests,
+  // CocoapodsTests,
+  // ComposerTests,
+  // DockerTests,
+  // GoTests,
+  // GradleTests,
+  // MavenTests,
+  // NpmTests,
+  // NugetTests,
+  // PythonTests,
+  // RubyTests,
+  // SbtTests,
+  // YarnTests,
+  // IacK8sTests,
+  // IacDirTests,
   YarnWorkspacesTests,
 ];
 
@@ -113,17 +113,17 @@ if (!isWindows) {
     t.end();
   });
 
-  test(GenericTests.language, async (t) => {
-    for (const testName of Object.keys(GenericTests.tests)) {
-      t.test(
-        testName,
-        GenericTests.tests[testName](
-          { server, versionNumber, cli },
-          { chdirWorkspaces },
-        ),
-      );
-    }
-  });
+  // test(GenericTests.language, async (t) => {
+  //   for (const testName of Object.keys(GenericTests.tests)) {
+  //     t.test(
+  //       testName,
+  //       GenericTests.tests[testName](
+  //         { server, versionNumber, cli },
+  //         { chdirWorkspaces },
+  //       ),
+  //     );
+  //   }
+  // });
 
   // TODO @boost: temporary disabling this flaky test
   // test(AllProjectsTests.language, async (t) => {
