@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "workspaces": [
+    "apples",
+    "tomatoes"
+  ],
+  "resolutions": {
+    "node-fetch": "^2.3.0"
+  },
+  "engines": {
+    "node": "^12"
+  },
+  "devDependencies": {
+    "wsrun": "^3.6.2"
+  },
+  "dependencies": {
+    "node-fetch": "^2.3.0"
+  }
+}
