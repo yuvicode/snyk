@@ -3,6 +3,7 @@ import * as depGraphLib from '@snyk/dep-graph';
 import { SupportedPackageManagers } from '../package-managers';
 import { SupportedProjectTypes } from '../types';
 import { SEVERITIES } from './common';
+import { ScanResult } from 'snyk-cpp-plugin';
 
 interface Pkg {
   name: string;

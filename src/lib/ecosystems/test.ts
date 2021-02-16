@@ -30,7 +30,7 @@ export async function testEcosystem(
     scanResultsByPath[path] = pluginResponse.scanResults;
   }
   spinner.clearAll();
-  const [testResults, errors] = await testDependencies(
+  const testResults = await testDependencies(
     scanResultsByPath,
     options,
   );
@@ -43,7 +43,7 @@ export async function testEcosystem(
   const readableResult = await plugin.display(
     scanResults,
     testResults,
-    errors,
+    testResults.map((result) => result.error),
     options,
   );
 
@@ -52,15 +52,24 @@ export async function testEcosystem(
     stringifiedData,
   );
 }
-
+interface TestResponse {
+  scanResult: ScanResult;
+  response?: TestDependenciesResponse;
+  error?: Error;
+}
 async function testDependencies(
   scans: {
     [dir: string]: ScanResult[];
   },
   options: Options,
-): Promise<[TestResult[], string[]]> {
-  const results: TestResult[] = [];
-  const errors: string[] = [];
+): Promise<TestResponse[]> {
+  // TODO: snyk-fix
+  // display() plugin boundary needs to update to couple result & test instead of 2 separate array params
+  // we want to convert the new ecosystem flow to be the ideal shape for `snyk-fix` to be easily callable somewhere
+  // for this we want to return each scanResult alongside it's TestResult
+  // For now it is possible to use the TestResult legacy that comes out of snyk.test() and kind of
+  // make scanResult & testResult shape to get started asap for Salesforce
+  const results: TestResponse[] = [];
   for (const [path, scanResults] of Object.entries(scans)) {
     await spinner(`Testing dependencies in ${path}`);
     for (const scanResult of scanResults) {
@@ -80,18 +89,21 @@ async function testDependencies(
       try {
         const response = await makeRequest<TestDependenciesResponse>(payload);
         results.push({
-          issues: response.result.issues,
-          issuesData: response.result.issuesData,
-          depGraphData: response.result.depGraphData,
+          scanResult,
+          response,
         });
       } catch (error) {
         if (error.code >= 400 && error.code < 500) {
           throw new Error(error.message);
         }
-        errors.push('Could not test dependencies in ' + path);
+        results.push({
+          scanResult,
+          message: 'Could not test dependencies in ' + path,
+          error,
+        });
       }
     }
   }
   spinner.clearAll();
-  return [results, errors];
+  return results;
 }
