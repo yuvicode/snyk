@@ -5,7 +5,7 @@ import { makeRequest } from '../request/promise';
 import { Options } from '../types';
 import { TestCommandResult } from '../../cli/commands/types';
 import * as spinner from '../../lib/spinner';
-import { Ecosystem, ScanResult, TestResult } from './types';
+import { Ecosystem, ScanResult } from './types';
 import { getPlugin } from './plugins';
 import { TestDependenciesResponse } from '../snyk-test/legacy';
 import { assembleQueryString } from '../snyk-test/common';
@@ -30,33 +30,48 @@ export async function testEcosystem(
     scanResultsByPath[path] = pluginResponse.scanResults;
   }
   spinner.clearAll();
-  const testResults = await testDependencies(
-    scanResultsByPath,
-    options,
-  );
+  const testResults = await testDependencies(scanResultsByPath, options);
   const stringifiedData = JSON.stringify(testResults, null, 2);
   if (options.json) {
     return TestCommandResult.createJsonTestCommandResult(stringifiedData);
   }
   const emptyResults: ScanResult[] = [];
   const scanResults = emptyResults.concat(...Object.values(scanResultsByPath));
+
   const readableResult = await plugin.display(
     scanResults,
-    testResults,
-    testResults.map((result) => result.error),
+    testResults
+      .filter(isGoodTestResponse)
+      .map((result) => result.response.result),
+    testResults.filter(isErrorTestResponse).map((result) => result.userMessage),
     options,
   );
-
+  // snyk.fix(testResults)
   return TestCommandResult.createHumanReadableTestCommandResult(
     readableResult,
     stringifiedData,
   );
 }
-interface TestResponse {
-  scanResult: ScanResult;
-  response?: TestDependenciesResponse;
-  error?: Error;
+
+function isGoodTestResponse(res: TestResponse): res is TestResponseGood {
+  return 'response' in res;
 }
+
+function isErrorTestResponse(res: TestResponse): res is TestResponseError {
+  return 'error' in res;
+}
+export interface TestResponseGood {
+  scanResult: ScanResult;
+  response: TestDependenciesResponse;
+}
+interface TestResponseError {
+  scanResult: ScanResult;
+  error: Error;
+  userMessage: string;
+}
+
+type TestResponse = TestResponseError | TestResponseGood;
+
 async function testDependencies(
   scans: {
     [dir: string]: ScanResult[];
@@ -79,7 +94,7 @@ async function testDependencies(
         json: true,
         headers: {
           'x-is-ci': isCI(),
-          authorization: 'token ' + snyk.api,
+          'authorization': 'token ' + snyk.api,
         },
         body: {
           scanResult,
@@ -98,7 +113,7 @@ async function testDependencies(
         }
         results.push({
           scanResult,
-          message: 'Could not test dependencies in ' + path,
+          userMessage: 'Could not test dependencies in ' + path,
           error,
         });
       }
