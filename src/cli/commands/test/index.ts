@@ -1,7 +1,12 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 export = test;
 
 const cloneDeep = require('lodash.clonedeep');
 const assign = require('lodash.assign');
+import { DepGraphData } from '@snyk/dep-graph';
+import * as snykFix from '@snyk/fix';
+
+import * as fs from 'fs';
 import chalk from 'chalk';
 import * as snyk from '../../../lib';
 import * as config from '../../../lib/config';
@@ -18,7 +23,11 @@ import {
 import { isLocalFolder } from '../../../lib/detect';
 import { MethodArgs } from '../../args';
 import { TestCommandResult } from '../../commands/types';
-import { LegacyVulnApiResult, TestResult } from '../../../lib/snyk-test/legacy';
+import {
+  LegacyVulnApiResult,
+  TestDependenciesResponse,
+  TestResult,
+} from '../../../lib/snyk-test/legacy';
 import {
   IacTestResponse,
   mapIacTestResult,
@@ -53,6 +62,8 @@ import {
 } from './formatters/format-test-results';
 
 import * as iacLocalExecution from './iac-local-execution';
+import { ScanResult } from '../../../lib/ecosystems/types';
+import { EntityToFix } from '@snyk/fix/dist/types';
 
 const debug = Debug('snyk-test');
 const SEPARATOR = '\n-------------------------------------------------------\n';
@@ -142,6 +153,10 @@ async function test(...args: MethodArgs): Promise<TestCommandResult> {
         res = await iacLocalExecution.test(path, options);
       } else {
         res = await snyk.test(path, testOpts);
+        if (options.fix) {
+          const newRes = convertLegacyTestResultToTestResult(res, path);
+          await snykFix.fix(newRes);
+        }
       }
       if (testOpts.iacDirFiles) {
         options.iacDirFiles = testOpts.iacDirFiles;
@@ -356,6 +371,57 @@ async function test(...args: MethodArgs): Promise<TestCommandResult> {
     stringifiedJsonData,
     stringifiedSarifData,
   );
+}
+
+function convertLegacyTestResultToTestResult(
+  testResults: (TestResult | TestResult[]) | Error,
+  root: string,
+): EntityToFix[] {
+  if (testResults instanceof Error) {
+    return [];
+  }
+  const oldResults = Array.isArray(testResults) ? testResults : [testResults];
+  return oldResults.map((res) => {
+    return {
+      // TODO: split into 2 functions 1 to convert to ScanResult and another
+      // to convert to TestDependenciesResponse
+      workspace: {
+        readFile: async (path: string) => {
+          return fs.readFileSync(pathLib.resolve(root, path), 'utf8');
+        },
+        writeFile: async (path: string, content: string) => {
+          return fs.writeFileSync(pathLib.resolve(root, path), content, 'utf8');
+        },
+      },
+      scanResult: {
+        identity: {
+          type: res.packageManager!,
+          targetFile: res.targetFile || res.displayTargetFile, // TODO: this is because not all plugins send it back
+        },
+        name: res.projectName, // TODO: confirm
+        facts: [
+          // TODO: facts
+        ],
+        policy: '', // TODO:
+      },
+      testResult: {
+        issuesData: {} as any, // TODO:
+        issues: [], // TODO:
+        // docker: res.docker, TODO:// convert this
+        remediation: res.remediation as any,
+        depGraphData: {} as DepGraphData, // TODO: need to get this from the scan
+        meta: {
+          isPublic: !res.isPrivate,
+          isLicensesEnabled: false, // figure it out yolo
+          licensesPolicy: undefined, // TODO: fix this
+          projectId: res.projectId,
+          ignoreSettings: undefined, // TODO: fix this
+          policy: '', // TODO:
+          org: res.org,
+        },
+      },
+    };
+  });
 }
 
 function shouldFail(vulnerableResults: any[], failOn: FailOn) {

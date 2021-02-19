@@ -209,6 +209,7 @@ export function args(rawArgv: string[]): Args {
     'yarn-workspaces',
     'detection-depth',
     'reachable',
+    'fix',
     'reachable-vulns',
     'reachable-timeout',
     'reachable-vulns-timeout',

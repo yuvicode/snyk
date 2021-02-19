@@ -21,6 +21,7 @@ export interface TestOptions {
   reachableVulns?: boolean;
   reachableVulnsTimeout?: number;
   initScript?: string;
+  fix?: boolean;
   yarnWorkspaces?: boolean;
   testDepGraphDockerEndpoint?: string | null;
   isDockerUser?: boolean;
@@ -177,6 +178,7 @@ export type SupportedUserReachableFacingCliArgs =
   | 'yarn-workspaces'
   | 'detection-depth'
   | 'project-name'
+  | 'fix'
   | 'reachable'
   | 'reachable-vulns'
   | 'reachable-timeout'
