@@ -1,7 +1,5 @@
 import * as _debug from 'debug';
-import { DepGraph, legacy } from '@snyk/dep-graph';
-
-import { DepTree } from './types';
+import { DepGraph, pruneGraph as libPruneGraph } from '@snyk/dep-graph';
 import * as config from './config';
 import { TooManyVulnPaths } from './errors';
 import * as analytics from '../lib/analytics';
@@ -9,8 +7,6 @@ import { SupportedPackageManagers } from './package-managers';
 import { countPathsToGraphRoot } from './utils';
 
 const debug = _debug('snyk:prune');
-
-const { depTreeToGraph, graphToDepTree } = legacy;
 
 export async function pruneGraph(
   depGraph: DepGraph,
@@ -27,16 +23,8 @@ export async function pruneGraph(
   if (isDenseGraph || pruneIsRequired) {
     debug('Trying to prune the graph');
     const pruneStartTime = Date.now();
-    const prunedTree = (await graphToDepTree(depGraph, packageManager, {
-      deduplicateWithinTopLevelDeps: true,
-    })) as DepTree;
-    const graphToTreeEndTime = Date.now();
-    analytics.add(
-      'prune.graphToTreeDuration',
-      graphToTreeEndTime - pruneStartTime,
-    );
-    const prunedGraph = await depTreeToGraph(prunedTree, packageManager);
-    analytics.add('prune.treeToGraphDuration', Date.now() - graphToTreeEndTime);
+    const prunedGraph = await libPruneGraph(depGraph);
+    analytics.add('prune.treeToGraphDuration', Date.now() - pruneStartTime);
     const postPrunePathsCount = countPathsToGraphRoot(prunedGraph);
     analytics.add('postPrunedPathsCount', postPrunePathsCount);
     debug('postPrunePathsCount' + postPrunePathsCount);

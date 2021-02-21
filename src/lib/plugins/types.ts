@@ -20,6 +20,7 @@ export interface Options {
   composerPharIsFine?: boolean;
   systemVersions?: object;
   scanAllUnmanaged?: boolean;
+  returnDepGraph?: boolean;
 }
 
 export interface Plugin {

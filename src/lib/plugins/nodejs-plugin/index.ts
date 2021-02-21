@@ -17,7 +17,7 @@ export async function inspect(
     targetFile.endsWith('yarn.lock');
 
   const getLockFileDeps = isLockFileBased && !options.traverseNodeModules;
-  const depTree: any = getLockFileDeps
+  const result: any = getLockFileDeps
     ? await lockParser.parse(root, targetFile, options)
     : await modulesParser.parse(root, targetFile, options);
 
@@ -26,6 +26,11 @@ export async function inspect(
       name: 'snyk-nodejs-lockfile-parser',
       runtime: process.version,
     },
-    scannedProjects: [{ depTree }],
+    scannedProjects: [
+      {
+        depTree: !options.returnDepGraph ? result : undefined,
+        depGraph: options.returnDepGraph ? result : undefined,
+      },
+    ],
   };
 }

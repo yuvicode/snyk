@@ -7,12 +7,13 @@ import * as fs from 'fs';
 import * as lockFileParser from 'snyk-nodejs-lockfile-parser';
 import { PkgTree } from 'snyk-nodejs-lockfile-parser';
 import { Options } from '../types';
+import { DepGraph } from '@snyk/dep-graph';
 
 export async function parse(
   root: string,
   targetFile: string,
   options: Options,
-): Promise<PkgTree> {
+): Promise<PkgTree | DepGraph> {
   const lockFileFullPath = path.resolve(root, targetFile);
   if (!fs.existsSync(lockFileFullPath)) {
     throw new Error(
@@ -50,13 +51,21 @@ export async function parse(
   try {
     await spinner(resolveModuleSpinnerLabel);
     const strictOutOfSync = options.strictOutOfSync !== false;
-    return lockFileParser.buildDepTreeFromFiles(
-      root,
-      manifestFileFullPath,
-      lockFileFullPath,
-      options.dev,
-      strictOutOfSync,
-    );
+    return options.returnDepGraph
+      ? lockFileParser.buildDepGraphFromFiles(
+          root,
+          manifestFileFullPath,
+          lockFileFullPath,
+          options.dev,
+          strictOutOfSync,
+        )
+      : lockFileParser.buildDepTreeFromFiles(
+          root,
+          manifestFileFullPath,
+          lockFileFullPath,
+          options.dev,
+          strictOutOfSync,
+        );
   } finally {
     await spinner.clear<void>(resolveModuleSpinnerLabel)();
   }
