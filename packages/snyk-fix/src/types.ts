@@ -164,7 +164,7 @@ export enum SEVERITY {
 /* End Remediation Data
  */
 
-/* Python fix types
+/* Snyk fix types
  * Types for concepts introduced as part of this lib
  */
 
@@ -177,4 +177,14 @@ export interface EntityToFix {
   };
   readonly scanResult: ScanResult;
   readonly testResult: TestResult;
+}
+
+export interface WithError<Original> {
+  original: Original;
+  error: Error;
+}
+
+export interface WithUserMessage<Original> {
+  original: Original;
+  userMessage: string;
 }

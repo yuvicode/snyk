@@ -11,11 +11,7 @@ import { parseRequirementsFile, Requirement } from './requirements-file-parser';
 export function updateDependencies(
   requirementsTxt: string,
   upgrades: DependencyUpdates,
-) {
-  if (Object.keys(upgrades).length === 0) {
-    return requirementsTxt;
-  }
-
+): { updatedManifest: string; appliedChangesSummary: string } {
   const parsedRequirementsData = parseRequirementsFile(requirementsTxt);
 
   // Lowercase the upgrades object. This might be overly defensive, given that
@@ -38,7 +34,7 @@ export function updateDependencies(
     .map(({ name }) => name && name.toLowerCase())
     .filter(isDefined);
 
-  let updatedManifestWithPins = applyPins(
+  let updatedManifest = applyPins(
     updatedRequirements,
     topLevelDeps,
     lowerCasedUpgrades,
@@ -47,9 +43,9 @@ export function updateDependencies(
   // This is a bit of a hack, but an easy one to follow. If a file ends with a
   // new line, ensure we keep it this way. Don't hijack customers formatting.
   if (requirementsTxt.endsWith('\n')) {
-    updatedManifestWithPins += '\n';
+    updatedManifest += '\n';
   }
-  return updatedManifestWithPins;
+  return { updatedManifest, appliedChangesSummary: 'TODO' };
 }
 
 // TS is not capable of determining when Array.filter has removed undefined
