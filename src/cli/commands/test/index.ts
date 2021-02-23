@@ -62,8 +62,8 @@ import {
 } from './formatters/format-test-results';
 
 import * as iacLocalExecution from './iac-local-execution';
-import { ScanResult } from '../../../lib/ecosystems/types';
 import { EntityToFix } from '@snyk/fix/dist/types';
+import { isFeatureFlagSupportedForOrg } from '../../../lib/feature-flags';
 
 const debug = Debug('snyk-test');
 const SEPARATOR = '\n-------------------------------------------------------\n';
@@ -153,9 +153,21 @@ async function test(...args: MethodArgs): Promise<TestCommandResult> {
         res = await iacLocalExecution.test(path, options);
       } else {
         res = await snyk.test(path, testOpts);
+        const snykFixFeatureFlag = 'cliSnykFix';
+        const snykFixSupported = await isFeatureFlagSupportedForOrg(
+          snykFixFeatureFlag,
+          Array.isArray(res) ? res[0].org : res.org,
+        );
         if (options.fix) {
-          const newRes = convertLegacyTestResultToTestResult(res, path);
-          await snykFix.fix(newRes);
+          if (snykFixSupported.ok) {
+            debug(
+              `Organization has ${snykFixFeatureFlag} feature flag enabled for experimental Snyk fix functionality`,
+            );
+            const newRes = convertLegacyTestResultToTestResult(res, path);
+            await snykFix.fix(newRes);
+          } else {
+            debug(snykFixSupported.userMessage);
+          }
         }
       }
       if (testOpts.iacDirFiles) {
