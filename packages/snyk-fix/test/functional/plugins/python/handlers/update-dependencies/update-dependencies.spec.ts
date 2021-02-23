@@ -19,7 +19,9 @@ describe('remediation', () => {
       'Django==2.0.1\ntransitive>=1.1.1 # not directly required, pinned by Snyk to avoid a vulnerability';
 
     const result = updateDependencies(manifestContents, upgrades);
-    expect(result.appliedChangesSummary).toEqual('TODO');
+    expect(result.appliedChangesSummary).toEqual(
+      'Upgraded Django from 1.6.1 to 2.0.1\nPinned transitive from 1.0.0 to 1.1.1\n',
+    );
     // Note no extra newline was added to the expected manifest
     expect(result.updatedManifest).toEqual(expectedManifest);
   });
@@ -40,7 +42,9 @@ describe('remediation', () => {
       'Django==2.0.1\ntransitive>=1.1.1 # not directly required, pinned by Snyk to avoid a vulnerability\n';
 
     const result = updateDependencies(manifestContents, upgrades);
-    expect(result.appliedChangesSummary).toEqual('TODO');
+    expect(result.appliedChangesSummary).toEqual(
+      'Upgraded Django from 1.6.1 to 2.0.1\nPinned transitive from 1.0.0 to 1.1.1\n',
+    );
     expect(result.updatedManifest).toEqual(expectedManifest);
   });
 
@@ -60,7 +64,9 @@ describe('remediation', () => {
       '\n#some comment\n\nDjango==2.0.1\ntransitive>=1.1.1 # not directly required, pinned by Snyk to avoid a vulnerability\n';
 
     const result = updateDependencies(manifestContents, upgrades);
-    expect(result.appliedChangesSummary).toEqual('TODO');
+    expect(result.appliedChangesSummary).toEqual(
+      'Upgraded Django from 1.6.1 to 2.0.1\nPinned transitive from 1.0.0 to 1.1.1\n',
+    );
     expect(result.updatedManifest).toEqual(expectedManifest);
   });
 
@@ -74,7 +80,9 @@ describe('remediation', () => {
     const expectedManifest = 'django==2.0.1\n';
 
     const result = updateDependencies(manifestContents, upgrades);
-    expect(result.appliedChangesSummary).toEqual('TODO');
+    expect(result.appliedChangesSummary).toEqual(
+      'Upgraded django from 1.6.1 to 2.0.1\n',
+    );
     expect(result.updatedManifest).toEqual(expectedManifest);
   });
 
@@ -88,7 +96,9 @@ describe('remediation', () => {
     const expectedManifest = 'Django==2.0.1\n';
 
     const result = updateDependencies(manifestContents, upgrades);
-    expect(result.appliedChangesSummary).toEqual('TODO');
+    expect(result.appliedChangesSummary).toEqual(
+      'Upgraded Django from 1.6.1 to 2.0.1\n',
+    );
     expect(result.updatedManifest).toEqual(expectedManifest);
   });
 
@@ -102,7 +112,9 @@ describe('remediation', () => {
     const expectedManifest = 'foo==55.66.7\n';
 
     const result = updateDependencies(manifestContents, upgrades);
-    expect(result.appliedChangesSummary).toEqual('TODO');
+    expect(result.appliedChangesSummary).toEqual(
+      'Upgraded foo from 12.123.14 to 55.66.7\n',
+    );
     expect(result.updatedManifest).toEqual(expectedManifest);
   });
 
@@ -116,7 +128,9 @@ describe('remediation', () => {
     const expectedManifest = 'django==2.0.1 # this is a comment\n';
 
     const result = updateDependencies(manifestContents, upgrades);
-    expect(result.appliedChangesSummary).toEqual('TODO');
+    expect(result.appliedChangesSummary).toEqual(
+      'Upgraded django from 1.6.1 to 2.0.1\n',
+    );
     expect(result.updatedManifest).toEqual(expectedManifest);
   });
 
@@ -131,7 +145,9 @@ describe('remediation', () => {
     const expectedManifest = 'django>=2.0.1\nclick>7.1';
 
     const result = updateDependencies(manifestContents, upgrades);
-    expect(result.appliedChangesSummary).toEqual('TODO');
+    expect(result.appliedChangesSummary).toEqual(
+      'Upgraded django from 1.6.1 to 2.0.1\nUpgraded click from 7.0 to 7.1\n',
+    );
     expect(result.updatedManifest).toEqual(expectedManifest);
   });
 

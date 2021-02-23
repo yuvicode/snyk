@@ -23,6 +23,7 @@ export interface ScanResult {
 export interface Identity {
   type: string;
   targetFile?: string;
+  // options used to scan should be here
   args?: { [key: string]: string };
 }
 
@@ -177,6 +178,7 @@ export interface EntityToFix {
   };
   readonly scanResult: ScanResult;
   readonly testResult: TestResult;
+  // options
 }
 
 export interface WithError<Original> {
