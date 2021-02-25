@@ -150,7 +150,21 @@ describe('fix *req*.txt / *.txt Python projects', () => {
         python: {
           failed: [],
           skipped: [],
-          succeeded: [{ original: entityToFix, userMessage: 'TODO' }],
+          succeeded: [
+            {
+              original: entityToFix,
+              changes: [
+                {
+                  success: true,
+                  userMessage: 'Pinned transitive from 1.0.0 to 1.1.1',
+                },
+                {
+                  success: true,
+                  userMessage: 'Upgraded Django from 1.6.1 to 2.0.1',
+                },
+              ],
+            },
+          ],
         },
       },
     });
@@ -224,7 +238,21 @@ describe('fix *req*.txt / *.txt Python projects', () => {
         python: {
           failed: [],
           skipped: [],
-          succeeded: [{ original: entityToFix, userMessage: 'TODO' }],
+          succeeded: [
+            {
+              original: entityToFix,
+              changes: [
+                {
+                  success: true,
+                  userMessage: 'Pinned transitive from 1.0.0 to 1.1.1',
+                },
+                {
+                  success: true,
+                  userMessage: 'Upgraded Django from 1.6.1 to 2.0.1',
+                },
+              ],
+            },
+          ],
         },
       },
     });
@@ -299,7 +327,21 @@ describe('fix *req*.txt / *.txt Python projects', () => {
         python: {
           failed: [],
           skipped: [],
-          succeeded: [{ original: entityToFix, userMessage: 'TODO' }],
+          succeeded: [
+            {
+              original: entityToFix,
+              changes: [
+                {
+                  success: true,
+                  userMessage: 'Pinned transitive from 1.0.0 to 1.1.1',
+                },
+                {
+                  success: true,
+                  userMessage: 'Upgraded Django from 1.6.1 to 2.0.1',
+                },
+              ],
+            },
+          ],
         },
       },
     });
@@ -368,7 +410,17 @@ describe('fix *req*.txt / *.txt Python projects', () => {
         python: {
           failed: [],
           skipped: [],
-          succeeded: [{ original: entityToFix, userMessage: 'TODO' }],
+          succeeded: [
+            {
+              original: entityToFix,
+              changes: [
+                {
+                  success: true,
+                  userMessage: 'Upgraded django from 1.6.1 to 2.0.1',
+                },
+              ],
+            },
+          ],
         },
       },
     });
@@ -438,7 +490,17 @@ describe('fix *req*.txt / *.txt Python projects', () => {
         python: {
           failed: [],
           skipped: [],
-          succeeded: [{ original: entityToFix, userMessage: 'TODO' }],
+          succeeded: [
+            {
+              original: entityToFix,
+              changes: [
+                {
+                  success: true,
+                  userMessage: 'Upgraded Django from 1.6.1 to 2.0.1',
+                },
+              ],
+            },
+          ],
         },
       },
     });
@@ -507,7 +569,17 @@ describe('fix *req*.txt / *.txt Python projects', () => {
         python: {
           failed: [],
           skipped: [],
-          succeeded: [{ original: entityToFix, userMessage: 'TODO' }],
+          succeeded: [
+            {
+              original: entityToFix,
+              changes: [
+                {
+                  success: true,
+                  userMessage: 'Upgraded foo from 12.123.14 to 55.66.7',
+                },
+              ],
+            },
+          ],
         },
       },
     });
@@ -577,7 +649,21 @@ describe('fix *req*.txt / *.txt Python projects', () => {
         python: {
           failed: [],
           skipped: [],
-          succeeded: [{ original: entityToFix, userMessage: 'TODO' }],
+          succeeded: [
+            {
+              original: entityToFix,
+              changes: [
+                {
+                  success: true,
+                  userMessage: 'Upgraded django from 1.6.1 to 2.0.1',
+                },
+                {
+                  success: true,
+                  userMessage: 'Upgraded click from 7.0 to 7.1',
+                },
+              ],
+            },
+          ],
         },
       },
     });
@@ -638,7 +724,17 @@ describe('fix *req*.txt / *.txt Python projects', () => {
         python: {
           failed: [],
           skipped: [],
-          succeeded: [{ original: entityToFix, userMessage: 'TODO' }],
+          succeeded: [
+            {
+              original: entityToFix,
+              changes: [
+                {
+                  success: true,
+                  userMessage: 'Upgraded click from 7.0 to 7.1',
+                },
+              ],
+            },
+          ],
         },
       },
     });
