@@ -186,7 +186,25 @@ export interface WithError<Original> {
   error: Error;
 }
 
+export interface WithFixChangesApplied<Original> {
+  original: Original;
+  changes: FixChangesSummary[];
+}
+
 export interface WithUserMessage<Original> {
   original: Original;
   userMessage: string;
+}
+
+export type FixChangesSummary = FixChangesSuccess | FixChangesError;
+
+interface FixChangesSuccess {
+  success: true;
+  userMessage: string;
+}
+
+interface FixChangesError {
+  success: false;
+  userMessage: string;
+  retryInstructions: string;
 }

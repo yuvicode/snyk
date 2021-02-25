@@ -1,5 +1,5 @@
 import * as debugLib from 'debug';
-import { EntityToFix, WithUserMessage } from '../../../types';
+import { EntityToFix, WithFixChangesApplied } from '../../../types';
 import { PluginFixResponse } from '../../types';
 import { updateDependencies } from './update-dependencies';
 
@@ -27,7 +27,7 @@ export async function pipRequirementsTxt(
       } else {
         handlerResult.skipped.push({
           original: entity,
-          userMessage: `${entity.scanResult.identity.targetFile}:\n ${isSupportedResponse.reason}`,
+          userMessage: isSupportedResponse.reason,
         });
       }
     } catch (e) {
@@ -94,7 +94,7 @@ async function containsRequireDirective(entity: EntityToFix): Promise<boolean> {
 // TODO: optionally verify the deps install
 export async function fixIndividualRequirementsTxt(
   entity: EntityToFix,
-): Promise<WithUserMessage<EntityToFix>> {
+): Promise<WithFixChangesApplied<EntityToFix>> {
   const fileName = entity.scanResult.identity.targetFile;
   const remediationData = entity.testResult.remediation;
   if (!remediationData) {
@@ -105,14 +105,15 @@ export async function fixIndividualRequirementsTxt(
   }
   const requirementsTxt = await entity.workspace.readFile(fileName);
   // TODO: allow handlers per fix type (later also strategies or combine with strategies)
-  const { updatedManifest, appliedChangesSummary } = updateDependencies(
+  const { updatedManifest, changes } = updateDependencies(
     requirementsTxt,
     remediationData.pin,
   );
-  await entity.workspace.writeFile(fileName, updatedManifest);
+  // await entity.workspace.writeFile(fileName, updatedManifest);
 
   return {
     original: entity,
-    userMessage: `${entity.scanResult.identity.targetFile}:\n  ${appliedChangesSummary}`,
+    changes,
+    // userMessage: `${entity.scanResult.identity.targetFile}:\n${appliedChangesSummary}`,
   };
 }
