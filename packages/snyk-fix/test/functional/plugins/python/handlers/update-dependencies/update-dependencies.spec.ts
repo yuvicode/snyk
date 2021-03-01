@@ -5,11 +5,17 @@ import { updateDependencies } from '../../../../../../src/plugins/python/handler
 describe('remediation', () => {
   it('does not add extra new lines', () => {
     const upgrades = {
-      'django@1.6.1': { upgradeTo: 'django@2.0.1', vulns: [], upgrades: [] },
+      'django@1.6.1': {
+        upgradeTo: 'django@2.0.1',
+        vulns: [],
+        upgrades: [],
+        isTransitive: false,
+      },
       'transitive@1.0.0': {
         upgradeTo: 'transitive@1.1.1',
         vulns: [],
         upgrades: [],
+        isTransitive: true,
       },
     };
 
@@ -31,11 +37,17 @@ describe('remediation', () => {
 
   it('retains new line at eof', () => {
     const upgrades = {
-      'django@1.6.1': { upgradeTo: 'django@2.0.1', vulns: [], upgrades: [] },
+      'django@1.6.1': {
+        upgradeTo: 'django@2.0.1',
+        vulns: [],
+        upgrades: [],
+        isTransitive: false,
+      },
       'transitive@1.0.0': {
         upgradeTo: 'transitive@1.1.1',
         vulns: [],
         upgrades: [],
+        isTransitive: true,
       },
     };
 
@@ -56,11 +68,17 @@ describe('remediation', () => {
 
   it('does not mess formatting', () => {
     const upgrades = {
-      'django@1.6.1': { upgradeTo: 'django@2.0.1', vulns: [], upgrades: [] },
+      'django@1.6.1': {
+        upgradeTo: 'django@2.0.1',
+        vulns: [],
+        upgrades: [],
+        isTransitive: false,
+      },
       'transitive@1.0.0': {
         upgradeTo: 'transitive@1.1.1',
         vulns: [],
         upgrades: [],
+        isTransitive: true,
       },
     };
 
@@ -81,7 +99,12 @@ describe('remediation', () => {
 
   it('ignores casing in upgrades (treats all as lowercase)', () => {
     const upgrades = {
-      'Django@1.6.1': { upgradeTo: 'Django@2.0.1', vulns: [], upgrades: [] },
+      'Django@1.6.1': {
+        upgradeTo: 'Django@2.0.1',
+        vulns: [],
+        upgrades: [],
+        isTransitive: false,
+      },
     };
 
     const manifestContents = 'django==1.6.1\n';
@@ -97,7 +120,12 @@ describe('remediation', () => {
 
   it('maintains package name casing when upgrading', () => {
     const upgrades = {
-      'django@1.6.1': { upgradeTo: 'django@2.0.1', vulns: [], upgrades: [] },
+      'django@1.6.1': {
+        upgradeTo: 'django@2.0.1',
+        vulns: [],
+        upgrades: [],
+        isTransitive: false,
+      },
     };
 
     const manifestContents = 'Django==1.6.1\n';
@@ -113,7 +141,12 @@ describe('remediation', () => {
 
   it('matches a package with multiple digit versions i.e. 12.123.14', () => {
     const upgrades = {
-      'foo@12.123.14': { upgradeTo: 'foo@55.66.7', vulns: [], upgrades: [] },
+      'foo@12.123.14': {
+        upgradeTo: 'foo@55.66.7',
+        vulns: [],
+        upgrades: [],
+        isTransitive: false,
+      },
     };
 
     const manifestContents = 'foo==12.123.14\n';
@@ -129,7 +162,12 @@ describe('remediation', () => {
 
   it('maintains comments when upgrading', () => {
     const upgrades = {
-      'django@1.6.1': { upgradeTo: 'django@2.0.1', vulns: [], upgrades: [] },
+      'django@1.6.1': {
+        upgradeTo: 'django@2.0.1',
+        vulns: [],
+        upgrades: [],
+        isTransitive: false,
+      },
     };
 
     const manifestContents = 'django==1.6.1 # this is a comment\n';
@@ -145,8 +183,18 @@ describe('remediation', () => {
 
   it('maintains version comparator when upgrading', () => {
     const upgrades = {
-      'django@1.6.1': { upgradeTo: 'django@2.0.1', vulns: [], upgrades: [] },
-      'click@7.0': { upgradeTo: 'click@7.1', vulns: [], upgrades: [] },
+      'django@1.6.1': {
+        upgradeTo: 'django@2.0.1',
+        vulns: [],
+        upgrades: [],
+        isTransitive: false,
+      },
+      'click@7.0': {
+        upgradeTo: 'click@7.1',
+        vulns: [],
+        upgrades: [],
+        isTransitive: false,
+      },
     };
 
     const manifestContents = 'django>=1.6.1\nclick>7.0';
@@ -163,11 +211,17 @@ describe('remediation', () => {
 
   it('fixes a pip app', () => {
     const upgrades = {
-      'django@1.6.1': { upgradeTo: 'django@2.0.1', vulns: [], upgrades: [] },
+      'django@1.6.1': {
+        upgradeTo: 'django@2.0.1',
+        vulns: [],
+        upgrades: [],
+        isTransitive: false,
+      },
       'transitive@1.0.0': {
         upgradeTo: 'transitive@1.1.1',
         vulns: [],
         upgrades: [],
+        isTransitive: true,
       },
     };
 
@@ -194,7 +248,12 @@ describe('remediation', () => {
 
   it('retains python markers', () => {
     const upgrades = {
-      'click@7.0': { upgradeTo: 'click@7.1', vulns: [], upgrades: [] },
+      'click@7.0': {
+        upgradeTo: 'click@7.1',
+        vulns: [],
+        upgrades: [],
+        isTransitive: false,
+      },
     };
 
     const manifestContents = readFileSync(
@@ -229,6 +288,8 @@ describe('remediation', () => {
       ),
       'utf8',
     );
-    expect(updateDependencies(manifestContents, upgrades)).toThrowErrorMatchingInlineSnapshot('err');
+    expect(
+      updateDependencies(manifestContents, upgrades),
+    ).toThrowErrorMatchingInlineSnapshot('err');
   });
 });

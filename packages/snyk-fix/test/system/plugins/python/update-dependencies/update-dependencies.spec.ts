@@ -27,12 +27,12 @@ describe('fix *req*.txt / *.txt Python projects', () => {
           'django@1.6.1': {
             upgradeTo: 'django@2.0.1',
             vulns: [],
-            upgrades: [],
+            isTransitive: false,
           },
           'transitive@1.0.0': {
             upgradeTo: 'transitive@1.1.1',
             vulns: [],
-            upgrades: [],
+            isTransitive: true,
           },
         },
       },
@@ -63,7 +63,6 @@ describe('fix *req*.txt / *.txt Python projects', () => {
 
     // Act
     const result = await snykFix.fix([entityToFix]);
-
     // Assert
     expect(result).toMatchObject({
       exceptionsByScanType: {},
@@ -73,8 +72,9 @@ describe('fix *req*.txt / *.txt Python projects', () => {
           skipped: [
             {
               original: entityToFix,
-              userMessage:
-                'Requirements with -r or -c directive are not yet supported',
+              userMessage: expect.stringContaining(
+                'directive are not yet supported',
+              ),
             },
           ],
           succeeded: [],
@@ -101,12 +101,12 @@ describe('fix *req*.txt / *.txt Python projects', () => {
           'django@1.6.1': {
             upgradeTo: 'django@2.0.1',
             vulns: [],
-            upgrades: [],
+            isTransitive: false,
           },
           'transitive@1.0.0': {
             upgradeTo: 'transitive@1.1.1',
             vulns: [],
-            upgrades: [],
+            isTransitive: true,
           },
         },
       },
@@ -189,12 +189,12 @@ describe('fix *req*.txt / *.txt Python projects', () => {
           'django@1.6.1': {
             upgradeTo: 'django@2.0.1',
             vulns: [],
-            upgrades: [],
+            isTransitive: false,
           },
           'transitive@1.0.0': {
             upgradeTo: 'transitive@1.1.1',
             vulns: [],
-            upgrades: [],
+            isTransitive: true,
           },
         },
       },
@@ -277,12 +277,12 @@ describe('fix *req*.txt / *.txt Python projects', () => {
           'django@1.6.1': {
             upgradeTo: 'django@2.0.1',
             vulns: [],
-            upgrades: [],
+            isTransitive: false,
           },
           'transitive@1.0.0': {
             upgradeTo: 'transitive@1.1.1',
             vulns: [],
-            upgrades: [],
+            isTransitive: true,
           },
         },
       },
@@ -366,7 +366,7 @@ describe('fix *req*.txt / *.txt Python projects', () => {
           'Django@1.6.1': {
             upgradeTo: 'Django@2.0.1',
             vulns: [],
-            upgrades: [],
+            isTransitive: false,
           },
         },
       },
@@ -446,7 +446,7 @@ describe('fix *req*.txt / *.txt Python projects', () => {
             // matches as the same when file has Django
             upgradeTo: 'django@2.0.1',
             vulns: [],
-            upgrades: [],
+            isTransitive: false,
           },
         },
       },
@@ -525,7 +525,7 @@ describe('fix *req*.txt / *.txt Python projects', () => {
           'foo@12.123.14': {
             upgradeTo: 'foo@55.66.7',
             vulns: [],
-            upgrades: [],
+            isTransitive: false,
           },
         },
       },
@@ -604,9 +604,13 @@ describe('fix *req*.txt / *.txt Python projects', () => {
           'django@1.6.1': {
             upgradeTo: 'django@2.0.1',
             vulns: [],
-            upgrades: [],
+            isTransitive: false,
           },
-          'click@7.0': { upgradeTo: 'click@7.1', vulns: [], upgrades: [] },
+          'click@7.0': {
+            upgradeTo: 'click@7.1',
+            vulns: [],
+            isTransitive: false,
+          },
         },
       },
     };
@@ -684,7 +688,11 @@ describe('fix *req*.txt / *.txt Python projects', () => {
         patch: {},
         ignore: {},
         pin: {
-          'click@7.0': { upgradeTo: 'click@7.1', vulns: [], upgrades: [] },
+          'click@7.0': {
+            upgradeTo: 'click@7.1',
+            vulns: [],
+            isTransitive: false,
+          },
         },
       },
     };

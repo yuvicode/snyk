@@ -3,9 +3,59 @@
 exports[`Error handling Snyk fix returns error when called with unsupported type 1`] = `
 Object {
   "exceptionsByScanType": Object {
-    "npm": Array [
-      "Provided scan type is not supported",
-    ],
+    "npm": Object {
+      "originals": Array [
+        Object {
+          "scanResult": Object {
+            "facts": Array [
+              Object {
+                "data": "not-implemented",
+                "type": "not-implemented",
+              },
+            ],
+            "identity": Object {
+              "targetFile": "package.json",
+              "type": "npm",
+            },
+          },
+          "testResult": Object {
+            "depGraphData": "",
+            "issues": Array [
+              Object {
+                "fixInfo": Object {},
+                "issueId": "VULN_ID_1",
+                "pkgName": "package@version",
+              },
+            ],
+            "issuesData": Object {
+              "vuln-id": Object {
+                "id": "VULN_ID_1",
+                "severity": "high",
+                "title": "Fake vuln",
+              },
+            },
+            "remediation": Object {
+              "ignore": Object {},
+              "patch": Object {},
+              "pin": Object {
+                "django@1.6.1": Object {
+                  "upgradeTo": "django@2.0.1",
+                  "upgrades": Array [],
+                  "vulns": Array [],
+                },
+              },
+              "unresolved": Array [],
+              "upgrade": Object {},
+            },
+          },
+          "workspace": Object {
+            "readFile": [Function],
+            "writeFile": [Function],
+          },
+        },
+      ],
+      "userMessage": "npm is not supported.",
+    },
   },
   "resultsByPlugin": Object {},
 }
