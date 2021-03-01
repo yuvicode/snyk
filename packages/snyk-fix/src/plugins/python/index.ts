@@ -2,7 +2,7 @@ import * as debugLib from 'debug';
 import * as pMap from 'p-map';
 import * as micromatch from 'micromatch';
 import * as ora from 'ora';
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 
 import { EntityToFix } from '../../types';
 import { FixHandlerResultByPlugin } from '../types';
@@ -15,7 +15,7 @@ export async function pythonFix(
   entities: EntityToFix[],
 ): Promise<FixHandlerResultByPlugin> {
   const spinner = ora(
-    'Looking for supported Python projects',
+    'Looking for supported Python items',
   ).start();
   const pluginId = 'python';
   const handlerResult: FixHandlerResultByPlugin = {
@@ -48,7 +48,7 @@ export async function pythonFix(
     async (projectType) => {
       const projectsToFix: EntityToFix[] = entitiesPerType[projectType];
 
-      spinner.text = `Processing ${projectsToFix.length} ${projectType} project(s).`;
+      spinner.text = `Processing ${projectsToFix.length} ${projectType} items.`;
       spinner.render();
 
       try {

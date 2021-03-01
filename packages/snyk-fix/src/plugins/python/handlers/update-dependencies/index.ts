@@ -1,4 +1,4 @@
-import { DependencyUpdates, FixChangesSummary } from '../../../../types';
+import { DependencyPins, FixChangesSummary } from '../../../../types';
 import { parseRequirementsFile, Requirement } from './requirements-file-parser';
 
 /*
@@ -10,7 +10,7 @@ import { parseRequirementsFile, Requirement } from './requirements-file-parser';
  */
 export function updateDependencies(
   requirementsTxt: string,
-  upgrades: DependencyUpdates,
+  upgrades: DependencyPins,
 ): { updatedManifest: string; changes: FixChangesSummary[] } {
   const parsedRequirementsData = parseRequirementsFile(requirementsTxt);
 

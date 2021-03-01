@@ -1,4 +1,7 @@
 import * as debugLib from 'debug';
+import * as chalk from 'chalk';
+
+
 import { EntityToFix, WithFixChangesApplied } from '../../../types';
 import { PluginFixResponse } from '../../types';
 import { updateDependencies } from './update-dependencies';
@@ -60,7 +63,9 @@ export async function isSupported(
   if (await containsRequireDirective(entity)) {
     return {
       supported: false,
-      reason: 'Requirements with -r or -c directive are not yet supported',
+      reason: `Requirements with ${chalk.bold(
+        '-r',
+      )} or ${chalk.bold('-c')} directive are not yet supported`,
     };
   }
 
@@ -109,11 +114,10 @@ export async function fixIndividualRequirementsTxt(
     requirementsTxt,
     remediationData.pin,
   );
-  // await entity.workspace.writeFile(fileName, updatedManifest);
+  await entity.workspace.writeFile(fileName, updatedManifest);
 
   return {
     original: entity,
     changes,
-    // userMessage: `${entity.scanResult.identity.targetFile}:\n${appliedChangesSummary}`,
   };
 }

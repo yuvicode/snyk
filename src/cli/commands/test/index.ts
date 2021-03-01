@@ -64,6 +64,7 @@ import {
 import * as iacLocalExecution from './iac-local-execution';
 import { EntityToFix } from '@snyk/fix/dist/types';
 import { isFeatureFlagSupportedForOrg } from '../../../lib/feature-flags';
+import { convertLegacyTestResultToFixEntities } from '../../../lib/convert-legacy-tests-results-to-fix-entities';
 
 const debug = Debug('snyk-test');
 const SEPARATOR = '\n-------------------------------------------------------\n';
@@ -167,7 +168,7 @@ async function test(...args: MethodArgs): Promise<TestCommandResult> {
             debug(
               `Organization has ${snykFixFeatureFlag} feature flag enabled for experimental Snyk fix functionality`,
             );
-            const newRes = convertLegacyTestResultToTestResult(res, path);
+            const newRes = convertLegacyTestResultToFixEntities(res, path);
             await snykFix.fix(newRes);
           } else {
             debug(snykFixSupported.userMessage);
@@ -387,57 +388,6 @@ async function test(...args: MethodArgs): Promise<TestCommandResult> {
     stringifiedJsonData,
     stringifiedSarifData,
   );
-}
-
-function convertLegacyTestResultToTestResult(
-  testResults: (TestResult | TestResult[]) | Error,
-  root: string,
-): EntityToFix[] {
-  if (testResults instanceof Error) {
-    return [];
-  }
-  const oldResults = Array.isArray(testResults) ? testResults : [testResults];
-  return oldResults.map((res) => {
-    return {
-      // TODO: split into 2 functions 1 to convert to ScanResult and another
-      // to convert to TestDependenciesResponse
-      workspace: {
-        readFile: async (path: string) => {
-          return fs.readFileSync(pathLib.resolve(root, path), 'utf8');
-        },
-        writeFile: async (path: string, content: string) => {
-          return fs.writeFileSync(pathLib.resolve(root, path), content, 'utf8');
-        },
-      },
-      scanResult: {
-        identity: {
-          type: res.packageManager!,
-          targetFile: res.targetFile || res.displayTargetFile, // TODO: this is because not all plugins send it back
-        },
-        name: res.projectName, // TODO: confirm
-        facts: [
-          // TODO: facts
-        ],
-        policy: '', // TODO:
-      },
-      testResult: {
-        issuesData: {} as any, // TODO:
-        issues: [], // TODO:
-        // docker: res.docker, TODO:// convert this
-        remediation: res.remediation as any,
-        depGraphData: {} as DepGraphData, // TODO: need to get this from the scan
-        meta: {
-          isPublic: !res.isPrivate,
-          isLicensesEnabled: false, // figure it out yolo
-          licensesPolicy: undefined, // TODO: fix this
-          projectId: res.projectId,
-          ignoreSettings: undefined, // TODO: fix this
-          policy: '', // TODO:
-          org: res.org,
-        },
-      },
-    };
-  });
 }
 
 function shouldFail(vulnerableResults: any[], failOn: FailOn) {
