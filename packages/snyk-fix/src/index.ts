@@ -15,7 +15,7 @@ const debug = debugLib('snyk-fix:main');
 export async function fix(
   entities: EntityToFix[],
   options: FixOptions = {
-    dryRun: false,
+    dryRun: true,
     quiet: false,
   },
 ): Promise<{

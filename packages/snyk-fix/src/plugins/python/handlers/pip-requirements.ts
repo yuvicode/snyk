@@ -1,7 +1,12 @@
 import * as debugLib from 'debug';
-import * as chalk from 'chalk';
+import * as path from 'path';
 
-import { EntityToFix, FixOptions, WithFixChangesApplied } from '../../../types';
+import {
+  EntityToFix,
+  FixOptions,
+  WithError,
+  WithFixChangesApplied,
+} from '../../../types';
 import { PluginFixResponse } from '../../types';
 import { updateDependencies } from './update-dependencies';
 import { MissingRemediationDataError } from '../../../lib/errors/missing-remediation-data';
@@ -23,17 +28,33 @@ export async function pipRequirementsTxt(
   // find related files
   // process related first
   // process the rest 1 by 1
-  for (const entity of entities) {
+
+  const fixableEntities = entities.filter(async (entity) => {
+    const isSupportedResponse = await isSupported(entity);
+    if (!projectTypeSupported(isSupportedResponse)) {
+      handlerResult.skipped.push({
+        original: entity,
+        userMessage: isSupportedResponse.reason,
+      });
+      return false;
+    }
+    return true;
+  });
+
+  const { individual, failed } = await detectRelatedEntities(fixableEntities);
+  handlerResult.failed.push(...failed);
+
+  // for all supported entities
+  // filter out the ones that contain -r -c
+  // also filter out the ones that are referenced
+  // then process 1 by 1
+
+  for (const entity of individual) {
     try {
       const isSupportedResponse = await isSupported(entity);
       if (projectTypeSupported(isSupportedResponse)) {
         const fixedEntity = await fixIndividualRequirementsTxt(entity, options);
         handlerResult.succeeded.push(fixedEntity);
-      } else {
-        handlerResult.skipped.push({
-          original: entity,
-          userMessage: isSupportedResponse.reason,
-        });
       }
     } catch (e) {
       handlerResult.failed.push({ original: entity, error: e });
@@ -65,16 +86,16 @@ export async function isSupported(
   // TODO: fix the non null assertion here
   const fileName = entity.scanResult.identity.targetFile!;
   const requirementsTxt = await entity.workspace.readFile(fileName);
-  const { containsRequire } = await containsRequireDirective(requirementsTxt);
+  // const { containsRequire } = await containsRequireDirective(requirementsTxt);
 
-  if (containsRequire) {
-    return {
-      supported: false,
-      reason: `Requirements with ${chalk.bold('-r')} or ${chalk.bold(
-        '-c',
-      )} directive are not yet supported`,
-    };
-  }
+  // if (await containsRequireDirective(entity)) {
+  //   return {
+  //     supported: false,
+  //     reason: `Requirements with ${chalk.bold('-r')} or ${chalk.bold(
+  //       '-c',
+  //     )} directive are not yet supported`,
+  //   };
+  // }
 
   if (!remediationData.pin || Object.keys(remediationData.pin).length === 0) {
     return {
@@ -130,4 +151,48 @@ export async function fixIndividualRequirementsTxt(
     original: entity,
     changes,
   };
+}
+
+async function detectRelatedEntities(
+  entities: EntityToFix[],
+): Promise<{
+  grouped: EntityToFix[];
+  individual: EntityToFix[];
+  failed: Array<WithError<EntityToFix>>;
+}> {
+  const failed: Array<WithError<EntityToFix>> = [];
+  for (const entity of entities) {
+    try {
+      const fileName = entity.scanResult.identity.targetFile!;
+      const requirementsTxt = await entity.workspace.readFile(fileName);
+      const { containsRequire, matches } = await containsRequireDirective(
+        requirementsTxt,
+      );
+
+      if (containsRequire) {
+        for (const match of matches) {
+          const requiredFilePath = match[2];
+          const { dir } = path.parse(fileName);
+          const requiredFileContent = await entity.workspace.readFile(
+            path.join(dir, requiredFilePath),
+          );
+          console.log(requiredFileContent);
+        }
+      }
+    } catch (e) {
+      failed.push({ original: entity, error: e });
+    }
+  }
+  return { grouped: entities, individual: entities, failed };
+}
+
+async function extractVersionProvenance(entity) {
+  const hasRequireDirective = await containsRequireDirective(entity);
+  if (hasRequireDirective) {
+    const requiredFilePath = hasRequireDirective[2];
+    const { dir } = path.parse(entity.scanResult.identity.targetFile!);
+    const requiredFileContent = await entity.workspace.readFile(
+      path.join(dir, requiredFilePath),
+    );
+  }
 }
