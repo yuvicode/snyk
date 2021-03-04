@@ -82,6 +82,94 @@ describe('fix *req*.txt / *.txt Python projects', () => {
       },
     });
   });
+
+  it.only('wip: with a -r option', async () => {
+    // Arrange
+    const targetFile = 'pip-app/requirements.txt';
+
+    const testResult = {
+      ...generateTestResult(),
+      remediation: {
+        unresolved: [],
+        upgrade: {},
+        patch: {},
+        ignore: {},
+        pin: {
+          'django@1.6.1': {
+            upgradeTo: 'django@2.0.1',
+            vulns: [],
+            isTransitive: false,
+          },
+          'Jinja2@2.7.2': {
+            upgradeTo: 'Jinja2@2.7.3',
+            vulns: [],
+            isTransitive: true,
+          },
+        },
+      },
+    };
+
+    const entityToFix = {
+      workspace: {
+        readFile: async (path: string) => {
+          return fs.readFileSync(
+            pathLib.resolve(workspacesPath, path),
+            'utf-8',
+          );
+        },
+        writeFile: async (path: string, contents: string) => {
+          const res = pathLib.parse(path);
+          const fixedPath = pathLib.resolve(
+            workspacesPath,
+            res.dir,
+            `fixed-${res.base}`,
+          );
+          filesToDelete = [fixedPath];
+          fs.writeFileSync(fixedPath, contents, 'utf-8');
+        },
+      },
+      scanResult: generateScanResult('pip', targetFile),
+      testResult,
+    };
+
+    // Act
+    const result = await snykFix.fix([entityToFix]);
+    console.log(result);
+
+    expect(result.resultsByPlugin.python.succeeded).toEqual([
+      {
+        original: entityToFix,
+        changes: [
+          {
+            success: true,
+            userMessage: 'Upgraded jinja2 from 2.7.2 to 2.7.3',
+          },
+          {
+            success: true,
+            userMessage: 'Upgraded Django from 1.6.1 to 2.0.1',
+          },
+        ],
+      },
+    ]);
+    // Assert
+    // expect(result).toMatchObject({
+    //   exceptionsByScanType: {},
+    //   resultsByPlugin: {
+    //     python: {
+    //       failed: [],
+    //       skipped: [
+    //         {
+    //           original: entityToFix,
+    //           userMessage: expect.stringContaining(
+    //             'directive are not yet supported',
+    //           ),
+    //         },
+    //       ],
+    //       succeeded: [],
+    //     },
+    //   },
+    // });
+  });
   it('does not add extra new lines', async () => {
     // Arrange
     const targetFile = 'basic/prod.txt';

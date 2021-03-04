@@ -1,5 +1,6 @@
 import * as debugLib from 'debug';
 import * as path from 'path';
+import * as _ from 'lodash';
 
 import {
   EntityToFix,
@@ -11,6 +12,11 @@ import { PluginFixResponse } from '../../types';
 import { updateDependencies } from './update-dependencies';
 import { MissingRemediationDataError } from '../../../lib/errors/missing-remediation-data';
 import { MissingFileNameError } from '../../../lib/errors/missing-file-name';
+import {
+  parseRequirementsFile,
+  Requirement,
+} from './update-dependencies/requirements-file-parser';
+import { readFile } from 'fs';
 
 const debug = debugLib('snyk-fix:python:requirements.txt');
 
@@ -88,6 +94,11 @@ export async function isSupported(
   const requirementsTxt = await entity.workspace.readFile(fileName);
   // const { containsRequire } = await containsRequireDirective(requirementsTxt);
 
+  const fileName = entity.scanResult.identity.targetFile;
+  if (!fileName) {
+    return { supported: false, reason: new MissingFileNameError().message };
+  }
+
   // if (await containsRequireDirective(entity)) {
   //   return {
   //     supported: false,
@@ -161,38 +172,72 @@ async function detectRelatedEntities(
   failed: Array<WithError<EntityToFix>>;
 }> {
   const failed: Array<WithError<EntityToFix>> = [];
-  for (const entity of entities) {
-    try {
-      const fileName = entity.scanResult.identity.targetFile!;
-      const requirementsTxt = await entity.workspace.readFile(fileName);
-      const { containsRequire, matches } = await containsRequireDirective(
-        requirementsTxt,
-      );
+  const sorted: {
+    [dir: string]: Array<{
+      path: string | undefined;
+      base: string;
+      dir: string;
+      entity: EntityToFix;
+    }>;
+  } = _(entities)
+    .map((e) => ({
+      path: e.scanResult.identity.targetFile,
+      ...path.parse(e.scanResult.identity.targetFile!),
+      entity: e,
+    }))
+    .sortBy('dir')
+    .uniqBy('dir') // important to process each folder only once
+    .groupBy('dir')
+    .value();
+  for (const directory of Object.keys(sorted)) {
+    for (const data of sorted[directory]) {
+      const entity = data.entity;
 
-      if (containsRequire) {
-        for (const match of matches) {
-          const requiredFilePath = match[2];
-          const { dir } = path.parse(fileName);
-          const requiredFileContent = await entity.workspace.readFile(
-            path.join(dir, requiredFilePath),
-          );
-          console.log(requiredFileContent);
-        }
+      try {
+        console.log(data);
+
+        // const requirementsTxt = await entity.workspace.readFile(
+        //   path.join(data.dir, data.base!),
+        // );
+        // const hasRequireDirective = await containsRequireDirective(
+        //   requirementsTxt,
+        // );
+
+        const provenance = await getProvenance(entity.workspace, data.dir, data.base);
+
+        console.log(JSON.stringify(provenance));
+      } catch (e) {
+        failed.push({ original: entity, error: e });
       }
-    } catch (e) {
-      failed.push({ original: entity, error: e });
     }
   }
   return { grouped: entities, individual: entities, failed };
 }
 
-async function extractVersionProvenance(entity) {
-  const hasRequireDirective = await containsRequireDirective(entity);
+async function getProvenance(
+  workspace,
+  dir,
+  base,
+  provenance: {
+    [fileName: string]: Requirement[];
+  } = {},
+): Promise<{
+  [fileName: string]: Requirement[];
+}> {
+  console.log('processing ', base)
+  const requirementsTxt = await workspace.readFile(path.join(dir, base));
+  provenance = {
+    ...provenance,
+    [base]: parseRequirementsFile(requirementsTxt),
+  };
+  const hasRequireDirective = await containsRequireDirective(requirementsTxt);
+  console.log(hasRequireDirective);
   if (hasRequireDirective) {
-    const requiredFilePath = hasRequireDirective[2];
-    const { dir } = path.parse(entity.scanResult.identity.targetFile!);
-    const requiredFileContent = await entity.workspace.readFile(
-      path.join(dir, requiredFilePath),
-    );
+    const filePath = hasRequireDirective[2];
+    provenance = {
+      ...provenance,
+      ...(await getProvenance(workspace, dir, filePath, provenance)),
+    };
   }
+  return provenance;
 }
