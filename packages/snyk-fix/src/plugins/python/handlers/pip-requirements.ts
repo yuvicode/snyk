@@ -4,19 +4,23 @@ import * as _ from 'lodash';
 
 import {
   EntityToFix,
+  FixChangesSummary,
   FixOptions,
   WithError,
   WithFixChangesApplied,
+  WithUserMessage,
 } from '../../../types';
 import { PluginFixResponse } from '../../types';
-import { updateDependencies } from './update-dependencies';
+import {
+  updateDependencies,
+  updateDependenciesMulti,
+} from './update-dependencies';
 import { MissingRemediationDataError } from '../../../lib/errors/missing-remediation-data';
 import { MissingFileNameError } from '../../../lib/errors/missing-file-name';
 import {
   parseRequirementsFile,
   Requirement,
 } from './update-dependencies/requirements-file-parser';
-import { readFile } from 'fs';
 
 const debug = debugLib('snyk-fix:python:requirements.txt');
 
@@ -47,7 +51,9 @@ export async function pipRequirementsTxt(
     return true;
   });
 
-  const { individual, failed } = await detectRelatedEntities(fixableEntities);
+  const { failed, succeeded } = await fixWithVersionProvenance(fixableEntities);
+
+  handlerResult.succeeded.push(...succeeded);
   handlerResult.failed.push(...failed);
 
   // for all supported entities
@@ -55,17 +61,17 @@ export async function pipRequirementsTxt(
   // also filter out the ones that are referenced
   // then process 1 by 1
 
-  for (const entity of individual) {
-    try {
-      const isSupportedResponse = await isSupported(entity);
-      if (projectTypeSupported(isSupportedResponse)) {
-        const fixedEntity = await fixIndividualRequirementsTxt(entity, options);
-        handlerResult.succeeded.push(fixedEntity);
-      }
-    } catch (e) {
-      handlerResult.failed.push({ original: entity, error: e });
-    }
-  }
+  // for (const entity of individual) {
+  //   try {
+  //     const isSupportedResponse = await isSupported(entity);
+  //     if (projectTypeSupported(isSupportedResponse)) {
+  //       const fixedEntity = await fixIndividualRequirementsTxt(entity, options);
+  //       handlerResult.succeeded.push(fixedEntity);
+  //     }
+  //   } catch (e) {
+  //     handlerResult.failed.push({ original: entity, error: e });
+  //   }
+  // }
   return handlerResult;
 }
 
@@ -90,8 +96,8 @@ export async function isSupported(
   }
   // TODO: recursive inclusions?
   // TODO: fix the non null assertion here
-  const fileName = entity.scanResult.identity.targetFile!;
-  const requirementsTxt = await entity.workspace.readFile(fileName);
+  // const fileName = entity.scanResult.identity.targetFile!;
+  // const requirementsTxt = await entity.workspace.readFile(fileName);
   // const { containsRequire } = await containsRequireDirective(requirementsTxt);
 
   const fileName = entity.scanResult.identity.targetFile;
@@ -164,14 +170,16 @@ export async function fixIndividualRequirementsTxt(
   };
 }
 
-async function detectRelatedEntities(
+async function fixWithVersionProvenance(
   entities: EntityToFix[],
 ): Promise<{
   grouped: EntityToFix[];
   individual: EntityToFix[];
   failed: Array<WithError<EntityToFix>>;
+  succeeded: Array<WithFixChangesApplied<EntityToFix>>;
 }> {
   const failed: Array<WithError<EntityToFix>> = [];
+  const succeeded: Array<WithFixChangesApplied<EntityToFix>> = [];
   const sorted: {
     [dir: string]: Array<{
       path: string | undefined;
@@ -194,8 +202,6 @@ async function detectRelatedEntities(
       const entity = data.entity;
 
       try {
-        console.log(data);
-
         // const requirementsTxt = await entity.workspace.readFile(
         //   path.join(data.dir, data.base!),
         // );
@@ -203,7 +209,62 @@ async function detectRelatedEntities(
         //   requirementsTxt,
         // );
 
-        const provenance = await getProvenance(entity.workspace, data.dir, data.base);
+        const provenance = await getProvenance(
+          entity.workspace,
+          data.dir,
+          data.base,
+        );
+        const changes: FixChangesSummary[] = [];
+
+        for (const fileName of Object.keys(provenance)) {
+          const relativeFilePath = path.join(data.dir, fileName);
+          const requirementsTxt = await entity.workspace.readFile(
+            relativeFilePath,
+          );
+          const parsedRequirementsData = parseRequirementsFile(requirementsTxt);
+          const remediationData = entity.testResult.remediation;
+
+          const res = updateDependenciesMulti(
+            parsedRequirementsData,
+            remediationData?.pin!,
+          );
+          // This is a bit of a hack, but an easy one to follow. If a file ends with a
+          // new line, ensure we keep it this way. Don't hijack customers formatting.
+          if (requirementsTxt.endsWith('\n')) {
+            res.updatedManifest += '\n';
+          }
+          // if (!options.dryRun) {
+          await entity.workspace.writeFile(
+            relativeFilePath,
+            res.updatedManifest,
+          );
+
+          if (res.updatedManifest === requirementsTxt) {
+            continue;
+            // TODO:
+            // throw new NoFixesCouldBeApplied();
+          }
+          // }
+          changes.push(
+            ...res.changes.map((c) => ({
+              ...c,
+              userMessage: c.userMessage + ` (updated in ${fileName})`,
+            })),
+          );
+          console.log(res);
+        }
+        succeeded.push({
+          original: entity,
+          changes,
+        });
+        // if (updatedManifest === requirementsTxt) {
+        //   // TODO:
+        //   // throw new NoFixesCouldBeApplied();
+        // }
+
+        // TODO:
+        // attach provenance ot each entity
+        // group entities that are referenced in provenance to fix together?
 
         console.log(JSON.stringify(provenance));
       } catch (e) {
@@ -211,33 +272,36 @@ async function detectRelatedEntities(
       }
     }
   }
-  return { grouped: entities, individual: entities, failed };
+  return { grouped: entities, individual: entities, failed, succeeded };
 }
 
+interface PythonProvenance {
+  [fileName: string]: Requirement[];
+}
 async function getProvenance(
   workspace,
   dir,
   base,
-  provenance: {
-    [fileName: string]: Requirement[];
-  } = {},
-): Promise<{
-  [fileName: string]: Requirement[];
-}> {
-  console.log('processing ', base)
+  provenance: PythonProvenance = {},
+): Promise<PythonProvenance> {
+  console.log('processing ', base);
   const requirementsTxt = await workspace.readFile(path.join(dir, base));
   provenance = {
     ...provenance,
     [base]: parseRequirementsFile(requirementsTxt),
   };
-  const hasRequireDirective = await containsRequireDirective(requirementsTxt);
-  console.log(hasRequireDirective);
-  if (hasRequireDirective) {
-    const filePath = hasRequireDirective[2];
-    provenance = {
-      ...provenance,
-      ...(await getProvenance(workspace, dir, filePath, provenance)),
-    };
+  const { containsRequire, matches } = await containsRequireDirective(
+    requirementsTxt,
+  );
+  console.log(containsRequire);
+  if (containsRequire) {
+    for (const match of matches) {
+      const filePath = match[2];
+      provenance = {
+        ...provenance,
+        ...(await getProvenance(workspace, dir, filePath, provenance)),
+      };
+    }
   }
   return provenance;
 }

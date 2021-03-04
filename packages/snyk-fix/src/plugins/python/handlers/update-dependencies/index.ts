@@ -59,6 +59,46 @@ export function updateDependencies(
   };
 }
 
+export function updateDependenciesMulti(
+  parsedRequirementsData: Requirement[],
+  upgrades: DependencyPins,
+): { updatedManifest: string; changes: FixChangesSummary[] } {
+
+  // Lowercase the upgrades object. This might be overly defensive, given that
+  // we control this input internally, but its a low cost guard rail. Outputs a
+  // mapping of upgrade to -> from, instead of the nested upgradeTo object.
+  const lowerCasedUpgrades: { [upgradeFrom: string]: string } = {};
+  Object.keys(upgrades).forEach((upgrade) => {
+    const { upgradeTo } = upgrades[upgrade];
+    lowerCasedUpgrades[upgrade.toLowerCase()] = upgradeTo.toLowerCase();
+  });
+
+  // TODO: record failed upgrades & pins and send them back
+  // to be shown in the UI,  do not break PR creation
+  const { updatedRequirements, changes: upgradedChanges } = applyUpgrades(
+    parsedRequirementsData,
+    lowerCasedUpgrades,
+  );
+
+  // const topLevelDeps = parsedRequirementsData
+  //   .map(({ name }) => name && name.toLowerCase())
+  //   .filter(isDefined);
+
+  // const { pinnedRequirements, changes: pinChanges } = applyPins(
+  //   topLevelDeps,
+  //   lowerCasedUpgrades,
+  // );
+
+  const updatedManifest = [...updatedRequirements].join(
+    '\n',
+  );
+
+  return {
+    updatedManifest,
+    changes: [ ...upgradedChanges],
+  };
+}
+
 // TS is not capable of determining when Array.filter has removed undefined
 // values without a manual Type Guard, so thats what this does
 function isDefined<T>(t: T | undefined): t is T {
