@@ -2,7 +2,6 @@
 README.md  @snyk/content @snyk/boost
 src/cli/commands/test/formatters/format-reachability.ts  @snyk/flow
 help/  @snyk/hammer
-*  @snyk/hammer @snyk/boost
 src/cli/commands/test/iac-output.ts @snyk/cloudconfig
 src/cli/commands/test/iac-local-execution/ @snyk/cloudconfig
 src/lib/cloud-config-projects.ts @snyk/cloudconfig
@@ -18,3 +17,6 @@ src/lib/errors/invalid-iac-file.ts @snyk/cloudconfig
 src/lib/errors/unsupported-options-iac-error.ts @snyk/cloudconfig
 help/commands-docs/iac-examples.md @snyk/cloudconfig
 help/commands-docs/iac.md @snyk/cloudconfig
+# Order matters in this file, therefore any files without ownership defined above, will be default to the following line
+*  @snyk/hammer @snyk/boost
+
