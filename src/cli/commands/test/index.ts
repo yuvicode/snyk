@@ -1,13 +1,14 @@
 export = test;
 
+import * as Debug from 'debug';
+import * as pathLib from 'path';
 const cloneDeep = require('lodash.clonedeep');
 const assign = require('lodash.assign');
 import chalk from 'chalk';
+
 import * as snyk from '../../../lib';
 import * as config from '../../../lib/config';
 import { isCI } from '../../../lib/is-ci';
-import * as Debug from 'debug';
-import * as pathLib from 'path';
 import {
   Options,
   ShowVulnPaths,
@@ -52,9 +53,9 @@ import {
 
 import * as iacLocalExecution from './iac-local-execution';
 import { validateCredentials } from './validate-credentials';
-import { generateSnykTestError } from './generate-snyk-test-error';
-import { validateTestOptions } from './validate-test-options';
 import { processCommandArgs } from '../process-command-args';
+import { formatTestError } from './format-test-error';
+import { validateTestOptions } from './validate-test-options';
 
 const debug = Debug('snyk-test');
 const SEPARATOR = '\n-------------------------------------------------------\n';
@@ -121,7 +122,9 @@ async function test(...args: MethodArgs): Promise<TestCommandResult> {
         options.iacDirFiles = testOpts.iacDirFiles;
       }
     } catch (error) {
-      res = generateSnykTestError(error);
+      // not throwing here but instead returning error response
+      // for legacy flow reasons.
+      res = formatTestError(error);
     }
 
     // Not all test results are arrays in order to be backwards compatible
