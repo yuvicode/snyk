@@ -69,7 +69,7 @@ describe('snyk fix (system tests)', () => {
     }
   });
   it(
-    '`errors when FF is not enabled`',
+    '`errors when FF is not enabled (exit code 2)`',
     (done) => {
       exec(
         `node ${main} fix --org=no-flag`,
@@ -81,8 +81,13 @@ describe('snyk fix (system tests)', () => {
             SNYK_HOST,
           },
         },
-        (err, stdout) => {
-          expect(stdout).toMatch(
+        (err, stdout, stderr) => {
+          if (!err) {
+            throw new Error('Test expected to return an error');
+          }
+          expect(stdout).toBe('');
+          expect(err.message).toMatch('`snyk fix` is not supported for org');
+          expect(stderr).toMatch(
             "`snyk fix` is not supported for org 'no-flag'",
           );
           done();
@@ -92,7 +97,7 @@ describe('snyk fix (system tests)', () => {
     testTimeout,
   );
   it(
-    '`shows error when called with --source`',
+    '`shows error when called with --source (exit code 2)`',
     (done) => {
       exec(
         `node ${main} fix --source`,
@@ -104,8 +109,16 @@ describe('snyk fix (system tests)', () => {
             SNYK_HOST,
           },
         },
-        (err, stdout) => {
-          expect(stdout).toMatch(
+        (err, stdout, stderr) => {
+          if (!err) {
+            throw new Error('Test expected to return an error');
+          }
+          expect(stdout).toBe('');
+          expect(err.message).toMatch(
+            "`snyk fix` is not supported for ecosystem 'cpp'",
+          );
+          expect(err.code).toEqual(2);
+          expect(stderr).toMatch(
             "`snyk fix` is not supported for ecosystem 'cpp'",
           );
           done();
@@ -116,7 +129,7 @@ describe('snyk fix (system tests)', () => {
   );
 
   it(
-    '`shows error when called with --docker (deprecated)`',
+    '`shows error when called with --docker (deprecated) (exit code 2)`',
     (done) => {
       exec(
         `node ${main} fix --docker`,
@@ -128,8 +141,16 @@ describe('snyk fix (system tests)', () => {
             SNYK_HOST,
           },
         },
-        (err, stdout) => {
-          expect(stdout).toMatch(
+        (err, stdout, stderr) => {
+          if (!err) {
+            throw new Error('Test expected to return an error');
+          }
+          expect(stdout).toBe('');
+          expect(err.message).toMatch(
+            "`snyk fix` is not supported for ecosystem 'docker'",
+          );
+          expect(err.code).toEqual(2);
+          expect(stderr).toMatch(
             "`snyk fix` is not supported for ecosystem 'docker'",
           );
           done();
@@ -153,8 +174,16 @@ describe('snyk fix (system tests)', () => {
             SNYK_HOST,
           },
         },
-        (err, stdout) => {
-          expect(stdout).toMatch(
+        (err, stdout, stderr) => {
+          if (!err) {
+            throw new Error('Test expected to return an error');
+          }
+          expect(stdout).toBe('');
+          expect(err.message).toMatch(
+            "`snyk fix` is not supported for ecosystem 'docker'",
+          );
+          expect(err.code).toEqual(2);
+          expect(stderr).toMatch(
             "`snyk fix` is not supported for ecosystem 'docker'",
           );
           done();
@@ -164,7 +193,7 @@ describe('snyk fix (system tests)', () => {
     testTimeout,
   );
   it(
-    '`shows error when called with --code`',
+    '`shows error when called with --code (exit code 2)`',
     (done) => {
       exec(
         `node ${main} fix --code`,
@@ -176,8 +205,16 @@ describe('snyk fix (system tests)', () => {
             SNYK_HOST,
           },
         },
-        (err, stdout) => {
-          expect(stdout).toMatch(
+        (err, stdout, stderr) => {
+          if (!err) {
+            throw new Error('Test expected to return an error');
+          }
+          expect(stdout).toBe('');
+          expect(err.message).toMatch(
+            "`snyk fix` is not supported for ecosystem 'code'",
+          );
+          expect(err.code).toEqual(2);
+          expect(stderr).toMatch(
             "`snyk fix` is not supported for ecosystem 'code'",
           );
           done();
@@ -188,7 +225,7 @@ describe('snyk fix (system tests)', () => {
   );
 
   it(
-    '`shows expected response when nothing could be fixed + returns exit code 2`',
+    '`shows expected response when nothing could be fixed + returns exit code 1`',
     (done) => {
       exec(
         `node ${main} fix ${noVulnsProjectPath}`,
@@ -204,10 +241,10 @@ describe('snyk fix (system tests)', () => {
           if (!err) {
             throw new Error('Test expected to return an error');
           }
-          expect(stderr).toBe('');
-          expect(stdout).toMatchSnapshot();
-          expect(err.message).toMatch('Command failed');
-          expect(err.code).toBe(2);
+          expect(stdout).toBe('');
+          expect(stderr).toMatchSnapshot();
+          expect(err.message).toMatch('No successful fixes');
+          expect(err.code).toBe(1);
           done();
         },
       );
@@ -230,8 +267,14 @@ describe('snyk fix (system tests)', () => {
             SNYK_HOST,
           },
         },
-        (err, stdout) => {
-          expect(stdout).toMatchSnapshot();
+        (err, stdout, stderr) => {
+          if (!err) {
+            throw new Error('Test expected to return an error');
+          }
+          expect(stdout).toMatch('Looking for supported Python items');
+          expect(stderr).toMatchSnapshot();
+          expect(err.message).toMatch('No successful fixes');
+          expect(err.code).toBe(1);
           done();
         },
       );
@@ -251,8 +294,14 @@ describe('snyk fix (system tests)', () => {
             SNYK_HOST,
           },
         },
-        (err, stdout) => {
-          expect(stdout).toMatchSnapshot();
+        (err, stdout, stderr) => {
+          if (!err) {
+            throw new Error('Test expected to return an error');
+          }
+          expect(stdout).toMatch('Looking for supported Python items');
+          expect(stderr).toMatchSnapshot();
+          expect(err.message).toMatch('No successful fixes');
+          expect(err.code).toBe(1);
           done();
         },
       );
@@ -263,7 +312,7 @@ describe('snyk fix (system tests)', () => {
     '`shows expected response when Python project was skipped because of missing remediation data --all-projects`',
     (done) => {
       exec(
-        `node ${main} fix ${noVulnsProjectPath}`,
+        `node ${main} fix ${noVulnsProjectPath} --all-projects`,
         {
           env: {
             PATH: process.env.PATH,
@@ -272,8 +321,16 @@ describe('snyk fix (system tests)', () => {
             SNYK_HOST,
           },
         },
-        (err, stdout) => {
-          expect(stdout).toMatchSnapshot();
+        (err, stdout, stderr) => {
+          if (!err) {
+            throw new Error('Test expected to return an error');
+          }
+          // nothing in stdout because we don't even load any plugins
+          // since npm is not supported and it is is the only project being scanned
+          expect(stdout).toMatch('');
+          expect(stderr).toMatchSnapshot();
+          expect(err.message).toMatch('No successful fixes');
+          expect(err.code).toBe(1);
           done();
         },
       );

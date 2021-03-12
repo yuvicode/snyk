@@ -28,6 +28,8 @@ export async function fix(
   fixSummary: string;
 }> {
   const spinner = ora({ isSilent: options.quiet, stream: process.stdout });
+  const stdErrSpinner = ora({ isSilent: options.quiet});
+
   let resultsByPlugin: FixHandlerResultByPlugin = {};
   const entitiesPerType = groupEntitiesPerScanType(entities);
   const exceptionsByScanType: ErrorsByEcoSystem = {};
@@ -62,10 +64,12 @@ export async function fix(
   const fixed = outputFormatter.calculateFixed(resultsByPlugin);
 
   spinner.start();
-  spinner.stopAndPersist({
-    text: 'Done',
-    symbol: fixed === 0 ? chalk.red('✖') : chalk.green('✔') ,
-  });
+
+  if (fixed === 0) {
+    stdErrSpinner.fail(`Done\n\n${fixSummary}`);
+  } else {
+    spinner.succeed(`Done\n\n${fixSummary}`);
+  }
 
   return {
     results: resultsByPlugin,

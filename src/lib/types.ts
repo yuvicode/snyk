@@ -46,6 +46,7 @@ export interface PolicyOptions {
 export interface Options {
   org?: string | null;
   path: string;
+  quiet?: boolean;
   docker?: boolean;
   iac?: boolean;
   code?: boolean;
