@@ -62,8 +62,11 @@ export async function fix(
   const fixed = outputFormatter.calculateFixed(resultsByPlugin);
 
   spinner.start();
-  spinner.stopAndPersist({ text: 'Done', symbol: chalk.green('✔') });
-  spinner.stopAndPersist({ text: `\n${fixSummary}` });
+  spinner.stopAndPersist({
+    text: 'Done',
+    symbol: fixed === 0 ? chalk.red('✖') : chalk.green('✔') ,
+  });
+
   return {
     results: resultsByPlugin,
     exceptions: exceptionsByScanType,
