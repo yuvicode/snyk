@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snyk fix (functional tests) shows successful fixes Python custom name base.txt project was fixed via --file 1`] = `
+"Successful fixes:
+
+  /Users/lili/www/snyk/snyk/test/acceptance/workspaces/pip-app-custom/base.txt
+  ✔ Upgraded Jinja2 from 2.7.2 to 2.11.3
+
+Summary:
+
+  0 items were not fixed
+  1 items were successfully fixed"
+`;
+
+exports[`snyk fix (functional tests) shows successful fixes Python requirements.txt project was fixed via --file 1`] = `
+"Successful fixes:
+
+  /Users/lili/www/snyk/snyk/test/acceptance/workspaces/pip-app/requirements.txt
+  ✔ Upgraded Jinja2 from 2.7.2 to 2.11.3
+
+Summary:
+
+  0 items were not fixed
+  1 items were successfully fixed"
+`;
+
+exports[`snyk fix (functional tests) snyk fails to fix when all path fails to test with \`snyk fix path1 path2\` 1`] = `
+"✖ No successful fixes
+
+Summary:
+
+  0 items were not fixed
+  0 items were successfully fixed"
+`;
+
+exports[`snyk fix (functional tests) snyk fix continues to fix when 1 path fails to test with \`snyk fix path1 path2\` 1`] = `
+"Successful fixes:
+
+  /Users/lili/www/snyk/snyk/test/acceptance/workspaces/pip-app/requirements.txt
+  ✔ Upgraded Jinja2 from 2.7.2 to 2.11.3
+
+Summary:
+
+  0 items were not fixed
+  1 items were successfully fixed"
+`;
