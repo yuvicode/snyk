@@ -1,4 +1,6 @@
 import stripAnsi = require('strip-ansi');
+import * as pathLib from 'path';
+
 import { formatChangesSummary } from '../../../../src/lib/output-formatters/format-successful-item';
 import { FixChangesSummary } from '../../../../src/types';
 import { generateEntityToFix } from '../../../helpers/generate-entity-to-fix';
@@ -7,8 +9,9 @@ describe('format successful item', () => {
   it('successful item & changes formatted', async () => {
     const entity = generateEntityToFix(
       'pip',
-      'requirements.txt',
+      pathLib.resolve(process.cwd(), 'requirements.txt'),
       JSON.stringify({}),
+      process.cwd(),
     );
     const changesSummary: FixChangesSummary[] = [
       {

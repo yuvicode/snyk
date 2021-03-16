@@ -6,6 +6,9 @@ Object {
     "npm": Object {
       "originals": Array [
         Object {
+          "options": Object {
+            "path": ".",
+          },
           "scanResult": Object {
             "facts": Array [
               Object {
@@ -103,6 +106,9 @@ Summary:
       "skipped": Array [
         Object {
           "original": Object {
+            "options": Object {
+              "path": ".",
+            },
             "scanResult": Object {
               "facts": Array [
                 Object {
@@ -162,6 +168,9 @@ Summary:
             },
           ],
           "original": Object {
+            "options": Object {
+              "path": ".",
+            },
             "scanResult": Object {
               "facts": Array [
                 Object {
@@ -232,6 +241,9 @@ Object {
           },
         ],
         "original": Object {
+          "options": Object {
+            "path": ".",
+          },
           "scanResult": Object {
             "facts": Array [
               Object {

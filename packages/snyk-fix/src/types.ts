@@ -183,9 +183,13 @@ export interface EntityToFix {
   };
   readonly scanResult: ScanResult;
   readonly testResult: TestResult;
-  // options
+  readonly options: Options;
 }
 
+// TODO: add more options as they are used/needed by @snyk/fix
+interface Options {
+  path: string; // root of what was scanned
+}
 export interface WithError<Original> {
   original: Original;
   error: CustomError;

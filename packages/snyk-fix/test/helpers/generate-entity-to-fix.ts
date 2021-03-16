@@ -5,11 +5,13 @@ export function generateEntityToFix(
   type: string,
   targetFile: string,
   contents: string,
+  path = '.',
 ): EntityToFix {
   const scanResult = generateScanResult(type, targetFile);
   const testResult = generateTestResult();
   const workspace = generateWorkspace(contents);
-  return { scanResult, testResult, workspace };
+  const options = { path };
+  return { scanResult, testResult, workspace, options };
 }
 
 function generateWorkspace(contents: string) {

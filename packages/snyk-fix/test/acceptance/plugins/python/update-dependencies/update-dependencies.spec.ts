@@ -59,6 +59,9 @@ describe('fix *req*.txt / *.txt Python projects', () => {
       },
       scanResult: generateScanResult('pip', targetFile),
       testResult,
+      options: {
+        path: 'path/to/folder',
+      },
     };
 
     // Act
@@ -136,6 +139,9 @@ describe('fix *req*.txt / *.txt Python projects', () => {
       },
       scanResult: generateScanResult('pip', targetFile),
       testResult,
+      options: {
+        path: 'path/to/folder',
+      },
     };
 
     // Act
@@ -227,6 +233,9 @@ describe('fix *req*.txt / *.txt Python projects', () => {
       },
       scanResult: generateScanResult('pip', targetFile),
       testResult,
+      options: {
+        path: 'path/to/folder',
+      },
     };
 
     // Act
@@ -318,6 +327,9 @@ describe('fix *req*.txt / *.txt Python projects', () => {
       },
       scanResult: generateScanResult('pip', targetFile),
       testResult,
+      options: {
+        path: 'path/to/folder',
+      },
     };
 
     // Act
@@ -405,6 +417,9 @@ describe('fix *req*.txt / *.txt Python projects', () => {
       },
       scanResult: generateScanResult('pip', targetFile),
       testResult,
+      options: {
+        path: 'path/to/folder',
+      },
     };
 
     // Act
@@ -488,6 +503,9 @@ describe('fix *req*.txt / *.txt Python projects', () => {
       },
       scanResult: generateScanResult('pip', targetFile),
       testResult,
+      options: {
+        path: 'path/to/folder',
+      },
     };
 
     // Act
@@ -547,6 +565,9 @@ describe('fix *req*.txt / *.txt Python projects', () => {
           },
         },
       },
+      options: {
+        path: 'path/to/folder',
+      },
     };
 
     const entityToFix = {
@@ -570,6 +591,9 @@ describe('fix *req*.txt / *.txt Python projects', () => {
       },
       scanResult: generateScanResult('pip', targetFile),
       testResult,
+      options: {
+        path: 'path/to/folder',
+      },
     };
 
     // Act
@@ -657,6 +681,9 @@ describe('fix *req*.txt / *.txt Python projects', () => {
       },
       scanResult: generateScanResult('pip', targetFile),
       testResult,
+      options: {
+        path: 'path/to/folder',
+      },
     };
 
     // Act
@@ -742,6 +769,9 @@ describe('fix *req*.txt / *.txt Python projects', () => {
       },
       scanResult: generateScanResult('pip', targetFile),
       testResult,
+      options: {
+        path: 'path/to/folder',
+      },
     };
 
     // Act
