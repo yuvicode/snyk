@@ -16,15 +16,11 @@ import { validateCredentials } from '../test/validate-credentials';
 import { validateTestOptions } from '../test/validate-test-options';
 import { setDefaultTestOptions } from '../test/set-default-test-options';
 import { validateFixCommandIsSupported } from './validate-fix-command-is-supported';
-import { Options, TestOptions } from '../../../lib/types';
+import { FixOptions, Options, TestOptions } from '../../../lib/types';
 
 const debug = Debug('snyk-fix');
 const snykFixFeatureFlag = 'cliSnykFix';
 
-interface FixOptions {
-  dryRun?: boolean;
-  quiet?: boolean;
-}
 async function fix(...args: MethodArgs): Promise<string> {
   const { options: rawOptions, paths } = await processCommandArgs<FixOptions>(
     ...args,
@@ -95,7 +91,11 @@ async function runSnykTestLegacy(
           ? testResultForPath
           : [testResultForPath]),
       );
-      const newRes = convertLegacyTestResultToFixEntities(testResults, path);
+      const newRes = convertLegacyTestResultToFixEntities(
+        testResults,
+        path,
+        snykTestOptions,
+      );
       results.push(...newRes);
     } catch (error) {
       const testError = formatTestError(error);

@@ -26,6 +26,10 @@ export interface TestOptions {
   iacDirFiles?: IacFileInDirectory[];
 }
 
+export interface FixOptions {
+  dryRun?: boolean;
+}
+
 export interface ProtectOptions {
   interactive?: boolean;
   newPolicy: boolean;
@@ -79,6 +83,7 @@ export interface Options {
   debug?: boolean;
   sarif?: boolean;
   'group-issues'?: boolean;
+  quiet?: boolean;
 }
 
 // TODO(kyegupov): catch accessing ['undefined-properties'] via noImplicitAny
