@@ -31,6 +31,7 @@ export async function fix(
   let resultsByPlugin: FixHandlerResultByPlugin = {};
   const entitiesPerType = groupEntitiesPerScanType(entities);
   const exceptionsByScanType: ErrorsByEcoSystem = {};
+
   await pMap(
     Object.keys(entitiesPerType),
     async (scanType) => {
@@ -50,27 +51,24 @@ export async function fix(
       concurrency: 3,
     },
   );
+
   const fixSummary = await outputFormatter.showResultsSummary(
     resultsByPlugin,
     exceptionsByScanType,
   );
-
-  const failed = outputFormatter.calculateFailed(
-    resultsByPlugin,
-    exceptionsByScanType,
-  );
-  const fixed = outputFormatter.calculateFixed(resultsByPlugin);
+  const meta = extractMeta(resultsByPlugin, exceptionsByScanType);
 
   spinner.start();
   spinner.stopAndPersist({
     text: 'Done',
-    symbol: fixed === 0 ? chalk.red('✖') : chalk.green('✔') ,
+    symbol: meta.fixed === 0 ? chalk.red('✖') : chalk.green('✔'),
   });
+
   return {
     results: resultsByPlugin,
     exceptions: exceptionsByScanType,
     fixSummary: options.stripAnsi ? stripAnsi(fixSummary) : fixSummary,
-    meta: { fixed, failed },
+    meta,
   };
 }
 
@@ -91,4 +89,20 @@ export function groupEntitiesPerScanType(
     entitiesPerType[type] = [entity];
   }
   return entitiesPerType;
+}
+
+function extractMeta(
+  resultsByPlugin: FixHandlerResultByPlugin,
+  exceptionsByScanType: ErrorsByEcoSystem,
+): {
+  fixed: number;
+  failed: number;
+} {
+  const failed = outputFormatter.calculateFailed(
+    resultsByPlugin,
+    exceptionsByScanType,
+  );
+  const fixed = outputFormatter.calculateFixed(resultsByPlugin);
+
+  return { fixed, failed };
 }

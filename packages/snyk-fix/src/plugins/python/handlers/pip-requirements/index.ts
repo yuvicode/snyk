@@ -61,7 +61,6 @@ export async function isSupported(
   if (!remediationData) {
     return { supported: false, reason: 'No remediation data available' };
   }
-  // TODO: recursive inclusions?
   // TODO: fix the non null assertion here
   const fileName = entity.scanResult.identity.targetFile!;
   const requirementsTxt = await entity.workspace.readFile(fileName);

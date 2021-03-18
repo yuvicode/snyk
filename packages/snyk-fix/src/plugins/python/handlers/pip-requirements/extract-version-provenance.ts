@@ -28,24 +28,28 @@ export async function extractProvenance(
   const { containsRequire, matches } = await containsRequireDirective(
     requirementsTxt,
   );
-  if (containsRequire) {
-    for (const match of matches) {
-      const requiredFilePath = match[2];
-      if (provenance[requiredFilePath]) {
-        debug('Detected recursive require directive, skipping');
-        continue;
-      }
 
-      provenance = {
-        ...provenance,
-        ...(await extractProvenance(
-          workspace,
-          dir,
-          requiredFilePath,
-          provenance,
-        )),
-      };
-    }
+  if (!containsRequire) {
+    return provenance;
   }
+
+  for (const match of matches) {
+    const requiredFilePath = match[2];
+    if (provenance[requiredFilePath]) {
+      debug('Detected recursive require directive, skipping');
+      continue;
+    }
+
+    provenance = {
+      ...provenance,
+      ...(await extractProvenance(
+        workspace,
+        dir,
+        requiredFilePath,
+        provenance,
+      )),
+    };
+  }
+
   return provenance;
 }
