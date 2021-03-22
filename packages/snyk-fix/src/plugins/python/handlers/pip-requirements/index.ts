@@ -1,8 +1,11 @@
 import * as debugLib from 'debug';
+import * as pathLib from 'path';
+import * as _ from 'lodash'; // TODO: remove
 
 import {
   EntityToFix,
   FixOptions,
+  WithError,
   WithFixChangesApplied,
 } from '../../../../types';
 import { PluginFixResponse } from '../../../types';
@@ -29,14 +32,11 @@ export async function pipRequirementsTxt(
   const { fixable, skipped } = await partitionByFixable(entities);
   handlerResult.skipped.push(...skipped);
 
-  for (const entity of fixable) {
-    try {
-      const fixedEntity = await fixIndividualRequirementsTxt(entity, options);
-      handlerResult.succeeded.push(fixedEntity);
-    } catch (e) {
-      handlerResult.failed.push({ original: entity, error: e });
-    }
-  }
+  const { failed, succeeded } = await fixAll(fixable, options);
+
+  handlerResult.failed.push(...failed);
+  handlerResult.succeeded.push(...succeeded);
+
   return handlerResult;
 }
 
@@ -78,4 +78,24 @@ export async function fixIndividualRequirementsTxt(
     original: entity,
     changes,
   };
+}
+
+export async function fixAll(
+  entities: EntityToFix[],
+  options: FixOptions,
+): Promise<{
+  failed: Array<WithError<EntityToFix>>;
+  succeeded: Array<WithFixChangesApplied<EntityToFix>>;
+}> {
+  const failed: Array<WithError<EntityToFix>> = [];
+  const succeeded: Array<WithFixChangesApplied<EntityToFix>> = [];
+  for (const entity of entities) {
+    try {
+      const fixedEntity = await fixIndividualRequirementsTxt(entity, options);
+      succeeded.push(fixedEntity);
+    } catch (e) {
+      failed.push({ original: entity, error: e });
+    }
+  }
+  return { failed, succeeded };
 }
