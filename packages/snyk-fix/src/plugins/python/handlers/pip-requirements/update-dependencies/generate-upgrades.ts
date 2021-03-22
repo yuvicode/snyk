@@ -1,5 +1,6 @@
 import { DependencyPins, FixChangesSummary } from '../../../../../types';
 import { calculateRelevantFixes } from './calculate-relevant-fixes';
+import { isDefined } from './is-defined';
 import { Requirement } from './requirements-file-parser';
 import { UpgradedRequirements } from './types';
 
@@ -15,12 +16,6 @@ export function generateUpgrades(
     updates,
     'direct-upgrades',
   );
-  if (Object.keys(lowerCasedUpgrades).length === 0) {
-    return {
-      updatedRequirements: {},
-      changes: [],
-    };
-  }
 
   const changes: FixChangesSummary[] = [];
   const updatedRequirements = {};
@@ -70,4 +65,24 @@ export function generateUpgrades(
     updatedRequirements,
     changes,
   };
+}
+
+export function getRelevantFixes(
+  requirements: Requirement[],
+  updates: DependencyPins,
+  forTransitiveDeps = false,
+): { [upgradeFrom: string]: string } {
+  const lowerCasedUpgrades: { [upgradeFrom: string]: string } = {};
+  const topLevelDeps = requirements
+    .map(({ name }) => name && name.toLowerCase())
+    .filter(isDefined);
+  Object.keys(updates).forEach((update) => {
+    const { upgradeTo } = updates[update];
+    const [pkgName] = update.split('@');
+    const isTransitiveDep = topLevelDeps.indexOf(pkgName.toLowerCase()) >= 0;
+    if (forTransitiveDeps ? isTransitiveDep : !isTransitiveDep) {
+      lowerCasedUpgrades[update.toLowerCase()] = upgradeTo.toLowerCase();
+    }
+  });
+  return lowerCasedUpgrades;
 }

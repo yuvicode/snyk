@@ -19,7 +19,7 @@ const debug = debugLib('snyk-fix:python:update-dependencies');
 export function updateDependencies(
   parsedRequirementsData: ParsedRequirements,
   updates: DependencyPins,
-  createPins = true,
+  directUpgradesOnly = false,
 ): { updatedManifest: string; changes: FixChangesSummary[] } {
   const {
     requirements,
@@ -41,7 +41,7 @@ export function updateDependencies(
 
   let pinnedRequirements: string[] = [];
   let pinChanges: FixChangesSummary[] = [];
-  if (createPins) {
+  if (!directUpgradesOnly) {
     ({ pinnedRequirements, changes: pinChanges } = generatePins(
       requirements,
       updates,

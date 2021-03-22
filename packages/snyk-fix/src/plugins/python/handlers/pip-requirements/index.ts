@@ -1,6 +1,5 @@
 import * as debugLib from 'debug';
 import * as pathLib from 'path';
-import * as _ from 'lodash'; // TODO: remove
 
 import {
   EntityToFix,
@@ -49,6 +48,7 @@ export async function fixIndividualRequirementsTxt(
   base: string,
   remediationData: RemediationChanges,
   options: FixOptions,
+  directUpgradesOnly: boolean,
 ): Promise<{ changes: FixChangesSummary[] }> {
   const fileName = pathLib.join(dir, base);
   // const fileName = entity.scanResult.identity.targetFile;
@@ -67,13 +67,15 @@ export async function fixIndividualRequirementsTxt(
   const { updatedManifest, changes } = updateDependencies(
     requirementsData,
     remediationData.pin,
+    directUpgradesOnly,
   );
 
-  // TODO: do this with the changes now that we only return new
-  if (updatedManifest === requirementsTxt) {
-    debug('Manifest has not changed!');
-    throw new NoFixesCouldBeAppliedError();
+  if (!updatedManifest) {
+    return {
+      changes: [],
+    };
   }
+
   if (!options.dryRun) {
     debug('Writing changes to file');
     await workspace.writeFile(fileName, updatedManifest);
@@ -124,14 +126,23 @@ async function fixWithVersionProvenance(
   const provenance = await extractProvenance(workspace, dir, base);
   const allChanges: FixChangesSummary[] = [];
   for (const fileName of Object.keys(provenance)) {
+    const directUpgradesOnly = true;
     const { changes } = await fixIndividualRequirementsTxt(
       workspace,
       dir,
       fileName,
       remediationData,
       options,
+      directUpgradesOnly,
     );
+
     allChanges.push(...changes);
+  }
+
+  // find the leftover pins and pin to root or constraints.
+  if (allChanges.length === 0) {
+    debug('Manifests have not changed!');
+    throw new NoFixesCouldBeAppliedError();
   }
 
   return { changes: allChanges };
