@@ -37,6 +37,37 @@ describe('remediation', () => {
     expect(result.updatedManifest).toEqual(expectedManifest);
   });
 
+  it('skips pins if asked', () => {
+    const upgrades = {
+      'django@1.6.1': {
+        upgradeTo: 'django@2.0.1',
+        vulns: [],
+        upgrades: [],
+        isTransitive: false,
+      },
+      'transitive@1.0.0': {
+        upgradeTo: 'transitive@1.1.1',
+        vulns: [],
+        upgrades: [],
+        isTransitive: true,
+      },
+    };
+
+    const manifestContents = 'Django==1.6.1';
+
+    const expectedManifest =
+      'Django==2.0.1';
+    const createPins = false;
+    const result = updateDependencies(manifestContents, upgrades, createPins);
+    expect(result.changes.map((c) => c.userMessage).sort()).toEqual(
+      [
+        'Upgraded Django from 1.6.1 to 2.0.1',
+      ].sort(),
+    );
+    // Note no extra newline was added to the expected manifest
+    expect(result.updatedManifest).toEqual(expectedManifest);
+  });
+
   it('retains new line at eof', () => {
     const upgrades = {
       'django@1.6.1': {

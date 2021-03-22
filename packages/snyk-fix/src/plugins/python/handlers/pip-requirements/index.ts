@@ -5,16 +5,18 @@ import * as _ from 'lodash'; // TODO: remove
 import {
   EntityToFix,
   FixOptions,
+  RemediationChanges,
   WithError,
+  Workspace,
   WithFixChangesApplied,
+  FixChangesSummary,
 } from '../../../../types';
 import { PluginFixResponse } from '../../../types';
 import { updateDependencies } from './update-dependencies';
-import { MissingRemediationDataError } from '../../../../lib/errors/missing-remediation-data';
-import { MissingFileNameError } from '../../../../lib/errors/missing-file-name';
 import { partitionByFixable } from './is-supported';
 import { NoFixesCouldBeAppliedError } from '../../../../lib/errors/no-fixes-applied';
 import { parseRequirementsFile } from './update-dependencies/requirements-file-parser';
+import { extractProvenance } from './extract-version-provenance';
 
 const debug = debugLib('snyk-fix:python:requirements.txt');
 
@@ -42,18 +44,23 @@ export async function pipRequirementsTxt(
 
 // TODO: optionally verify the deps install
 export async function fixIndividualRequirementsTxt(
-  entity: EntityToFix,
+  workspace: Workspace,
+  dir: string,
+  base: string,
+  remediationData: RemediationChanges,
   options: FixOptions,
-): Promise<WithFixChangesApplied<EntityToFix>> {
-  const fileName = entity.scanResult.identity.targetFile;
-  const remediationData = entity.testResult.remediation;
-  if (!remediationData) {
-    throw new MissingRemediationDataError();
-  }
-  if (!fileName) {
-    throw new MissingFileNameError();
-  }
-  const requirementsTxt = await entity.workspace.readFile(fileName);
+): Promise<{ changes: FixChangesSummary[] }> {
+  const fileName = pathLib.join(dir, base);
+  // const fileName = entity.scanResult.identity.targetFile;
+  // const remediationData = entity.testResult.remediation;
+  // if (!remediationData) {
+  //   throw new MissingRemediationDataError();
+  // }
+  // if (!fileName) {
+  //   throw new MissingFileNameError();
+  // }
+  // const requirementsTxt = await entity.workspace.readFile(fileName);
+  const requirementsTxt = await workspace.readFile(fileName);
   const requirementsData = parseRequirementsFile(requirementsTxt);
 
   // TODO: allow handlers per fix type (later also strategies or combine with strategies)
@@ -69,15 +76,12 @@ export async function fixIndividualRequirementsTxt(
   }
   if (!options.dryRun) {
     debug('Writing changes to file');
-    await entity.workspace.writeFile(fileName, updatedManifest);
+    await workspace.writeFile(fileName, updatedManifest);
   } else {
     debug('Skipping writing changes to file in --dry-run mode');
   }
 
-  return {
-    original: entity,
-    changes,
-  };
+  return { changes };
 }
 
 export async function fixAll(
@@ -91,11 +95,44 @@ export async function fixAll(
   const succeeded: Array<WithFixChangesApplied<EntityToFix>> = [];
   for (const entity of entities) {
     try {
-      const fixedEntity = await fixIndividualRequirementsTxt(entity, options);
-      succeeded.push(fixedEntity);
+      const { dir, base } = pathLib.parse(
+        entity.scanResult.identity.targetFile!,
+      );
+      const remediationData = entity.testResult.remediation;
+      const { changes } = await fixWithVersionProvenance(
+        entity.workspace,
+        dir,
+        base,
+        remediationData!,
+        options,
+      );
+      succeeded.push({ original: entity, changes });
     } catch (e) {
       failed.push({ original: entity, error: e });
     }
   }
   return { failed, succeeded };
+}
+
+async function fixWithVersionProvenance(
+  workspace: Workspace,
+  dir: string,
+  base: string,
+  remediationData: RemediationChanges,
+  options: FixOptions,
+): Promise<{ changes: FixChangesSummary[] }> {
+  const provenance = await extractProvenance(workspace, dir, base);
+  const allChanges: FixChangesSummary[] = [];
+  for (const fileName of Object.keys(provenance)) {
+    const { changes } = await fixIndividualRequirementsTxt(
+      workspace,
+      dir,
+      fileName,
+      remediationData,
+      options,
+    );
+    allChanges.push(...changes);
+  }
+
+  return { changes: allChanges };
 }
