@@ -28,3 +28,16 @@ flask-apscheduler==1.11.0
 flask==1.0.2
 "
 `;
+
+exports[`fix *req*.txt / *.txt Python projects wip: with a -r option 1`] = `
+Array [
+  Object {
+    "success": true,
+    "userMessage": "Upgraded Django from 1.6.1 to 2.0.1",
+  },
+  Object {
+    "success": true,
+    "userMessage": "Upgraded Jinja2 from 2.7.2 to 2.7.3 (upgraded in base2.txt)",
+  },
+]
+`;

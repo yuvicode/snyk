@@ -33,27 +33,27 @@ export async function isSupported(
     };
   }
 
-  // // TODO: fix the non null assertion here
-  // let requirementsTxt;
-  // try {
-  //   const fileName = entity.scanResult.identity.targetFile!;
-  //   requirementsTxt = await entity.workspace.readFile(fileName);
-  // } catch (e) {
-  //   return {
-  //     supported: false,
-  //     reason: e.message,
-  //   };
-  // }
+  // TODO: fix the non null assertion here
+  let requirementsTxt;
+  try {
+    const fileName = entity.scanResult.identity.targetFile!;
+    requirementsTxt = await entity.workspace.readFile(fileName);
+  } catch (e) {
+    return {
+      supported: false,
+      reason: e.message,
+    };
+  }
 
-  // const { containsRequire } = await containsRequireDirective(requirementsTxt);
-  // if (containsRequire) {
-  //   return {
-  //     supported: false,
-  //     reason: `Requirements with ${chalk.bold('-r')} or ${chalk.bold(
-  //       '-c',
-  //     )} directive are not yet supported`,
-  //   };
-  // }
+  const { containsRequire } = await containsRequireDirective(requirementsTxt);
+  if (containsRequire) {
+    return {
+      supported: false,
+      reason: `Requirements with ${chalk.bold(
+        '-c',
+      )} directive are not yet supported`,
+    };
+  }
 
   return { supported: true };
 }

@@ -54,13 +54,18 @@ describe('remediation', () => {
     };
 
     const manifestContents = 'Django==1.6.1';
-
+    const parsedRequirements = parseRequirementsFile(manifestContents);
     const expectedManifest =
-      'Django==2.0.1';
-    const createPins = false;
-    const result = updateDependencies(manifestContents, upgrades, createPins);
+      'Django==2.0.1\ntransitive>=1.1.1 # not directly required, pinned by Snyk to avoid a vulnerability';
+    const directUpgradesOnly = false;
+    const result = updateDependencies(
+      parsedRequirements,
+      upgrades,
+      directUpgradesOnly,
+    );
     expect(result.changes.map((c) => c.userMessage).sort()).toEqual(
       [
+        'Pinned transitive from 1.0.0 to 1.1.1',
         'Upgraded Django from 1.6.1 to 2.0.1',
       ].sort(),
     );

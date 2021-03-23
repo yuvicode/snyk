@@ -141,22 +141,9 @@ describe('fix *req*.txt / *.txt Python projects', () => {
     });
     console.log(result);
 
-    expect(result.results.python.succeeded).toEqual([
-      {
-        original: entityToFix,
-        changes: [
-          {
-            success: true,
-            userMessage:
-              'Upgraded jinja2 from 2.7.2 to 2.7.3 (upgraded in base2.txt)',
-          },
-          {
-            success: true,
-            userMessage: 'Upgraded Django from 1.6.1 to 2.0.1',
-          },
-        ],
-      },
-    ]);
+    expect(result.results.python.succeeded[0].original).toEqual(entityToFix);
+
+    expect(result.results.python.succeeded[0].changes).toMatchSnapshot();
   });
   it('does not add extra new lines', async () => {
     // Arrange

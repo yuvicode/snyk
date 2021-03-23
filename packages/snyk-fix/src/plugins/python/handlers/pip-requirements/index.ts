@@ -97,14 +97,9 @@ export async function fixAll(
   const succeeded: Array<WithFixChangesApplied<EntityToFix>> = [];
   for (const entity of entities) {
     try {
-      const { dir, base } = pathLib.parse(
-        entity.scanResult.identity.targetFile!,
-      );
       const remediationData = entity.testResult.remediation;
       const { changes } = await fixWithVersionProvenance(
-        entity.workspace,
-        dir,
-        base,
+        entity,
         remediationData!,
         options,
       );
@@ -117,25 +112,45 @@ export async function fixAll(
 }
 
 async function fixWithVersionProvenance(
-  workspace: Workspace,
-  dir: string,
-  base: string,
+  entity: EntityToFix,
   remediationData: RemediationChanges,
   options: FixOptions,
 ): Promise<{ changes: FixChangesSummary[] }> {
+  const entryTargetFile = entity.scanResult.identity.targetFile!;
+  const { workspace } = entity;
+  const { dir, base } = pathLib.parse(entryTargetFile);
   const provenance = await extractProvenance(workspace, dir, base);
   const allChanges: FixChangesSummary[] = [];
   for (const fileName of Object.keys(provenance)) {
     const directUpgradesOnly = true;
-    const { changes } = await fixIndividualRequirementsTxt(
-      workspace,
-      dir,
-      fileName,
-      remediationData,
-      options,
+    // const { changes } = await fixIndividualRequirementsTxt(
+    //   workspace,
+    //   dir,
+    //   fileName,
+    //   remediationData,
+    //   options,
+    //   directUpgradesOnly,
+    // );
+    const requirementsTxt = provenance[fileName];
+    // TODO: allow handlers per fix type (later also strategies or combine with strategies)
+    const { updatedManifest, changes } = updateDependencies(
+      requirementsTxt,
+      remediationData.pin,
       directUpgradesOnly,
     );
 
+    if (!updatedManifest) {
+      return {
+        changes: [],
+      };
+    }
+
+    if (!options.dryRun) {
+      debug('Writing changes to file');
+      await workspace.writeFile(fileName, updatedManifest);
+    } else {
+      debug('Skipping writing changes to file in --dry-run mode');
+    }
     allChanges.push(...changes);
   }
 
