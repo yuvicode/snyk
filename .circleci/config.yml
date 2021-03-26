@@ -157,6 +157,20 @@ commands:
       - run: sudo npm install -g lerna@3.22.1
 
 jobs:
+  linting-and-sanity-check:
+    <<: *defaults
+    docker:
+      - image: circleci/node:<< parameters.node_version >>
+    steps:
+      - checkout
+      - run:
+          name: Install npm@7
+          command: sudo npm install -g npm@7
+      - install_deps
+      - run:
+          name: Linting and common checks
+          command: npm run test:common
+
   regression-test:
     <<: *defaults
     docker:
@@ -169,19 +183,14 @@ jobs:
       - install_shellspec
       - run:
           name: Install npm@7
-          command: |
-            sudo npm install -g npm@7
+          command: sudo npm install -g npm@7
       - show_node_version
       - update_local_npmrc_linux
       - install_deps
-      - build_ts
       - generate_help
       - run:
           name: Run auth
           command: npm run snyk-auth
-      - run:
-          name: Run tests
-          command: npm run test:common
       - run:
           name: Clear Snyk config
           command: rm ~/.config/configstore/snyk.json
@@ -472,19 +481,25 @@ workflows:
   version: 2
   test_and_release:
     jobs:
-      - regression-test:
-          name: Regression Test
+      - linting-and-sanity-check:
+          name: Linting and sanity check
           context: nodejs-install
           node_version: '12.16.2'
           filters:
             branches:
               ignore:
                 - master
+      - regression-test:
+          name: Regression test
+          context: nodejs-install
+          node_version: '12'
+          requires:
+            - Linting and sanity check
       - dev-release:
           name: Dev Release
           node_version: '14'
           requires:
-            - Regression Test
+            - Linting and sanity check
       - test-windows:
           name: Windows, Node 14 - Packages, Jest, Acceptance, System tests
           context: nodejs-install
@@ -494,14 +509,14 @@ workflows:
           system_tests: true
           package_tests: true
           requires:
-            - Regression Test
+            - Linting and sanity check
       - test-windows:
           name: Windows, Node 14 - "Root" tap tests
           context: nodejs-install
           node_version: '14.15.4'
           root_tap_tests: true
           requires:
-            - Regression Test
+            - Linting and sanity check
       - test-windows:
           name: Windows, Node 12 - Packages, Jest, Acceptance, System tests
           context: nodejs-install
@@ -511,14 +526,14 @@ workflows:
           system_tests: true
           package_tests: true
           requires:
-            - Regression Test
+            - Linting and sanity check
       - test-windows:
           name: Windows, Node 12 - "Root" tap tests
           context: nodejs-install
           node_version: '12.21.0'
           root_tap_tests: true
           requires:
-            - Regression Test
+            - Linting and sanity check
 
       - test-windows:
           name: Windows, Node 10 - Packages, Jest, Acceptance, System tests
@@ -529,14 +544,14 @@ workflows:
           system_tests: true
           package_tests: true
           requires:
-            - Regression Test
+            - Linting and sanity check
       - test-windows:
           name: Windows, Node 10 - "Root" tap tests
           context: nodejs-install
           node_version: '10.23.1'
           root_tap_tests: true
           requires:
-            - Regression Test
+            - Linting and sanity check
       - test-linux:
           name: Linux, Node 14 - Packages, Jest, Acceptance, System tests
           context: nodejs-install
@@ -546,14 +561,14 @@ workflows:
           system_tests: true
           package_tests: true
           requires:
-            - Regression Test
+            - Linting and sanity check
       - test-linux:
           name: Linux, Node 14 - "Root" tap tests
           context: nodejs-install
           node_version: '14.15.4'
           root_tap_tests: true
           requires:
-            - Regression Test
+            - Linting and sanity check
       - test-linux:
           name: Linux, Node 12 - Packages, Jest, Acceptance, System tests
           context: nodejs-install
@@ -563,14 +578,14 @@ workflows:
           system_tests: true
           package_tests: true
           requires:
-            - Regression Test
+            - Linting and sanity check
       - test-linux:
           name: Linux, Node 12 - "Root" tap tests
           context: nodejs-install
           node_version: '12.21.0'
           root_tap_tests: true
           requires:
-            - Regression Test
+            - Linting and sanity check
       - test-linux:
           name: Linux, Node 10 - Packages, Jest, Acceptance, System tests
           context: nodejs-install
@@ -580,14 +595,14 @@ workflows:
           system_tests: true
           package_tests: true
           requires:
-            - Regression Test
+            - Linting and sanity check
       - test-linux:
           name: Linux, Node 10 - "Root" tap tests
           context: nodejs-install
           node_version: '10.23.1'
           root_tap_tests: true
           requires:
-            - Regression Test
+            - Linting and sanity check
       - release:
           name: Release
           context: nodejs-app-release
