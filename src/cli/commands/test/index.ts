@@ -17,7 +17,7 @@ import {
 import { isLocalFolder } from '../../../lib/detect';
 import { MethodArgs } from '../../args';
 import { TestCommandResult } from '../../commands/types';
-import { LegacyVulnApiResult, TestResult } from '../../../lib/snyk-test/legacy';
+import { LegacyVulnApiResult } from '../../../lib/snyk-test/legacy';
 import {
   IacTestResponse,
   mapIacTestResult,
@@ -34,7 +34,11 @@ import {
   getIacDisplayedOutput,
   getIacDisplayErrorFileOutput,
 } from './iac-output';
-import { getEcosystemForTest, testEcosystem } from '../../../lib/ecosystems';
+import {
+  getEcosystemForTest,
+  getPlugin,
+  testEcosystem,
+} from '../../../lib/ecosystems';
 import { isMultiProjectScan } from '../../../lib/is-multi-project-scan';
 import {
   IacProjectType,
@@ -56,6 +60,8 @@ import { validateTestOptions } from './validate-test-options';
 import { setDefaultTestOptions } from './set-default-test-options';
 import { processCommandArgs } from '../process-command-args';
 import { formatTestError } from './format-test-error';
+import { Result } from '../../../lib/ecosystems/test';
+import { EcosystemPlugin, TestResult } from '../../../lib/ecosystems/types';
 
 const debug = Debug('snyk-test');
 const SEPARATOR = '\n-------------------------------------------------------\n';
@@ -71,8 +77,10 @@ async function test(...args: MethodArgs): Promise<TestCommandResult> {
   const ecosystem = getEcosystemForTest(options);
   if (ecosystem) {
     try {
-      const commandResult = await testEcosystem(ecosystem, paths, options);
-      return commandResult;
+      const plugin = getPlugin(ecosystem);
+      const pluginResults = await testEcosystem(plugin, paths, options);
+
+      return formatResults(options, pluginResults, plugin);
     } catch (error) {
       if (error instanceof Error) {
         throw error;
@@ -435,4 +443,46 @@ function displayResult(
     multiProjAdvice,
     dockerAdvice,
   );
+}
+
+async function formatResults(
+  options,
+  allResults: Result[],
+  plugin: EcosystemPlugin,
+): Promise<TestCommandResult> {
+  const { errors, testResults } = separateErrorResults(allResults);
+  const stringifiedData = JSON.stringify(testResults, null, 2);
+  if (options.json) {
+    return TestCommandResult.createJsonTestCommandResult(stringifiedData);
+  }
+  const readableResult = await plugin.display(
+    allResults,
+    errors,
+    options,
+  );
+
+  return TestCommandResult.createHumanReadableTestCommandResult(
+    readableResult,
+    stringifiedData,
+  );
+}
+
+function separateErrorResults(
+  results: Result[],
+): {
+  errors: string[];
+  testResults: TestResult[];
+} {
+  const errors: string[] = [];
+  const testResults: TestResult[] = [];
+
+  for (const i of results) {
+    if ('error' in i) {
+      errors.push(i.error.message);
+    } else {
+      testResults.push(i.testResult);
+    }
+  }
+
+  return { errors, testResults };
 }

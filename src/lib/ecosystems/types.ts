@@ -1,6 +1,7 @@
 import { DepGraphData } from '@snyk/dep-graph';
 import { RemediationChanges } from '../snyk-test/legacy';
 import { Options } from '../types';
+import { Result } from './test';
 
 export type Ecosystem = 'cpp' | 'docker' | 'code';
 
@@ -78,8 +79,7 @@ export interface TestResult {
 export interface EcosystemPlugin {
   scan: (options: Options) => Promise<PluginResponse>;
   display: (
-    scanResults: ScanResult[],
-    testResults: TestResult[],
+    results: Result[],
     errors: string[],
     options: Options,
   ) => Promise<string>;
