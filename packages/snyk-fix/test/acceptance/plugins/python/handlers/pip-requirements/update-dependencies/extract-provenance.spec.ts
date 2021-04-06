@@ -11,7 +11,7 @@ describe('extractProvenance', () => {
     const targetFile = pathLib.resolve(workspacesPath, 'with-require/dev.txt');
 
     const workspace = {
-      path: workspacesPath,
+      path: '/path/to/file',
       readFile: async (path: string) => {
         return fs.readFileSync(pathLib.resolve(workspacesPath, path), 'utf-8');
       },
@@ -42,7 +42,7 @@ describe('extractProvenance', () => {
     );
 
     const workspace = {
-      path: workspacesPath,
+      path: '/path/to/file',
       readFile: async (path: string) => {
         return fs.readFileSync(pathLib.resolve(workspacesPath, path), 'utf-8');
       },
@@ -72,7 +72,7 @@ describe('extractProvenance', () => {
     const targetFile = pathLib.resolve(workspacesPath, `${folder}/dev.txt`);
 
     const workspace = {
-      path: workspacesPath,
+      path: '/path/to/file',
       readFile: async (path: string) => {
         return fs.readFileSync(pathLib.resolve(workspacesPath, path), 'utf-8');
       },
@@ -116,7 +116,7 @@ describe('extractProvenance', () => {
     const targetFile = pathLib.resolve(workspacesPath, `${folder}/dev.txt`);
 
     const workspace = {
-      path: workspacesPath,
+      path: '/path/to/file',
       readFile: async (path: string) => {
         return fs.readFileSync(pathLib.resolve(workspacesPath, path), 'utf-8');
       },
