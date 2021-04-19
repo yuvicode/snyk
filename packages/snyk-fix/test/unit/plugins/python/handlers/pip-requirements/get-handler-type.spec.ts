@@ -21,9 +21,13 @@ describe('getHandlerType', () => {
     expect(getHandlerType(entity)).toBe(SUPPORTED_HANDLER_TYPES.REQUIREMENTS);
   });
 
-  it('pip + Pipfile is NOT supported so returns null', () => {
+  it('pip + Pipfile is supported project type `Pipfile`', () => {
     const entity = generateEntityToFix('pip', 'Pipfile', '');
-    expect(getHandlerType(entity)).toBeNull();
+    expect(getHandlerType(entity)).toBe(SUPPORTED_HANDLER_TYPES.PIPFILE);
+  });
+  it('pip + Pipfile is supported project type `Pipfile`', () => {
+    const entity = generateEntityToFix('pip', 'lib/Pipfile.lock', '');
+    expect(getHandlerType(entity)).toBe(SUPPORTED_HANDLER_TYPES.PIPFILE);
   });
 });
 
