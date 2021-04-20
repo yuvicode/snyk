@@ -1,10 +1,8 @@
 import * as fs from 'fs';
 import * as pathLib from 'path';
 
-import {
-  generateSuccessfulChanges,
-  generateUpgrades,
-} from '../../../../../../src/plugins/python/handlers/pipenv-pipfile/update-dependencies';
+import * as snykFix from '../../../../../../src';
+import { TestResult } from '../../../../../../src/types';
 import { generateScanResult, generateTestResult } from '../../../../../helpers/generate-entity-to-fix';
 
 describe('fix Pipfile Python projects', () => {
@@ -14,11 +12,11 @@ describe('fix Pipfile Python projects', () => {
   });
   const workspacesPath = pathLib.resolve(__dirname, 'workspaces');
 
-  it('fixes project with lockfile', async () => {
+  it('shows expected changes with lockfile in --dry-run mode', async () => {
     // Arrange
-    const targetFile = 'with-require/dev.txt';
+    const targetFile = 'with-dev-deps/Pipfile';
     filesToDelete = [
-      pathLib.join(workspacesPath, 'with-require/fixed-dev.txt'),
+      pathLib.join(workspacesPath, 'with-dev-deps/Pipfile'),
     ];
 
     const testResult = {
@@ -53,6 +51,7 @@ describe('fix Pipfile Python projects', () => {
     const result = await snykFix.fix([entityToFix], {
       quiet: true,
       stripAnsi: true,
+      dryRun: true,
     });
     // Assert
     expect(result).toMatch({
@@ -540,6 +539,9 @@ function generateEntityToFix(
   testResult: TestResult,
 ): snykFix.EntityToFix {
   const entityToFix = {
+    options: {
+      command: 'python3',
+    },
     workspace: {
       path: workspacesPath,
       readFile: async (path: string) => {

@@ -1,4 +1,3 @@
-import { spawn, SpawnOptions } from 'child_process';
 import * as pathLib from 'path';
 import * as debugLib from 'debug';
 
@@ -11,11 +10,11 @@ import {
   FixChangesSummary,
   FixOptions,
 } from '../../../../../types';
-import { getRequiredData } from '../../get-required-data';
 import { NoFixesCouldBeAppliedError } from '../../../../../lib/errors/no-fixes-applied';
 import { standardizePackageName } from '../../pip-requirements/update-dependencies/standardize-package-name';
 import { CommandFailedError } from '../../../../../lib/errors/command-failed-to-run-error';
 import { execute, ExecuteResponse } from '../../sub-process';
+import { validateRequiredData } from '../../validate-required-data';
 
 const debug = debugLib('snyk-fix:python:Pipfile');
 
@@ -30,6 +29,7 @@ const limiter = new Bottleneck({
 
 const runPipAddLimitedConcurrency = limiter.wrap(runPipEnvInstall);
 
+// TODO: support correct python version?
 // https://pipenv.pypa.io/en/latest/advanced/#changing-default-python-versions
 function getPythonversionArgs(config: PipEnvConfig): string | void {
   if (config.pythonCommand) {
@@ -77,7 +77,7 @@ export async function updateDependencies(
     skipped: [],
   };
   try {
-    const { remediation, targetFile } = getRequiredData(entity);
+    const { remediation, targetFile } = validateRequiredData(entity);
     const { dir } = pathLib.parse(
       pathLib.resolve(entity.workspace.path, targetFile),
     );
@@ -93,7 +93,6 @@ export async function updateDependencies(
         upgrades,
         {}, // TODO: get the CLI options
       );
-      console.log(res);
       if (res.exitCode !== 0) {
         const pipenvError = getPipenvError(res.stderr);
         debug(
@@ -121,7 +120,7 @@ export async function updateDependencies(
   return handlerResult;
 }
 
-function generateSuccessfulChanges(pins: DependencyPins): FixChangesSummary[] {
+export function generateSuccessfulChanges(pins: DependencyPins): FixChangesSummary[] {
   const changes: FixChangesSummary[] = [];
   for (const pkgAtVersion of Object.keys(pins)) {
     const pin = pins[pkgAtVersion];
@@ -140,7 +139,7 @@ function generateSuccessfulChanges(pins: DependencyPins): FixChangesSummary[] {
   return changes;
 }
 
-function generateUpgrades(pins: DependencyPins): string[] {
+export function generateUpgrades(pins: DependencyPins): string[] {
   const upgrades: string[] = [];
   for (const pkgAtVersion of Object.keys(pins)) {
     const pin = pins[pkgAtVersion];

@@ -51,7 +51,6 @@ export async function execute(
         });
       });
       worker.on('exit', (code) => {
-        console.log(stderr);
         if (code > 0) {
           resolve({
             stderr,

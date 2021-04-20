@@ -13,6 +13,7 @@ import {
 } from '../../../../types';
 import { FixedCache, PluginFixResponse } from '../../../types';
 import { updateDependencies } from './update-dependencies';
+import { partitionByFixable } from './../is-supported';
 import { NoFixesCouldBeAppliedError } from '../../../../lib/errors/no-fixes-applied';
 import { extractProvenance } from './extract-version-provenance';
 import {
@@ -21,20 +22,24 @@ import {
 } from './update-dependencies/requirements-file-parser';
 import { standardizePackageName } from './update-dependencies/standardize-package-name';
 import { containsRequireDirective } from './contains-require-directive';
-import { validateRequiredData } from '../validate-required-data';
+import { validateRequiredData } from '../valdidate-required-data';
+import { formatDisplayName } from '../../../../lib/output-formatters/format-display-name';
 
 const debug = debugLib('snyk-fix:python:requirements.txt');
 
 export async function pipRequirementsTxt(
-  fixable: EntityToFix[],
+  entities: EntityToFix[],
   options: FixOptions,
 ): Promise<PluginFixResponse> {
-  debug(`Preparing to fix ${fixable.length} Python requirements.txt projects`);
+  debug(`Preparing to fix ${entities.length} Python requirements.txt projects`);
   const handlerResult: PluginFixResponse = {
     succeeded: [],
     failed: [],
     skipped: [],
   };
+
+  const { fixable, skipped: notFixable } = await partitionByFixable(entities);
+  handlerResult.skipped.push(...notFixable);
 
   const ordered = sortByDirectory(fixable);
   let fixedFilesCache: FixedCache = {};

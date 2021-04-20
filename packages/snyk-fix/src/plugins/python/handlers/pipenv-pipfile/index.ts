@@ -1,4 +1,7 @@
 import * as debugLib from 'debug';
+import * as ora from 'ora';
+import * as chalk from 'chalk';
+
 import { EntityToFix, FixOptions } from '../../../../types';
 import { PluginFixResponse } from '../../../types';
 import { execute, ExecuteResponse } from '../sub-process';
@@ -16,9 +19,14 @@ export async function pipenvPipfile(
     failed: [],
     skipped: [],
   };
-  await checkPipenvInstalled();
 
-  for (const entity of fixable) {
+  await checkPipenvSupport(options);
+  for (const [index, entity] of fixable.entries()) {
+    const spinner = ora({ isSilent: options.quiet, stream: process.stdout });
+    const spinnerMessage = `Fixing Pipfile ${index + 1}/${fixable.length}`;
+    spinner.text = spinnerMessage;
+    spinner.start();
+
     const { failed, succeeded, skipped } = await updateDependencies(
       entity,
       options,
@@ -26,12 +34,13 @@ export async function pipenvPipfile(
     handlerResult.succeeded.push(...succeeded);
     handlerResult.failed.push(...failed);
     handlerResult.skipped.push(...skipped);
+    spinner.stop();
   }
 
   return handlerResult;
 }
 
-async function checkPipenvInstalled(): Promise<{ version: string }> {
+async function checkPipenvInstalled(): Promise<{ version: string | null }> {
   let res: ExecuteResponse;
   try {
     res = await execute('pipenv', ['--version'], {});
@@ -42,14 +51,67 @@ async function checkPipenvInstalled(): Promise<{ version: string }> {
   if (res.exitCode !== 0) {
     throw res.error;
   }
-  console.log(res);
-  extractPipenvVersion(res.stdout);
 
-  return { version:  ''};
+  return { version: extractPipenvVersion(res.stdout) };
 }
 
-function extractPipenvVersion(stdout: string) {
+function extractPipenvVersion(stdout: string): string | null {
   // stdout example: pipenv, version 2018.11.26\n
-  const match = stdout.match(/^pipenv,\sversion\s([0-9.]+)/g);
-  console.log(match);
+  let version: string | null = null;
+  const re = new RegExp(/^pipenv,\sversion\s([0-9.]+)/, 'g');
+  const match = re.exec(stdout);
+  if (match) {
+    version = match[1];
+  }
+  return version;
+}
+
+function isSupportedPipenvVersion(
+  version: string,
+): { supported: boolean; versions: string[] } {
+  // TODO: add all that we can test against in a matrix that pass
+  // https://pipenv.pypa.io/en/latest/changelog/
+  const SUPPORTED_PIPENV_VERSIONS = ['2018.11.26'];
+  let supported = false;
+  if (SUPPORTED_PIPENV_VERSIONS.includes(version)) {
+    supported = true;
+  }
+
+  return {
+    supported,
+    versions: SUPPORTED_PIPENV_VERSIONS,
+  };
+}
+
+async function checkPipenvSupport(options: FixOptions): Promise<void> {
+  const { version } = await checkPipenvInstalled();
+
+  const spinner = ora({ isSilent: options.quiet, stream: process.stdout });
+  spinner.clear();
+  spinner.text = 'Checking pipenv version';
+  spinner.indent = 2;
+  spinner.start();
+
+  if (!version) {
+    spinner.stopAndPersist({
+      text: chalk.hex('#EDD55E')(
+        'Could not detect pipenv version, proceeding anyway. Some operations may fail.',
+      ),
+      symbol: chalk.hex('#EDD55E')('⚠️'),
+    });
+    return;
+  }
+
+  const { supported, versions } = isSupportedPipenvVersion(version);
+  if (!supported) {
+    const spinnerMessage = ` ${version} pipenv version detected. Currently the following pipenv versions are supported: ${versions.join(
+      ',',
+    )}`;
+    spinner.stopAndPersist({
+      text: chalk.hex('#EDD55E')(spinnerMessage),
+      symbol: chalk.hex('#EDD55E')('⚠️'),
+    });
+  } else {
+    spinner.stop();
+  }
 }
