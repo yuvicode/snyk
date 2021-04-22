@@ -76,6 +76,7 @@ export async function updateDependencies(
     failed: [],
     skipped: [],
   };
+  let pipenvCommand;
   try {
     const { remediation, targetFile } = validateRequiredData(entity);
     const { dir } = pathLib.parse(
@@ -94,16 +95,8 @@ export async function updateDependencies(
         {}, // TODO: get the CLI options
       );
       if (res.exitCode !== 0) {
-        const pipenvError = getPipenvError(res.stderr);
-        debug(
-          `Failed to fix ${entity.scanResult.identity.targetFile}.\nERROR: ${res.stderr}`,
-        );
-        handlerResult.failed.push({
-          original: entity,
-          error: pipenvError,
-          tip: `Try running \`${res.command}\``,
-        });
-        return handlerResult;
+        pipenvCommand = res.command;
+        throwPipenvError(res.stderr);
       }
     }
     const changes = generateSuccessfulChanges(remediation.pin);
@@ -115,12 +108,15 @@ export async function updateDependencies(
     handlerResult.failed.push({
       original: entity,
       error,
+      tip: pipenvCommand ? `Try running \`${pipenvCommand}\`` : undefined,
     });
   }
   return handlerResult;
 }
 
-export function generateSuccessfulChanges(pins: DependencyPins): FixChangesSummary[] {
+export function generateSuccessfulChanges(
+  pins: DependencyPins,
+): FixChangesSummary[] {
   const changes: FixChangesSummary[] = [];
   for (const pkgAtVersion of Object.keys(pins)) {
     const pin = pins[pkgAtVersion];
@@ -145,20 +141,24 @@ export function generateUpgrades(pins: DependencyPins): string[] {
     const pin = pins[pkgAtVersion];
     const newVersion = pin.upgradeTo.split('@')[1];
     const [pkgName] = pkgAtVersion.split('@');
-    upgrades.push(`${standardizePackageName(pkgName)}>=${newVersion}`);
+    upgrades.push(`${standardizePackageName(pkgName)}==${newVersion}`);
   }
   return upgrades;
 }
 
-function getPipenvError(stderr: string) {
+function throwPipenvError(stderr: string) {
   const incompatibleDeps =
     'There are incompatible versions in the resolved dependencies';
   const lockingFailed = 'Locking Failed';
+  const versionNotFound = 'Could not find a version that matches';
   if (stderr.includes(incompatibleDeps)) {
-    return new CommandFailedError(incompatibleDeps);
+    throw new CommandFailedError(incompatibleDeps);
   }
   if (stderr.includes(lockingFailed)) {
-    return new CommandFailedError(lockingFailed);
+    throw new CommandFailedError(lockingFailed);
   }
-  return new NoFixesCouldBeAppliedError();
+  if (stderr.includes(versionNotFound)) {
+    throw new CommandFailedError(versionNotFound);
+  }
+  throw new NoFixesCouldBeAppliedError();
 }
