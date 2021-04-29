@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as pathLib from 'path';
 import * as debugLib from 'debug';
-const endsWith = require('lodash.endswith');
+import { parse as parseToml } from 'toml';
 import { NoSupportedManifestsFoundError } from './errors';
 import { SupportedPackageManagers } from './package-managers';
 
@@ -64,6 +64,7 @@ export const AUTO_DETECTABLE_FILES: string[] = [
 ];
 
 // when file is specified with --file, we look it up here
+// this is also used when --all-projects flag is enabled and auto detection plugin is triggered
 const DETECTABLE_PACKAGE_MANAGERS: {
   [name: string]: SupportedPackageManagers;
 } = {
@@ -99,9 +100,24 @@ const DETECTABLE_PACKAGE_MANAGERS: {
   'mix.exs': 'hex',
 };
 
-export function isPathToPackageFile(path) {
+const inferPackageManagerFromPyProjectToml = (file: string) => {
+  const data = fs.readFileSync(file, { encoding: 'utf8' });
+  const parsedData = parseToml(data);
+
+  if (parsedData?.tool?.poetry) {
+    return 'poetry';
+  }
+
+  return null;
+};
+// these filenames do not guarantee the usage of a package manager yet, and further checks are required to determine correct package manager
+const NON_DETERMINISTIC_BASENAMES = {
+  'pyproject.toml': inferPackageManagerFromPyProjectToml,
+};
+
+export function isPathToPackageFile(path: string) {
   for (const fileName of DETECTABLE_FILES) {
-    if (endsWith(path, fileName)) {
+    if (path.endsWith(fileName)) {
       return true;
     }
   }
@@ -177,9 +193,15 @@ export function detectPackageFile(root) {
   debug('no package file found in ' + root);
 }
 
-export function detectPackageManagerFromFile(
-  file: string,
-): SupportedPackageManagers {
+const isBasenameDeterministic = (basename: string): boolean => {
+  if (basename in NON_DETERMINISTIC_BASENAMES) {
+    return false;
+  }
+
+  return true;
+};
+
+export function detectPackageManagerFromFile(file: string) {
   let key = pathLib.basename(file);
 
   // TODO: fix this to use glob matching instead
@@ -200,6 +222,17 @@ export function detectPackageManagerFromFile(
     // we throw and error here because the file was specified by the user
     throw new Error('Could not detect package manager for file: ' + file);
   }
+
+  if (!isBasenameDeterministic(key)) {
+    const detectedPackage = NON_DETERMINISTIC_BASENAMES[key](file);
+
+    if (!detectedPackage) {
+      throw new Error('Could not detect package manager for file: ' + file);
+    }
+
+    return detectedPackage;
+  }
+
   return DETECTABLE_PACKAGE_MANAGERS[key];
 }
 
