@@ -260,6 +260,9 @@ describe('fix Pipfile Python projects', () => {
       pathLib.join(workspacesPath, 'with-django-upgrade/Pipfile.lock.orig'),
     ];
   }, 90000);
+
+  it.todo('Uses provided python interpreter if --command was used for test/fix');
+
   // it('does not add a lockfile if none was present (uses --skip-lock)    ', async () => {
   //   // Arrange
   //   const targetFile = 'basic/prod.txt';

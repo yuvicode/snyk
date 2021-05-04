@@ -56,7 +56,9 @@ async function checkPipenvInstalled(): Promise<{ version: string | null }> {
 }
 
 function extractPipenvVersion(stdout: string): string | null {
-  // stdout example: pipenv, version 2018.11.26\n
+  /* stdout example:
+   * pipenv, version 2018.11.26\n
+   */
   let version: string | null = null;
   const re = new RegExp(/^pipenv,\sversion\s([0-9.]+)/, 'g');
   const match = re.exec(stdout);
@@ -69,9 +71,19 @@ function extractPipenvVersion(stdout: string): string | null {
 function isSupportedPipenvVersion(
   version: string,
 ): { supported: boolean; versions: string[] } {
-  // TODO: add all that we can test against in a matrix that pass
   // https://pipenv.pypa.io/en/latest/changelog/
-  const SUPPORTED_PIPENV_VERSIONS = ['2018.11.26'];
+  const SUPPORTED_PIPENV_VERSIONS = [
+    '2020.11.4',
+    '2020.8.13',
+    '2020.6.2',
+    '2020.5.28',
+    '2018.11.26',
+    '2018.11.14',
+    '2018.10.13',
+    '2018.10.9',
+    '2018.7.1',
+    '2018.6.25',
+  ];
   let supported = false;
   if (SUPPORTED_PIPENV_VERSIONS.includes(version)) {
     supported = true;

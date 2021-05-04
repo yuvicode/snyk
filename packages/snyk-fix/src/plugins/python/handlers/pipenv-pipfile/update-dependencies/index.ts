@@ -20,7 +20,7 @@ const debug = debugLib('snyk-fix:python:Pipfile');
 
 interface PipEnvConfig {
   pythonVersion?: '2' | '3';
-  pythonCommand?: string; // use the provided Python interpreter
+  command?: string; // use the provided Python interpreter
 }
 
 const limiter = new Bottleneck({
@@ -32,7 +32,7 @@ const runPipAddLimitedConcurrency = limiter.wrap(runPipEnvInstall);
 // TODO: support correct python version?
 // https://pipenv.pypa.io/en/latest/advanced/#changing-default-python-versions
 function getPythonversionArgs(config: PipEnvConfig): string | void {
-  if (config.pythonCommand) {
+  if (config.command) {
     return '--python'; // Performs the installation in a virtualenv using the provided Python interpreter.
   }
   if (config.pythonVersion === '2') {
