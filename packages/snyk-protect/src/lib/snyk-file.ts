@@ -1,41 +1,39 @@
+import type { PatchMetadata } from './types'
+
 const lineRegex = /^(\s*)(.*):(?:$| )+(.*)$/i;
+
+const isComment = (line: string): boolean => {
+  return line.trimStart().startsWith('#');
+};
 
 export function extractPatchMetadata(
   dotSnykFileContent: string,
-): { [vulnId: string]: string[] } {
+): PatchMetadata {
   let writingPatches = false;
-  let writingTo: string;
+  let currentVulnId: string;
 
-  // .snyk parsing => snyk-policy ( or js-yaml )
-  const patches = dotSnykFileContent
+  return dotSnykFileContent
     .split('\n')
-    .filter((l) => l.length && !l.trimStart().startsWith('#'))
+    .filter((line) => line.length > 0 && !isComment(line))
     .map((line) => lineRegex.exec(line))
-    .filter(Boolean)
-    .reduce((acc, thing) => {
-      const [, prefix, key, value] = thing as RegExpExecArray;
-      if (writingPatches && prefix === '') {
+    .filter((matches) => !!matches)
+    .reduce((patchMetadata, matches) => {
+      const [, indent, key, value] = matches as RegExpExecArray;
+      if (writingPatches && indent.length === 0) {
         writingPatches = false;
-      } else if (prefix === '' && key === 'patch' && value === '') {
+      } else if (indent.length === 0 && key === 'patch' && value === '') {
         writingPatches = true;
       } else if (writingPatches) {
-        if (prefix.length === 2) {
-          writingTo = key;
-          acc[key] = [];
+        if (indent.length === 2) {
+          currentVulnId = key;
+          patchMetadata.set(key, new Set());
         } else {
           if (key.startsWith('-')) {
-            const destination = key
-              .split('>')
-              .pop()
-              ?.trim();
-            if (!acc[writingTo].includes(destination)) {
-              acc[writingTo].push(destination);
-            }
+            const packageName = key.split('>').pop()?.trim();
+            patchMetadata.get(currentVulnId).add(packageName);
           }
         }
       }
-      return acc;
-    }, {});
-
-  return patches;
+      return patchMetadata;
+    }, new Map());
 }

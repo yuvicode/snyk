@@ -4,52 +4,49 @@ import { extractPatchMetadata } from './snyk-file';
 import { applyPatchToFile } from './patch';
 import { getPatches } from './get-patches';
 import { checkProject } from './explore-node-modules';
-import { PhysicalModuleToPatch } from './types';
+import { PackageName, PatchMetadata } from './types';
 
-async function protect(projectFolderPath: string) {
+const getPackages = (patchMetadata: PatchMetadata): Set<PackageName> => {
+  const result: Set<PackageName> = new Set();
+  for (const values of patchMetadata.values()) {
+    for (const value of values) {
+      result.add(value);
+    }
+  }
+  return result;
+};
+
+async function protect(projectFolderPath: string): Promise<void> {
   const snykFilePath = path.resolve(projectFolderPath, '.snyk');
 
   if (!fs.existsSync(snykFilePath)) {
-    console.log('No .snyk file found');
+    console.log('No .snyk file found.');
     return;
   }
 
   const snykFileContents = fs.readFileSync(snykFilePath, 'utf8');
-  const snykFilePatchMetadata = extractPatchMetadata(snykFileContents);
+  const patchMetadata = extractPatchMetadata(snykFileContents);
 
-  const patchesOfInterest: string[] = Object.keys(snykFilePatchMetadata); // a list of snyk vulnerability IDs
+  const vulnsToPatch = new Set(patchMetadata.keys());
+  const packagesToPatch: Set<PackageName> = getPackages(patchMetadata);
 
-  // a list of package names (corresponding to the vulnerability IDs)
-  // can't use .flat() because it's not supported in Node 10
-  const librariesOfInterest: string[] = [];
-  for (const nextArrayOfPackageNames of Object.values(snykFilePatchMetadata)) {
-    librariesOfInterest.push(...nextArrayOfPackageNames);
-  }
+  const installedPackages = checkProject(projectFolderPath, packagesToPatch);
 
-  const physicalModulesToPatch: PhysicalModuleToPatch[] = []; // this will be poplulated by checkProject and checkPhysicalModule
-
-  // this fills in physicalModulesToPatch
-  checkProject(projectFolderPath, librariesOfInterest, physicalModulesToPatch);
-
-  // TODO: type this
-  // it's a map of string -> something
-  const snykPatches = await getPatches(
-    physicalModulesToPatch,
-    patchesOfInterest,
-  );
-  if (Object.keys(snykPatches).length === 0) {
-    console.log('Nothing to patch, done');
+  const patchesByPackage = await getPatches(installedPackages, vulnsToPatch);
+  if (patchesByPackage.size === 0) {
+    console.log('Nothing to patch.');
     return;
   }
 
-  for (const [libToPatch, patches] of Object.entries(snykPatches)) {
-    for (const place of physicalModulesToPatch.filter(
-      (l) => l.name === libToPatch,
-    )) {
-      for (const patch of patches as any) {
-        for (const patchDiff of (patch as any).diffs) {
-          applyPatchToFile(patchDiff, place.folderPath);
-        }
+  for (const installedPackage of installedPackages) {
+    const patches = patchesByPackage.get(installedPackage.name);
+    if (!patches) {
+      continue;
+    }
+
+    for (const patch of patches) {
+      for (const patchDiff of patch.diffs) {
+        applyPatchToFile(patchDiff, installedPackage.path);
       }
     }
   }

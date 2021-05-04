@@ -71,7 +71,7 @@ describe('@snyk/protect', () => {
 
       await protect(project.path);
 
-      expect(log).toHaveBeenCalledWith('Nothing to patch, done');
+      expect(log).toHaveBeenCalledWith('Nothing to patch.');
     });
 
     // skipped because we need to check the versions of the found modules before we attempt to patch them which we don't currently do
@@ -80,7 +80,7 @@ describe('@snyk/protect', () => {
     //   const project = await createProject('target-module-exists-but-no-patches-for-version');
     //   const log = jest.spyOn(global.console, 'log');
     //   await protect(project.path);
-    //   expect(log).toHaveBeenCalledWith('Nothing to patch, done');
+    //   expect(log).toHaveBeenCalledWith('Nothing to patch.');
     // });
 
     // fixture has a lodash@4.14.1 which we don't have patches for
@@ -90,7 +90,7 @@ describe('@snyk/protect', () => {
 
       await protect(project.path);
 
-      expect(log).toHaveBeenCalledWith('No .snyk file found');
+      expect(log).toHaveBeenCalledWith('No .snyk file found.');
     });
   });
 });

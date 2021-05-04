@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { PhysicalModuleToPatch, PackageAndVersion } from '../../src/lib/types';
+import { PackageAndVersion } from '../../src/lib/types';
 
 import { extractPatchMetadata } from '../../src/lib/snyk-file';
 import { checkProject } from '../../src/lib/explore-node-modules';
@@ -25,19 +25,11 @@ patch:
     - tap > nyc > istanbul-lib-instrument > babel-types > lodash:
         patched: '2021-02-17T13:43:51.857Z'
     `;
-    const snykFilePatchMetadata = extractPatchMetadata(dotSnykFileContents);
-    const vulnIds = Object.keys(snykFilePatchMetadata);
+    const result = extractPatchMetadata(dotSnykFileContents);
 
-    // can't use .flat() because it's not supported in Node 10
-    const packageNames: string[] = [];
-    for (const nextArrayOfPackageNames of Object.values(
-      snykFilePatchMetadata,
-    )) {
-      packageNames.push(...nextArrayOfPackageNames);
-    }
-
-    expect(vulnIds).toEqual(['SNYK-JS-LODASH-567746']);
-    expect(packageNames).toEqual(['lodash']);
+    expect(result).toEqual(
+      new Map([['SNYK-JS-LODASH-567746', new Set(['lodash'])]]),
+    );
   });
 
   it('works with multiple patches', async () => {
@@ -55,22 +47,13 @@ patch:
     - top-level > some-other > the-module:
         patched: '2021-02-17T13:43:51.857Z'
     `;
-    const snykFilePatchMetadata = extractPatchMetadata(dotSnykFileContents);
-    const vulnIds = Object.keys(snykFilePatchMetadata);
-
-    // can't use .flat() because it's not supported in Node 10
-    const packageNames: string[] = [];
-    for (const nextArrayOfPackageNames of Object.values(
-      snykFilePatchMetadata,
-    )) {
-      packageNames.push(...nextArrayOfPackageNames);
-    }
-
-    expect(vulnIds).toEqual([
-      'SNYK-JS-LODASH-567746',
-      'SNYK-FAKE-THEMODULE-000000',
-    ]);
-    expect(packageNames).toEqual(['lodash', 'the-module']);
+    const result = extractPatchMetadata(dotSnykFileContents);
+    expect(result).toEqual(
+      new Map([
+        ['SNYK-JS-LODASH-567746', new Set(['lodash'])],
+        ['SNYK-FAKE-THEMODULE-000000', new Set(['the-module'])],
+      ]),
+    );
   });
 
   it('works with zero patches defined in patch section', async () => {
@@ -81,19 +64,8 @@ ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
 `;
-    const snykFilePatchMetadata = extractPatchMetadata(dotSnykFileContents);
-    const vulnIds = Object.keys(snykFilePatchMetadata);
-
-    // can't use .flat() because it's not supported in Node 10
-    const packageNames: string[] = [];
-    for (const nextArrayOfPackageNames of Object.values(
-      snykFilePatchMetadata,
-    )) {
-      packageNames.push(...nextArrayOfPackageNames);
-    }
-
-    expect(vulnIds).toHaveLength(0);
-    expect(packageNames).toHaveLength(0);
+    const result = extractPatchMetadata(dotSnykFileContents);
+    expect(result).toEqual(new Map());
   });
 
   it('works with no patch section', async () => {
@@ -102,19 +74,8 @@ patch:
 version: v1.19.0
 ignore: {}
 `;
-    const snykFilePatchMetadata = extractPatchMetadata(dotSnykFileContents);
-    const vulnIds = Object.keys(snykFilePatchMetadata);
-
-    // can't use .flat() because it's not supported in Node 10
-    const packageNames: string[] = [];
-    for (const nextArrayOfPackageNames of Object.values(
-      snykFilePatchMetadata,
-    )) {
-      packageNames.push(...nextArrayOfPackageNames);
-    }
-
-    expect(vulnIds).toHaveLength(0);
-    expect(packageNames).toHaveLength(0);
+    const result = extractPatchMetadata(dotSnykFileContents);
+    expect(result).toEqual(new Map());
   });
 });
 
@@ -122,25 +83,23 @@ describe('checkProject', () => {
   it('works with no matching physical modules', () => {
     const fixtureFolderRelativePath = '../fixtures/no-matching-paths';
     const fixtureFolder = path.join(__dirname, fixtureFolderRelativePath);
-
-    const physicalModulesToPatch: PhysicalModuleToPatch[] = []; // this will get populated by checkProject
-    checkProject(fixtureFolder, ['lodash'], physicalModulesToPatch);
-
-    expect(physicalModulesToPatch).toHaveLength(0);
+    expect(checkProject(fixtureFolder, new Set(['lodash']))).toHaveLength(0);
   });
 
   it('works with single matching physical module', () => {
     const fixtureFolderRelativePath = '../fixtures/single-patchable-module';
     const fixtureFolder = path.join(__dirname, fixtureFolderRelativePath);
 
-    const physicalModulesToPatch: PhysicalModuleToPatch[] = []; // this will get populated by checkProject
-    checkProject(fixtureFolder, ['lodash'], physicalModulesToPatch);
+    const physicalModulesToPatch = checkProject(
+      fixtureFolder,
+      new Set(['lodash']),
+    );
 
     expect(physicalModulesToPatch).toHaveLength(1);
     const m = physicalModulesToPatch[0];
     expect(m.name).toBe('lodash');
     expect(m.version).toBe('4.17.15');
-    expect(m.folderPath).toEqual(
+    expect(m.path).toEqual(
       path.join(
         __dirname,
         fixtureFolderRelativePath,
@@ -153,20 +112,22 @@ describe('checkProject', () => {
     const fixtureFolderRelativePath = '../fixtures/multiple-matching-paths';
     const fixtureFolder = path.join(__dirname, fixtureFolderRelativePath);
 
-    const physicalModulesToPatch: PhysicalModuleToPatch[] = []; // this will get populated by checkProject
-    checkProject(fixtureFolder, ['lodash'], physicalModulesToPatch);
+    const physicalModulesToPatch = checkProject(
+      fixtureFolder,
+      new Set(['lodash']),
+    );
 
     expect(physicalModulesToPatch).toHaveLength(2);
     const m0 = physicalModulesToPatch[0];
     expect(m0.name).toBe('lodash');
     expect(m0.version).toBe('4.17.15');
-    expect(m0.folderPath).toEqual(
+    expect(m0.path).toEqual(
       path.join(__dirname, fixtureFolderRelativePath, '/node_modules/lodash'),
     );
     const m1 = physicalModulesToPatch[1];
     expect(m1.name).toBe('lodash');
     expect(m1.version).toBe('4.17.15');
-    expect(m1.folderPath).toEqual(
+    expect(m1.path).toEqual(
       path.join(
         __dirname,
         fixtureFolderRelativePath,
@@ -188,15 +149,27 @@ describe('getPatches', () => {
           version: '4.17.15',
         } as PackageAndVersion,
       ];
-      const vulnIds = ['SNYK-JS-LODASH-567746'];
+      const vulnIds = new Set(['SNYK-JS-LODASH-567746']);
       const patches = await getPatches(packageAndVersions, vulnIds);
-      expect(Object.keys(patches)).toEqual(['lodash']);
-      const lodashPatches = patches['lodash'];
-      expect(lodashPatches).toHaveLength(1);
-      const theOnePatch = lodashPatches[0];
-      expect(theOnePatch.id).toBe('patch:SNYK-JS-LODASH-567746:0');
-      expect(theOnePatch.diffs).toHaveLength(1);
-      expect(theOnePatch.diffs[0]).toContain('index 9b95dfef..43e71ffb 100644'); // something from the actual patch
+      expect(patches).toMatchObject(
+        new Map([
+          [
+            'lodash',
+            [
+              {
+                id: 'patch:SNYK-JS-LODASH-567746:0',
+                modificationTime: expect.any(String),
+                urls: [expect.any(String)],
+                version: expect.any(String),
+                comments: [],
+                diffs: [
+                  expect.stringContaining('index 9b95dfef..43e71ffb 100644'),
+                ],
+              },
+            ],
+          ],
+        ]),
+      );
     },
     testTimeout,
   );
@@ -204,15 +177,15 @@ describe('getPatches', () => {
   it(
     'does not download patch for non-applicable version',
     async () => {
-      const packageAndVersions: PackageAndVersion[] = [
+      const packageAndVersions = [
         {
           name: 'lodash',
           version: '4.17.20', // this version is not applicable to the patch
-        } as PackageAndVersion,
+        },
       ];
-      const vulnIds = ['SNYK-JS-LODASH-567746'];
+      const vulnIds = new Set(['SNYK-JS-LODASH-567746']);
       const patches = await getPatches(packageAndVersions, vulnIds);
-      expect(patches).toEqual({}); // expect nothing to be returned because SNYK-JS-LODASH-567746 does not apply to 4.17.20 of lodash
+      expect(patches).toEqual(new Map()); // expect nothing to be returned because SNYK-JS-LODASH-567746 does not apply to 4.17.20 of lodash
     },
     testTimeout,
   );

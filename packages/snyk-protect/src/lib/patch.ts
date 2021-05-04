@@ -1,15 +1,16 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import { Diff } from './types';
 
-export function applyPatchToFile(patchContents: string, baseFolder: string) {
+export function applyPatchToFile(patchDiff: Diff, baseFolder: string): void {
   const targetFilePath = path.join(
     baseFolder,
-    extractTargetFilePathFromPatch(patchContents),
+    extractTargetFilePathFromPatch(patchDiff),
   );
   const contentsToPatch = fs.readFileSync(targetFilePath, 'utf-8');
-  const patchedContents = patchString(patchContents, contentsToPatch);
+  const patchedContents = patchString(patchDiff, contentsToPatch);
   fs.writeFileSync(targetFilePath, patchedContents);
-  console.log(`patched ${targetFilePath}`);
+  console.log(`Patched: ${targetFilePath}`);
 }
 
 export function extractTargetFilePathFromPatch(patchContents: string): string {

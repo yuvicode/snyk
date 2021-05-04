@@ -1,73 +1,89 @@
 import * as https from 'https';
-import { PackageAndVersion } from './types';
+import {
+  TestResponse,
+  Diff,
+  PackageAndVersion,
+  PackageName,
+  VulnerabilityID,
+  Patch,
+} from './types';
+
+const DEFAULT_API_BASE_URL = 'https://snyk.io/api';
 
 export async function getPatches(
-  foundPackages: PackageAndVersion[],
-  patchesOfInterest: string[],
-) {
-  const snykPatches = {};
-  const checkedLibraries: any[] = [];
-  for (const foundLibrary of foundPackages) {
-    const toCheck = `${foundLibrary.name}/${foundLibrary.version}`;
-    if (!checkedLibraries.includes(toCheck)) {
-      checkedLibraries.push(toCheck);
+  packages: PackageAndVersion[],
+  vulnsToPatch: Set<VulnerabilityID>,
+): Promise<Map<PackageName, Array<Patch>>> {
+  const patchesByPackage = new Map();
+  const checkedPackages = new Set();
+  for (const pkg of packages) {
+    const toCheck = `${pkg.name}/${pkg.version}`;
+    if (checkedPackages.has(toCheck)) {
+      continue;
+    }
 
-      const snykToken = process.env.SNYK_TOKEN || process.env.SNYK_API_KEY;
-      if (!snykToken) {
-        throw new Error('SNYK_TOKEN must be set');
-      }
+    checkedPackages.add(toCheck);
 
-      let apiBaseUrl = 'https://snyk.io/api';
-      if (process.env.SNYK_API) {
-        if (process.env.SNYK_API.endsWith('/api')) {
-          apiBaseUrl = process.env.SNYK_API;
-        } else if (process.env.SNYK_API.endsWith('/api/v1')) {
-          // snyk CI environment - we use `.../api/v1` though the norm is just `.../api`
-          apiBaseUrl = process.env.SNYK_API.replace('/v1', '');
-        } else {
-          console.log(
-            'Malformed SNYK_API value. Using default: https://snyk.io/api',
-          );
-        }
-      }
+    const snykToken = process.env.SNYK_TOKEN || process.env.SNYK_API_KEY;
+    if (!snykToken) {
+      throw new Error('SNYK_TOKEN must be set');
+    }
 
-      const { issues } = await httpsGet(
-        `${apiBaseUrl}/v1/test/npm/${toCheck}`,
-        {
-          json: true,
-          headers: {
-            // TODO: remove after replacing with new API endpoint
-            Authorization: `token ${snykToken}`,
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-      if (issues.vulnerabilities) {
-        for (const vulnerability of issues.vulnerabilities) {
-          if (patchesOfInterest.includes(vulnerability.id)) {
-            snykPatches[vulnerability.package] =
-              snykPatches[vulnerability.package] || [];
-            const fetchedPatches = await Promise.all(
-              vulnerability.patches.map(async (patch) => {
-                return {
-                  ...patch,
-                  diffs: await Promise.all(
-                    patch.urls.map(async (url) => httpsGet(url)),
-                  ),
-                };
-              }),
-            );
-            snykPatches[vulnerability.package] = [...fetchedPatches];
-          }
-        }
+    let apiBaseUrl = DEFAULT_API_BASE_URL;
+    if (process.env.SNYK_API) {
+      if (process.env.SNYK_API.endsWith('/api')) {
+        apiBaseUrl = process.env.SNYK_API;
+      } else if (process.env.SNYK_API.endsWith('/api/v1')) {
+        apiBaseUrl = process.env.SNYK_API.replace('/v1', '');
+      } else {
+        console.log(
+          `Malformed SNYK_API value. Using default: ${DEFAULT_API_BASE_URL}`,
+        );
       }
     }
+
+    const { issues } = await httpsGet<TestResponse>(
+      `${apiBaseUrl}/v1/test/npm/${toCheck}`,
+      {
+        json: true,
+        headers: {
+          Authorization: `token ${snykToken}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+
+    if (!issues.vulnerabilities) {
+      continue;
+    }
+
+    for (const vulnerability of issues.vulnerabilities) {
+      if (!vulnsToPatch.has(vulnerability.id)) {
+        continue;
+      }
+
+      const fetchedPatches: Patch[] = [];
+      for (const patch of vulnerability.patches) {
+        const patchWithDiffs: Patch = {
+          ...patch,
+          diffs: [],
+        };
+
+        for (const url of patch.urls) {
+          const diff = await httpsGet<Diff>(url);
+          patchWithDiffs.diffs.push(diff);
+        }
+
+        fetchedPatches.push(patchWithDiffs);
+      }
+
+      patchesByPackage.set(vulnerability.package, fetchedPatches);
+    }
   }
-  return snykPatches;
+  return patchesByPackage;
 }
 
-// fetch patches => needle
-export const httpsGet = async (url: string, options: any = {}): Promise<any> =>
+export const httpsGet = async <T>(url: string, options: any = {}): Promise<T> =>
   new Promise((resolve, reject) => {
     const parsedURL = new URL(url);
     const requestOptions = {
@@ -81,7 +97,7 @@ export const httpsGet = async (url: string, options: any = {}): Promise<any> =>
         (response.statusCode < 200 || response.statusCode > 299)
       ) {
         reject(
-          new Error('Failed to load page, status code: ' + response.statusCode),
+          new Error('HTTP request failed. Status Code: ' + response.statusCode),
         );
       }
       const body: any[] = [];

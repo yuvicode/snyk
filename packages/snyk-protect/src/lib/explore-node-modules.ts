@@ -1,20 +1,18 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { PhysicalModuleToPatch } from './types';
+import { InstalledPackage, PackageName } from './types';
 
-// Check if a physical module (given by folderPath) is a thing we want to patch and if it is, add it to the list of modules to patch
-// for a given path and
-function checkPhysicalModule(
-  folderPath: string,
-  librariesOfInterest: Readonly<string[]>,
-  physicalModulesToPatch: PhysicalModuleToPatch[],
-) {
-  const folderName = path.basename(folderPath);
-  if (!librariesOfInterest.includes(folderName)) {
-    return false;
+function checkInstalledPackage(
+  packagePath: string,
+  packagesToPatch: Readonly<Set<PackageName>>,
+  installedPackages: InstalledPackage[],
+): void {
+  const packageName = path.basename(packagePath);
+  if (!packagesToPatch.has(packageName)) {
+    return;
   }
 
-  const packageJsonPath = path.resolve(folderPath, 'package.json');
+  const packageJsonPath = path.resolve(packagePath, 'package.json');
   if (
     fs.existsSync(packageJsonPath) &&
     fs.lstatSync(packageJsonPath).isFile()
@@ -22,45 +20,34 @@ function checkPhysicalModule(
     const { name, version } = JSON.parse(
       fs.readFileSync(packageJsonPath, 'utf8'),
     );
-    if (librariesOfInterest.includes(name)) {
-      physicalModulesToPatch.push({
+    if (packagesToPatch.has(name)) {
+      installedPackages.push({
         name,
         version,
-        folderPath,
-      } as PhysicalModuleToPatch);
+        path: packagePath,
+      });
     }
   }
 }
 
-// splelunk down the node_modules folder of a project given the project root directory looking for
-// physical modules which match our librariesOfInterest
-// we do not check for matching version at this point (that happens in getPatches)
-// calls checkPhysicalModule
-// calls itself recursively
 export function checkProject(
-  pathToCheck: string,
-  librariesOfInterest: Readonly<string[]>,
-  physicalModulesToPatch: PhysicalModuleToPatch[],
-) {
-  if (fs.existsSync(pathToCheck) && fs.lstatSync(pathToCheck).isDirectory()) {
-    checkPhysicalModule(
-      pathToCheck,
-      librariesOfInterest,
-      physicalModulesToPatch,
-    );
+  packagePath: string,
+  packagesToPatch: Readonly<Set<PackageName>>,
+  installedPackages: InstalledPackage[] = [],
+): InstalledPackage[] {
+  if (fs.existsSync(packagePath) && fs.lstatSync(packagePath).isDirectory()) {
+    checkInstalledPackage(packagePath, packagesToPatch, installedPackages);
 
-    const folderNodeModules = path.resolve(pathToCheck, 'node_modules');
-    if (
-      fs.existsSync(folderNodeModules) &&
-      fs.lstatSync(folderNodeModules).isDirectory()
-    ) {
-      fs.readdirSync(folderNodeModules).forEach((p) => {
+    const nodeModules = path.resolve(packagePath, 'node_modules');
+    if (fs.existsSync(nodeModules) && fs.lstatSync(nodeModules).isDirectory()) {
+      fs.readdirSync(nodeModules).forEach((packageName) => {
         checkProject(
-          path.resolve(folderNodeModules, p),
-          librariesOfInterest,
-          physicalModulesToPatch,
+          path.resolve(nodeModules, packageName),
+          packagesToPatch,
+          installedPackages,
         );
       });
     }
   }
+  return installedPackages;
 }
