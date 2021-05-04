@@ -1,45 +1,20 @@
 import { join } from 'path';
-import { fakeServer } from '../../acceptance/fake-server';
 import { test } from '../../../src/cli/commands';
 import { loadPlugin } from '../../../src/lib/plugins/index';
 import { CommandResult } from '../../../src/cli/commands/types';
+import makeRequest = require('../../../src/lib/request/request');
 
 jest.mock('../../../src/lib/plugins/index');
-
-const apiKey = '123456789';
-const port = process.env.PORT || process.env.SNYK_PORT || '12345';
-
-const BASE_API = '/api/v1';
-const SNYK_API = 'http://localhost:' + port + BASE_API;
-const SNYK_HOST = 'http://localhost:' + port;
-const server = fakeServer(BASE_API, apiKey);
+jest.mock('../../../src/lib/request/request');
 
 const mockedLoadPlugin = loadPlugin as jest.Mock<any>;
+const mockedMakeRequest = makeRequest as jest.Mock<any>;
 
 describe('snyk test for python project', () => {
-  beforeAll(async () => {
-    await new Promise((resolve) => {
-      server.listen(port, resolve);
-    });
-  });
-
-  afterAll(async () => {
-    await server.close();
-  });
-
   describe('--all-projects flag is used to scan the project', () => {
     describe('pyproject.toml does not contain peotry metadata', () => {
-      beforeEach(() => {
-        process.env.SNYK_TOKEN = apiKey;
-        process.env.SNYK_API = SNYK_API;
-        process.env.SNYK_HOST = SNYK_HOST;
-      });
       afterEach(() => {
-        delete process.env.SNYK_API;
-        delete process.env.SNYK_HOST;
-        delete process.env.SNYK_PORT;
-
-        mockedLoadPlugin.mockClear();
+        jest.clearAllMocks();
       });
 
       it('should not attempt to scan peotry vulnerabilities', async (done) => {
@@ -48,7 +23,6 @@ describe('snyk test for python project', () => {
           '../../acceptance/workspaces',
           'python-w-pyproject-wo-poetry',
         );
-
         const plugin = {
           async inspect() {
             return {
@@ -63,6 +37,16 @@ describe('snyk test for python project', () => {
         };
         mockedLoadPlugin.mockImplementationOnce(() => {
           return plugin;
+        });
+        mockedMakeRequest.mockImplementationOnce(() => {
+          return {
+            res: { statusCode: 200 },
+            body: {
+              result: { issuesData: {}, affectedPkgs: {} },
+              meta: { org: 'test-org', isPublic: false },
+              filesystemPolicy: false,
+            },
+          };
         });
 
         const result: CommandResult = await test(fixturePath, {
