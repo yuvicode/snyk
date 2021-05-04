@@ -194,15 +194,11 @@ export function detectPackageFile(root) {
 }
 
 const isBasenameDeterministic = (basename: string): boolean => {
-  if (basename in NON_DETERMINISTIC_BASENAMES) {
-    return false;
-  }
-
-  return true;
+  return !(basename in NON_DETERMINISTIC_BASENAMES);
 };
 
-export function detectPackageManagerFromFile(file: string) {
-  let key = pathLib.basename(file);
+export function detectPackageManagerFromFile(path: string) {
+  let key = pathLib.basename(path);
 
   // TODO: fix this to use glob matching instead
   // like *.gemspec
@@ -220,14 +216,14 @@ export function detectPackageManagerFromFile(file: string) {
 
   if (!(key in DETECTABLE_PACKAGE_MANAGERS)) {
     // we throw and error here because the file was specified by the user
-    throw new Error('Could not detect package manager for file: ' + file);
+    throw new Error('Could not detect package manager for file: ' + path);
   }
 
   if (!isBasenameDeterministic(key)) {
-    const detectedPackage = NON_DETERMINISTIC_BASENAMES[key](file);
+    const detectedPackage = NON_DETERMINISTIC_BASENAMES[key](path);
 
     if (!detectedPackage) {
-      throw new Error('Could not detect package manager for file: ' + file);
+      throw new Error('Could not detect package manager for file: ' + path);
     }
 
     return detectedPackage;
