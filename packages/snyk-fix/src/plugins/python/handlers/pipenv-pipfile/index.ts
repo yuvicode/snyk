@@ -40,6 +40,7 @@ export async function pipenvPipfile(
   return handlerResult;
 }
 
+// TODO: move
 async function checkPipenvInstalled(): Promise<{ version: string | null }> {
   let res: ExecuteResponse;
   try {
@@ -55,6 +56,7 @@ async function checkPipenvInstalled(): Promise<{ version: string | null }> {
   return { version: extractPipenvVersion(res.stdout) };
 }
 
+// TODO: move
 function extractPipenvVersion(stdout: string): string | null {
   /* stdout example:
    * pipenv, version 2018.11.26\n
@@ -68,6 +70,7 @@ function extractPipenvVersion(stdout: string): string | null {
   return version;
 }
 
+// TODO: move
 function isSupportedPipenvVersion(
   version: string,
 ): { supported: boolean; versions: string[] } {

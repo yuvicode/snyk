@@ -29,7 +29,7 @@ const limiter = new Bottleneck({
 
 const runPipAddLimitedConcurrency = limiter.wrap(runPipEnvInstall);
 
-// TODO: support correct python version?
+// TODO: move
 // https://pipenv.pypa.io/en/latest/advanced/#changing-default-python-versions
 function getPythonversionArgs(config: PipEnvConfig): string | void {
   if (config.command) {
@@ -43,6 +43,7 @@ function getPythonversionArgs(config: PipEnvConfig): string | void {
   }
 }
 
+// TODO: move
 async function runPipEnvInstall(
   projectPath: string,
   requirements: string[],
