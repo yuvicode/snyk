@@ -151,10 +151,6 @@ commands:
             mv gh-download/gh_1.3.1_linux_amd64/bin/gh /home/circleci/bin
             which gh
             gh --version
-  install_lerna_linux:
-    description: Setup Lerna
-    steps:
-      - run: sudo npm install -g lerna@3.22.1
 
 jobs:
   regression-test:
@@ -230,9 +226,6 @@ jobs:
           steps:
             - run: npm install -g npm@7
       - show_node_version
-      - run:
-          name: Setup Lerna
-          command: npm install -g lerna@3.22.1
       - run:
           name: Update local .npmrc file (Windows)
           command: echo "//registry.npmjs.org/:_authToken=$env:NPM_TOKEN" >> .npmrc
@@ -312,7 +305,6 @@ jobs:
           steps:
             - run: sudo npm install -g npm@7
       - show_node_version
-      - install_lerna_linux
       - update_local_npmrc_linux
       - install_deps
       - build_ts
@@ -424,7 +416,6 @@ jobs:
           command: |
             sudo npm install -g npm@7
       - show_node_version
-      - install_lerna_linux
       - update_local_npmrc_linux
       - install_deps
       - generate_help
@@ -441,7 +432,7 @@ jobs:
       - run:
           name: Lerna Publish
           command: |
-            lerna publish minor --yes --no-push --no-git-tag-version --exact
+            npx lerna publish minor --yes --no-push --no-git-tag-version --exact
       - run:
           name: Install osslsigncode
           command: sudo apt-get install -y osslsigncode

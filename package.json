@@ -159,6 +159,7 @@
     "eslint-config-prettier": "^6.1.0",
     "fs-extra": "^9.1.0",
     "jest": "^26.6.3",
+    "lerna": "^4.0.0",
     "lodash": "^4.17.20",
     "lodash.countby": "^4.6.0",
     "lodash.every": "^4.6.0",
