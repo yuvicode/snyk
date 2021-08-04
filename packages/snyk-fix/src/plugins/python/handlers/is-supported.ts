@@ -23,6 +23,19 @@ export async function isSupported(
   if (!remediationData) {
     return { supported: false, reason: 'No remediation data available' };
   }
+
+  // TODO: make per type checks nicer
+  if (entity.scanResult.identity.type === 'maven') {
+    if (
+      !remediationData.upgrade ||
+      Object.keys(remediationData.upgrade).length === 0
+    ) {
+      return {
+        supported: false,
+        reason: 'There is no actionable remediation to apply',
+      };
+    }
+  }
   if (!remediationData.pin || Object.keys(remediationData.pin).length === 0) {
     return {
       supported: false,

@@ -4,6 +4,7 @@ import { pythonFix } from './python';
 import { FixHandler } from './types';
 
 export function loadPlugin(type: string): FixHandler {
+  console.log({type})
   switch (type) {
     case 'pip': {
       return pythonFix;

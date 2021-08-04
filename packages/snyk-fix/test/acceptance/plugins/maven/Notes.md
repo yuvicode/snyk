@@ -14,4 +14,20 @@ Notes on effective pom:
 Possible remediations:
 - use effective pom and if all versions are defined in the same pom then inline the version upgrade
 - use effective pom & if we notice the dependency points to a known framework parent then bump the parent in the pom to the fixed version. Assuming Deps & framework version are versioned together.
--
+
+4th Aug
+- swap out the xml library for something like poke so we make a min diff only
+- go over test cases & make them work
+- improve error handling
+
+// v2 parents
+- add more tests where have local parents where the fix is to update the local parent
+- add tests with remote parent where we can't fix anything
+- add tests where the fix is to upgrade the framework (spike 2)
+
+
+How to track merge/pr rates?
+- propose a commit message so we can find it later (keywords)
+- create the PR for them
+- GithubAction (insert analytics to track)
+- speak to comet about the PR

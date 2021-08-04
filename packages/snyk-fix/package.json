@@ -41,6 +41,7 @@
     "@snyk/fix-poetry": "0.7.2",
     "chalk": "4.1.1",
     "debug": "^4.3.1",
+    "fast-xml-parser": "^3.19.0",
     "lodash.groupby": "4.6.0",
     "lodash.sortby": "^4.7.0",
     "ora": "5.4.0",
