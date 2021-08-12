@@ -9,6 +9,7 @@ import { parsePackageString as moduleToObject } from 'snyk-module';
 import * as depGraphLib from '@snyk/dep-graph';
 import { IacScan } from './payload-schema';
 import * as Queue from 'promise-queue';
+import * as ora from 'ora';
 
 import {
   AffectedPackages,
@@ -226,7 +227,6 @@ function getAffectedPkgsFromIssues(issues: Issue[]): AffectedPackages {
 
 async function sendAndParseResults(
   payloads: Payload[],
-  spinnerLbl: string,
   root: string,
   options: Options & TestOptions,
 ): Promise<TestResult[]> {
@@ -235,17 +235,24 @@ async function sendAndParseResults(
   // To support this limit and avoid getting back 502 errors from registry,
   // we introduced a concurrent requests limit of 25. With that, we will only process MAX 25 requests at the same time.
   // In the future, we would probably want to introduce a RATE_LIMIT specific for IaC
+  const stdOutSpinner = ora({
+    isSilent: options.quiet,
+    stream: process.stdout,
+  });
 
   if (options.iac) {
     const maxConcurrent = 25;
     const queue = new Queue(maxConcurrent);
     const iacResults: Promise<TestResult>[] = [];
 
-    await spinner.clear<void>(spinnerLbl)();
-    if (!options.quiet) {
-      await spinner(spinnerLbl);
-    }
-    for (const payload of payloads) {
+    for (const [index, payload] of payloads.entries()) {
+      stdOutSpinner.text = `Sending result ${index + 1}/${
+        payloads.length
+      } to Snyk`;
+      stdOutSpinner.clear();
+      stdOutSpinner.indent = 2;
+      stdOutSpinner.render();
+
       iacResults.push(
         queue.add(async () => {
           const iacScan: IacScan = payload.body as IacScan;
@@ -254,6 +261,10 @@ async function sendAndParseResults(
 
           const projectName =
             iacScan.projectNameOverride || iacScan.originalProjectName;
+          stdOutSpinner.text = `Processing response ${index + 1}/${
+            payloads.length
+          }`;
+          stdOutSpinner.render();
           return await parseIacTestResult(
             res,
             iacScan.targetFile,
@@ -263,16 +274,21 @@ async function sendAndParseResults(
           );
         }),
       );
+
+      stdOutSpinner.stop();
     }
     return Promise.all(iacResults);
   }
 
   const results: TestResult[] = [];
-  for (const payload of payloads) {
-    await spinner.clear<void>(spinnerLbl)();
-    if (!options.quiet) {
-      await spinner(spinnerLbl);
-    }
+  for (const [index, payload] of payloads.entries()) {
+    const spinnerMessage = `Sending result ${index + 1}/${
+      payloads.length
+    } to Snyk`;
+    stdOutSpinner.clear();
+    stdOutSpinner.text = spinnerMessage;
+    stdOutSpinner.indent = 2;
+    stdOutSpinner.render();
     /** sendTestPayload() deletes the request.body from the payload once completed. */
     const payloadCopy = Object.assign({}, payload);
     const res = await sendTestPayload(payload);
@@ -295,11 +311,13 @@ async function sendAndParseResults(
 
     const ecosystem = getEcosystem(options);
     if (ecosystem && options['print-deps']) {
-      await spinner.clear<void>(spinnerLbl)();
       await maybePrintDepGraph(options, depGraph);
     }
 
     const legacyRes = convertIssuesToAffectedPkgs(res);
+
+    stdOutSpinner.text = `Processing response ${index + 1}/${payloads.length}`;
+    stdOutSpinner.render();
 
     const result = await parseRes(
       depGraph,
@@ -322,6 +340,7 @@ async function sendAndParseResults(
       scanResult,
     });
   }
+  stdOutSpinner.stop();
   return results;
 }
 
@@ -330,11 +349,20 @@ export async function runTest(
   root: string,
   options: Options & TestOptions,
 ): Promise<TestResult[]> {
-  const spinnerLbl = 'Querying vulnerabilities database...';
+  const stdOutSpinner = ora({
+    isSilent: options.quiet,
+    stream: process.stdout,
+  });
+  const spinnerLbl = 'Querying vulnerabilities database';
+
   try {
     await validateOptions(options, options.packageManager);
     const payloads = await assemblePayloads(root, options);
-    return await sendAndParseResults(payloads, spinnerLbl, root, options);
+
+    stdOutSpinner.clear();
+    stdOutSpinner.start(spinnerLbl);
+
+    return await sendAndParseResults(payloads, root, options);
   } catch (error) {
     debug('Error running test', { error });
     // handling denial from registry because of the feature flag
@@ -371,7 +399,7 @@ export async function runTest(
       error.code,
     );
   } finally {
-    spinner.clear<void>(spinnerLbl)();
+    stdOutSpinner.stop();
   }
 }
 
