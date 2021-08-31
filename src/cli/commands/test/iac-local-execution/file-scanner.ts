@@ -19,6 +19,8 @@ export async function scanFiles(
   const scanResults: IacFileScanResult[] = [];
   for (const parsedFile of parsedFiles) {
     const policyEngine = await getPolicyEngine(parsedFile.engineType);
+    console.log('policyEngine', policyEngine)
+    console.log('parsedFile.engineType', parsedFile.engineType)
     const result = policyEngine.scanFile(parsedFile);
     scanResults.push(result);
   }
@@ -73,6 +75,7 @@ async function buildPolicyEngine(
 
     return new PolicyEngine(opaWasmInstance);
   } catch (err) {
+    console.log(err)
     throw new FailedToBuildPolicyEngine();
   }
 }
@@ -83,7 +86,10 @@ class PolicyEngine {
   }
 
   private evaluate(data: Record<string, any>): PolicyMetadata[] {
-    return this.opaWasmInstance.evaluate(data)[0].result;
+    const res = this.opaWasmInstance.evaluate(data);
+    console.log(res)
+    console.log('data', data)
+    return res[0].result;
   }
 
   public scanFile(iacFile: IacFileParsed): IacFileScanResult {
@@ -94,6 +100,7 @@ class PolicyEngine {
         violatedPolicies,
       };
     } catch (err) {
+      console.log(err)
       // TODO: to distinguish between different failure reasons
       throw new FailedToExecutePolicyEngine();
     }

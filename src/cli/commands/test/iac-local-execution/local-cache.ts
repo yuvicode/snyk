@@ -9,10 +9,13 @@ import { CustomError } from '../../../../lib/errors';
 import * as analytics from '../../../../lib/analytics';
 import ReadableStream = NodeJS.ReadableStream;
 import { getErrorStringCode } from './error-utils';
+import { Readable } from "stream"
+
+import { Octokit } from '@octokit/rest';
 
 const debug = Debug('iac-local-cache');
 
-export const LOCAL_POLICY_ENGINE_DIR = '.iac-data';
+export const LOCAL_POLICY_ENGINE_DIR = 'iac-data';
 
 const KUBERNETES_POLICY_ENGINE_WASM_PATH = path.join(
   LOCAL_POLICY_ENGINE_DIR,
@@ -93,14 +96,33 @@ export async function initLocalCache({
   }
 
   // Attempt to extract the custom rules from the path provided.
-  if (customRulesPath) {
-    try {
-      const response = fs.createReadStream(customRulesPath);
-      await extractBundle(response);
-    } catch (e) {
-      throw new FailedToExtractCustomRulesError(customRulesPath);
-    }
+  const octokit = new Octokit({
+    auth: process.env.GITHUB_ACCESS_TOKEN,
+  });
+  try {
+    // private repos get 404 without auth
+    console.log('download bundle')
+    const response: any = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+      owner: 'teodora-sandu',
+      repo: 'test-custom-rules',
+      path: 'bundle.tar.gz',
+    })
+    const content = Buffer.from(response.data.content, 'base64')
+    console.log(content.toString())
+    await extractBundle(Readable.from(content))
+  } catch (e) {
+    console.log(e)
+    throw new FailedToExtractCustomRulesError('blah');
   }
+  // if (customRulesPath) {
+  //   try {
+  //     const response = fs.createReadStream(customRulesPath);
+  //     await extractBundle(response);
+  //   } catch (e) {
+  //     console.log(e)
+  //     throw new FailedToExtractCustomRulesError('blah');
+  //   }
+  // }
 
   // We extract the Snyk rules after the custom rules to ensure our files
   // always overwrite whatever might be there.

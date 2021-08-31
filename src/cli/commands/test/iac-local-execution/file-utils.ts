@@ -5,7 +5,7 @@ import { FailedToInitLocalCacheError } from './local-cache';
 
 export function createIacDir(): void {
   // this path will be able to be customised by the user in the future
-  const iacPath: fs.PathLike = path.join('.iac-data/');
+  const iacPath: fs.PathLike = '/Users/teodorasandu/Documents/repos/snyk/iac-data/';
   try {
     if (!fs.existsSync(iacPath)) {
       fs.mkdirSync(iacPath, '700');
@@ -22,7 +22,7 @@ export function extractBundle(response: NodeJS.ReadableStream): Promise<void> {
       .on('error', reject)
       .pipe(
         tar.x({
-          C: path.join('.iac-data'),
+          C: '/Users/teodorasandu/Documents/repos/snyk/iac-data',
         }),
       )
       .on('finish', resolve)
