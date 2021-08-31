@@ -9,6 +9,17 @@ import { CustomError } from '../../../../lib/errors';
 import * as analytics from '../../../../lib/analytics';
 import ReadableStream = NodeJS.ReadableStream;
 import { getErrorStringCode } from './error-utils';
+import { Readable } from "stream"
+const tar = require('tar-stream');
+const streamifier = require('streamifier');
+
+import * as config from '../../../../lib/config';
+import { api } from '../../../../lib/api-token';
+// import { isCI } from '../../../../lib/is-ci';
+import { makeRequest } from '../../../../lib/request';
+// import { Payload } from '../../../../lib/request/types';
+import { FailedToGetIacOrgSettingsError } from './org-settings/get-iac-org-settings';
+import * as zlib from 'zlib'
 
 const debug = Debug('iac-local-cache');
 
@@ -83,6 +94,33 @@ export function getLocalCachePath(engineType: EngineType) {
   }
 }
 
+function getIacOrgCustomRules(
+  publicOrgId?: string,
+): Promise<{fileContentResult: string}> {
+  const payload: any = {
+    method: 'get',
+    url: config.API + '/custom-rules',
+    json: true,
+    qs: { org: publicOrgId },
+    headers: {
+      // 'x-is-ci': isCI(),
+      authorization: `token ${api()}`,
+    },
+  };
+
+  return new Promise((resolve, reject) => {
+    makeRequest(payload, (error, res) => {
+      if (error) {
+        return reject(error);
+      }
+      if (res.statusCode < 200 || res.statusCode > 299) {
+        return reject(res);
+      }
+      resolve(res.body);
+    });
+  });
+}
+
 export async function initLocalCache({
   customRulesPath,
 }: { customRulesPath?: string } = {}): Promise<void> {
@@ -92,15 +130,25 @@ export async function initLocalCache({
     throw new FailedToInitLocalCacheError();
   }
 
-  // Attempt to extract the custom rules from the path provided.
-  if (customRulesPath) {
-    try {
-      const response = fs.createReadStream(customRulesPath);
-      await extractBundle(response);
-    } catch (e) {
-      throw new FailedToExtractCustomRulesError(customRulesPath);
-    }
+ 
+  try {
+    console.log('download bundle')
+    const response: any = await getIacOrgCustomRules()
+    const content = Buffer.from(response.fileContentResult.text, 'utf8')
+    await extractBundle(Readable.from(content))
+  } catch (e) {
+    console.log(e)
+    throw new FailedToExtractCustomRulesError('blah');
   }
+  // // Attempt to extract the custom rules from the path provided.
+  // if (customRulesPath) {
+  //   try {
+  //     const response = fs.createReadStream(customRulesPath);
+  //     await extractBundle(response);
+  //   } catch (e) {
+  //     throw new FailedToExtractCustomRulesError(customRulesPath);
+  //   }
+  // }
 
   // We extract the Snyk rules after the custom rules to ensure our files
   // always overwrite whatever might be there.
