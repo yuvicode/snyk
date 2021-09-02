@@ -109,23 +109,21 @@ commands:
     steps:
       - run: curl -fsSL https://git.io/shellspec | sh -s -- -y
       - run: sudo ln -s ${HOME}/.local/lib/shellspec/shellspec /usr/local/bin/shellspec
-      - run: sudo apt-get install jq
 
 jobs:
   build:
     <<: *defaults
     docker:
-      - image: circleci/node:<< parameters.node_version >>
+      - image: cimg/node:<< parameters.node_version >>
     resource_class: large
     steps:
       - checkout
-      - run: sudo npm install -g npm@7.21.0
       - install_deps
       - build_ts
   regression-test:
     <<: *defaults
     docker:
-      - image: circleci/node:<< parameters.node_version >>
+      - image: cimg/node:<< parameters.node_version >>
     steps:
       - checkout
       - install_shellspec
@@ -228,7 +226,7 @@ jobs:
   test-linux:
     <<: *defaults
     docker:
-      - image: circleci/node:<< parameters.node_version >>
+      - image: cimg/node:<< parameters.node_version >>
     resource_class: large
     steps:
       - install_sdkman_linux
@@ -292,7 +290,7 @@ jobs:
   dev-release:
     <<: *defaults
     docker:
-      - image: circleci/node:<< parameters.node_version >>
+      - image: cimg/node:<< parameters.node_version >>
     resource_class: large
     steps:
       - checkout
@@ -332,7 +330,7 @@ jobs:
   release:
     <<: *defaults
     docker:
-      - image: circleci/node:<< parameters.node_version >>
+      - image: cimg/node:<< parameters.node_version >>
     resource_class: small
     steps:
       - checkout
@@ -400,7 +398,7 @@ workflows:
       - build:
           name: Build
           context: nodejs-install
-          node_version: '14.17.5'
+          node_version: '16.8'
       - regression-test:
           name: Regression Test
           context: nodejs-install
