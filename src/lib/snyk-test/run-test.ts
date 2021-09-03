@@ -1,5 +1,8 @@
 import * as fs from 'fs';
 const get = require('lodash.get');
+import * as pMap from 'p-map';
+import * as ora from 'ora';
+import { eventLoopSpinner } from 'event-loop-spinner';
 import * as path from 'path';
 import * as pathUtil from 'path';
 import * as debugModule from 'debug';
@@ -9,8 +12,6 @@ import { parsePackageString as moduleToObject } from 'snyk-module';
 import * as depGraphLib from '@snyk/dep-graph';
 import { IacScan } from './payload-schema';
 import * as Queue from 'promise-queue';
-import { cliFailFast } from '../../lib/feature-flags';
-import * as theme from '../../lib/theme';
 
 import {
   AffectedPackages,
@@ -75,6 +76,10 @@ import { getEcosystem } from '../ecosystems';
 import { Issue } from '../ecosystems/types';
 import { assembleEcosystemPayloads } from './assemble-payloads';
 import { makeRequest } from '../request';
+import { TimeoutServerError } from '../errors/timeout-error';
+import { cliFailFast } from '../../lib/feature-flags';
+import * as theme from '../../lib/theme';
+
 import spinner = require('../spinner');
 
 const debug = debugModule('snyk:run-test');
@@ -182,17 +187,18 @@ function isTestDependenciesResponse(
   return assumedTestDependenciesResponse?.result?.issues !== undefined;
 }
 
-function convertIssuesToAffectedPkgs(
+async function convertIssuesToAffectedPkgs(
   response:
     | IacTestResponse
     | TestDepGraphResponse
     | TestDependenciesResponse
     | LegacyVulnApiResult,
-):
+): Promise<
   | IacTestResponse
   | TestDepGraphResponse
   | TestDependenciesResponse
-  | LegacyVulnApiResult {
+  | LegacyVulnApiResult
+> {
   if (!(response as any).result) {
     return response;
   }
@@ -201,13 +207,15 @@ function convertIssuesToAffectedPkgs(
     return response;
   }
 
-  response.result['affectedPkgs'] = getAffectedPkgsFromIssues(
+  response.result['affectedPkgs'] = await getAffectedPkgsFromIssues(
     response.result.issues,
   );
   return response;
 }
 
-function getAffectedPkgsFromIssues(issues: Issue[]): AffectedPackages {
+async function getAffectedPkgsFromIssues(
+  issues: Issue[],
+): Promise<AffectedPackages> {
   const result: AffectedPackages = {};
 
   for (const issue of issues) {
@@ -221,6 +229,10 @@ function getAffectedPkgsFromIssues(issues: Issue[]): AffectedPackages {
     }
 
     result[packageId].issues[issue.issueId] = issue;
+
+    if (eventLoopSpinner.isStarving()) {
+      await eventLoopSpinner.spin();
+    }
   }
 
   return result;
@@ -228,7 +240,6 @@ function getAffectedPkgsFromIssues(issues: Issue[]): AffectedPackages {
 
 async function sendAndParseResults(
   payloads: Payload[],
-  spinnerLbl: string,
   root: string,
   options: Options & TestOptions,
 ): Promise<TestResult[]> {
@@ -237,16 +248,17 @@ async function sendAndParseResults(
   // To support this limit and avoid getting back 502 errors from registry,
   // we introduced a concurrent requests limit of 25. With that, we will only process MAX 25 requests at the same time.
   // In the future, we would probably want to introduce a RATE_LIMIT specific for IaC
+  const stdOutSpinner = ora({
+    isSilent: options.quiet,
+    stream: process.stdout,
+  });
+  stdOutSpinner.start();
 
   if (options.iac) {
     const maxConcurrent = 25;
     const queue = new Queue(maxConcurrent);
     const iacResults: Promise<TestResult>[] = [];
 
-    await spinner.clear<void>(spinnerLbl)();
-    if (!options.quiet) {
-      await spinner(spinnerLbl);
-    }
     for (const payload of payloads) {
       iacResults.push(
         queue.add(async () => {
@@ -256,6 +268,8 @@ async function sendAndParseResults(
 
           const projectName =
             iacScan.projectNameOverride || iacScan.originalProjectName;
+          stdOutSpinner.text = `Processing result for ${projectName}(${iacScan.targetFile})`;
+          stdOutSpinner.render();
           return await parseIacTestResult(
             res,
             iacScan.targetFile,
@@ -266,64 +280,114 @@ async function sendAndParseResults(
         }),
       );
     }
+    stdOutSpinner.stop();
     return Promise.all(iacResults);
   }
 
   const results: TestResult[] = [];
-  for (const payload of payloads) {
-    await spinner.clear<void>(spinnerLbl)();
-    if (!options.quiet) {
-      await spinner(spinnerLbl);
-    }
-    /** sendTestPayload() deletes the request.body from the payload once completed. */
-    const payloadCopy = Object.assign({}, payload);
-    const res = await sendTestPayload(payload);
-    const {
-      depGraph,
-      payloadPolicy,
-      pkgManager,
-      targetFile,
-      projectName,
-      foundProjectCount,
-      displayTargetFile,
-      dockerfilePackages,
-      platform,
-      scanResult,
-    } = prepareResponseForParsing(
-      payloadCopy,
-      res as TestDependenciesResponse,
-      options,
+  const errorResults: any[] = [];
+
+  await pMap(
+    payloads,
+    async (payload) => {
+      let projectNameCopy;
+      let displayTargetFileCopy;
+
+      try {
+        /** sendTestPayload() deletes the request.body from the payload once completed. */
+        const payloadCopy = { ...payload };
+        const { result: res, duration, attempts, error } = await backendRequest(
+          payload,
+        );
+        debug('Completed request:', { duration, attempts });
+
+        const {
+          depGraph,
+          payloadPolicy,
+          pkgManager,
+          targetFile,
+          projectName,
+          foundProjectCount,
+          displayTargetFile,
+          dockerfilePackages,
+          platform,
+          scanResult,
+        } = prepareResponseForParsing(
+          payloadCopy,
+          res as TestDependenciesResponse,
+          options,
+        );
+        stdOutSpinner.text = `Processing result for ${projectName} (${displayTargetFile})`;
+        stdOutSpinner.render();
+        projectNameCopy = projectName;
+        displayTargetFileCopy = displayTargetFile;
+
+        if (error) {
+          throw error;
+        }
+
+        const ecosystem = getEcosystem(options);
+        if (ecosystem && options['print-deps']) {
+          stdOutSpinner.clear();
+          await maybePrintDepGraph(options, depGraph);
+        }
+        debug('convertIssuesToAffectedPkgs');
+
+        stdOutSpinner.text = `convertIssuesToAffectedPkgs for ${projectName} (${displayTargetFile})`;
+        stdOutSpinner.render();
+
+        const legacyRes = await convertIssuesToAffectedPkgs(res!);
+        stdOutSpinner.text = `Parse response for ${projectName} (${displayTargetFile})`;
+        stdOutSpinner.render();
+        debug('parseRes');
+
+        const result = await parseRes(
+          depGraph,
+          pkgManager,
+          legacyRes as LegacyVulnApiResult,
+          options,
+          payload,
+          payloadPolicy,
+          root,
+          dockerfilePackages,
+        );
+
+        results.push({
+          ...result,
+          targetFile,
+          projectName,
+          foundProjectCount,
+          displayTargetFile,
+          platform,
+          scanResult,
+        });
+      } catch (e) {
+        debug(
+          `Request for ${projectNameCopy}(${displayTargetFileCopy}) failed even after retries. ${e}`,
+        );
+        errorResults.push({
+          error: e.userMessage || e.message,
+          errorCode: e.code,
+          projectName: projectNameCopy,
+          targetFile: displayTargetFileCopy,
+        });
+      }
+    },
+    { concurrency: 10 },
+  );
+
+  if (errorResults.length > 0) {
+    console.error(
+      chalk.red(
+        `${errorResults.length}/${
+          payloads.length
+        } tests failed to complete. Failed projects:\n ${JSON.stringify(
+          errorResults,
+        )}`,
+      ),
     );
-
-    const ecosystem = getEcosystem(options);
-    if (ecosystem && options['print-deps']) {
-      await spinner.clear<void>(spinnerLbl)();
-      await maybePrintDepGraph(options, depGraph);
-    }
-
-    const legacyRes = convertIssuesToAffectedPkgs(res);
-
-    const result = await parseRes(
-      depGraph,
-      pkgManager,
-      legacyRes as LegacyVulnApiResult,
-      options,
-      payload,
-      payloadPolicy,
-      root,
-      dockerfilePackages,
-    );
-
-    results.push({
-      ...result,
-      targetFile,
-      projectName,
-      foundProjectCount,
-      displayTargetFile,
-      platform,
-      scanResult,
-    });
   }
+  stdOutSpinner.stop();
   return results;
 }
 
@@ -332,13 +396,11 @@ export async function runTest(
   root: string,
   options: Options & TestOptions,
 ): Promise<TestResult[]> {
-  const spinnerLbl = 'Querying vulnerabilities database...';
   try {
     await validateOptions(options, options.packageManager);
     const payloads = await assemblePayloads(root, options);
-    return await sendAndParseResults(payloads, spinnerLbl, root, options);
+    return await sendAndParseResults(payloads, root, options);
   } catch (error) {
-    debug('Error running test', { error });
     // handling denial from registry because of the feature flag
     // currently done for go.mod
     const isFeatureNotAllowed =
@@ -372,8 +434,6 @@ export async function runTest(
         `Failed to test ${projectType} project`,
       error.code,
     );
-  } finally {
-    spinner.clear<void>(spinnerLbl)();
   }
 }
 
@@ -458,6 +518,62 @@ async function parseRes(
   return res;
 }
 
+export async function backendRequest<T>(
+  payload: Payload,
+): Promise<{
+  attempts: number;
+  error?: any;
+  duration: number;
+  result?:
+    | LegacyVulnApiResult
+    | TestDepGraphResponse
+    | IacTestResponse
+    | TestDependenciesResponse;
+}> {
+  const maxAttempts = 5;
+  const start = process.hrtime();
+  const reqRetrySleepMs = 30000;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    debug(
+      `Trying request (attempt=${attempt}/${maxAttempts}, delay=${reqRetrySleepMs})`,
+    );
+    const { result, error } = await performAttempt(payload);
+    const errorCode = error?.code || error?.statusCode;
+
+    if (result) {
+      return { result, attempts: attempt, duration: durationSince(start) };
+    } else if (errorCode >= 500 && attempt < maxAttempts) {
+      await delayFor(reqRetrySleepMs);
+      continue;
+    } else {
+      return {
+        error,
+        attempts: attempt,
+        duration: durationSince(start),
+      };
+    }
+  }
+  throw new Error(
+    'Failed to process request. Only reachable if maxAttempts < 1',
+  );
+}
+
+const delayFor = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function durationSince(start: [number, number]) {
+  const timeElapsed = process.hrtime(start);
+  return (timeElapsed[0] * 1000000000 + timeElapsed[1]) / 1000000; // convert first to ns then to ms
+}
+
+async function performAttempt(payload) {
+  try {
+    return { result: await sendTestPayload(payload) };
+  } catch (error) {
+    return { error };
+  }
+}
+
 function sendTestPayload(
   payload: Payload,
 ): Promise<
@@ -478,7 +594,6 @@ function sendTestPayload(
         const err = handleTestHttpErrorResponse(res, body);
         return reject(err);
       }
-
       body.filesystemPolicy = filesystemPolicy;
       resolve(body);
     });
@@ -507,6 +622,10 @@ function handleTestHttpErrorResponse(res, body) {
       err = new InternalServerError(userMessage);
       err.innerError = body.stack;
       break;
+    case 504:
+      err = new TimeoutServerError(userMessage);
+      err.innerError = body.stack;
+      break;
     default:
       err = new FailedToGetVulnerabilitiesError(userMessage, statusCode);
       err.innerError = body.error;
@@ -518,6 +637,12 @@ function assemblePayloads(
   root: string,
   options: Options & TestOptions,
 ): Promise<Payload[]> {
+  const stdOutSpinner = ora({
+    isSilent: options.quiet,
+    stream: process.stdout,
+  });
+  stdOutSpinner.start();
+
   let isLocal;
   if (options.docker) {
     isLocal = true;
@@ -529,11 +654,19 @@ function assemblePayloads(
 
   const ecosystem = getEcosystem(options);
   if (ecosystem) {
+    stdOutSpinner.text = 'Assembling ecosystem payloads';
+    stdOutSpinner.render();
+    stdOutSpinner.stop();
     return assembleEcosystemPayloads(ecosystem, options);
   }
   if (isLocal) {
+    stdOutSpinner.text = 'Assembling local payloads';
+    stdOutSpinner.stop();
     return assembleLocalPayloads(root, options);
   }
+  stdOutSpinner.text = 'Assembling remote payloads';
+  stdOutSpinner.render();
+  stdOutSpinner.stop();
   return assembleRemotePayloads(root, options);
 }
 
@@ -558,28 +691,39 @@ async function assembleLocalPayloads(
     (path.relative('.', path.join(root, options.file || '')) ||
       path.relative('..', '.') + ' project dir');
 
+  const stdOutSpinner = ora({
+    isSilent: options.quiet,
+    stream: process.stdout,
+  });
+  stdOutSpinner.start();
+  stdOutSpinner.text = spinnerLbl;
+  stdOutSpinner.render();
+
   try {
     const payloads: Payload[] = [];
-    await spinner.clear<void>(spinnerLbl)();
-    if (!options.quiet) {
-      await spinner(spinnerLbl);
-    }
     if (options.iac) {
       return assembleIacLocalPayloads(root, options);
     }
-
     const deps = await getDepsFromPlugin(root, options);
+
+    stdOutSpinner.text = 'Received analysis from plugin';
+    stdOutSpinner.render();
     const failedResults = (deps as MultiProjectResultCustom).failedResults;
     if (failedResults?.length) {
-      await spinner.clear<void>(spinnerLbl)();
       if (!options.json && !options.quiet) {
-        console.warn(
-          chalk.bold.red(
-            `${icon.ISSUE} ${failedResults.length}/${failedResults.length +
-              deps.scannedProjects
-                .length} potential projects failed to get dependencies.`,
-          ),
-        );
+        const message = `${icon.ISSUE} ${
+          failedResults.length
+        }/${failedResults.length +
+          deps.scannedProjects
+            .length} potential projects failed to get dependencies. Run with \`-d\` for debug output.`;
+
+        if (failedResults?.length === payloads.length) {
+          console.error(chalk.bold.red(message));
+          throw new Error(message);
+        } else {
+          console.warn(chalk.bold.red(message));
+        }
+
         failedResults.forEach((f) => {
           if (f.targetFile) {
             console.warn(theme.color.status.error(`${f.targetFile}:`));
@@ -597,6 +741,7 @@ async function assembleLocalPayloads(
         );
       }
     }
+
     analytics.add('pluginName', deps.plugin.name);
     const javaVersion = get(
       deps.plugin,
@@ -623,7 +768,9 @@ async function assembleLocalPayloads(
       analytics.add('sbtVersion', sbtVersion);
     }
 
-    for (const scannedProject of deps.scannedProjects) {
+    for (const [index, scannedProject] of deps.scannedProjects.entries()) {
+      stdOutSpinner.text = `Processing scan result ${index}/${deps.scannedProjects.length}`;
+      stdOutSpinner.render();
       if (!scannedProject.depTree && !scannedProject.depGraph) {
         debug(
           'scannedProject is missing depGraph or depTree, cannot run test/monitor',
@@ -838,7 +985,7 @@ async function assembleLocalPayloads(
     }
     return payloads;
   } finally {
-    await spinner.clear<void>(spinnerLbl)();
+    stdOutSpinner.stop();
   }
 }
 

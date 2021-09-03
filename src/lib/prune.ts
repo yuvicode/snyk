@@ -17,13 +17,16 @@ export async function pruneGraph(
   packageManager: SupportedPackageManagers,
   pruneIsRequired = false,
 ): Promise<DepGraph> {
-  const prePrunePathsCount = countPathsToGraphRoot(depGraph);
-  const isDenseGraph = prePrunePathsCount > config.PRUNE_DEPS_THRESHOLD;
+  let isDenseGraph;
+  if (!pruneIsRequired) {
+    const prePrunePathsCount = countPathsToGraphRoot(depGraph);
+    isDenseGraph = prePrunePathsCount > config.PRUNE_DEPS_THRESHOLD;
+    debug('rootPkg', depGraph.rootPkg);
+    debug('prePrunePathsCount: ' + prePrunePathsCount);
+    debug('isDenseGraph', isDenseGraph);
+    analytics.add('prePrunedPathsCount', prePrunePathsCount);
+  }
 
-  debug('rootPkg', depGraph.rootPkg);
-  debug('prePrunePathsCount: ' + prePrunePathsCount);
-  debug('isDenseGraph', isDenseGraph);
-  analytics.add('prePrunedPathsCount', prePrunePathsCount);
   if (isDenseGraph || pruneIsRequired) {
     debug('Trying to prune the graph');
     const pruneStartTime = Date.now();
