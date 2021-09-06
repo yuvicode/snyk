@@ -82,9 +82,9 @@ export const codePlugin: EcosystemPlugin = {
 
 function isCodeClientError(error: object): boolean {
   return (
-    error.hasOwnProperty('statusCode') &&
-    error.hasOwnProperty('statusText') &&
-    error.hasOwnProperty('apiName')
+    Object.prototype.hasOwnProperty.call(error, 'statusCode') &&
+    Object.prototype.hasOwnProperty.call(error, 'statusText') &&
+    Object.prototype.hasOwnProperty.call(error, 'apiName')
   );
 }
 

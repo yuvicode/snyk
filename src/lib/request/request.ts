@@ -77,8 +77,7 @@ export async function makeRequest(
     payload.url = format(parsedUrl);
   }
 
-  // prefer config timeout unless payload specified
-  if (!payload.hasOwnProperty('timeout')) {
+  if (!Object.prototype.hasOwnProperty.call(payload, 'timeout')) {
     payload.timeout = config.timeout * 1000; // s -> ms
   }
 

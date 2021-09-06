@@ -43,6 +43,6 @@ export function checkRequiredFieldsMatch(
     return false;
   }
   return requiredFields.every((requiredField) =>
-    parsedDocument.hasOwnProperty(requiredField),
+    Object.prototype.hasOwnProperty.call(parsedDocument, requiredField),
   );
 }
