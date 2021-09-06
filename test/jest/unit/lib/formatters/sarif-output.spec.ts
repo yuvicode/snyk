@@ -12,7 +12,7 @@ describe('createSarifOutputForContainers', () => {
     expect(run.tool.driver.name).toEqual('Snyk Container');
     expect(run.tool.driver.rules).toHaveLength(1);
     expect(run.results).toHaveLength(1);
-    expect(run.results?.[0].level === 'error');
+    expect(run.results?.[0].level).toEqual('error');
     expect(sarif).toMatchSnapshot();
   });
 });

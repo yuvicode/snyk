@@ -93,7 +93,7 @@ describe('Test snyk code', () => {
     );
   });
 
-  it('should fail - when we do not support files ', async () => {
+  it('should fail - when we do not support files', async () => {
     const options: Options & TestOptions = {
       path: '',
       traverseNodeModules: false,

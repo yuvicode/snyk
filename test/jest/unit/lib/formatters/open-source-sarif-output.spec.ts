@@ -11,7 +11,7 @@ describe('createSarifOutputForOpenSource', () => {
     expect(run.tool.driver.name).toEqual('Snyk Open Source');
     expect(run.tool.driver.rules).toHaveLength(1);
     expect(run.results).toHaveLength(1);
-    expect(run.results?.[0].level === 'error');
+    expect(run.results?.[0].level).toEqual('error');
     expect(sarif).toMatchSnapshot();
   });
 
