@@ -45,7 +45,7 @@ export default async function fix(...args: MethodArgs): Promise<string> {
     (res) => Object.keys(res.testResult.issues).length,
   );
   const { dryRun, quiet } = options;
-  const { fixSummary, meta, results: resultsByPlugin } = await snykFix.fix(
+  const { fixSummary, meta, results: resultsByPlugin, exceptions } = await snykFix.fix(
     results,
     {
       dryRun,
@@ -59,6 +59,7 @@ export default async function fix(...args: MethodArgs): Promise<string> {
     results,
     resultsByPlugin,
     vulnerableResults,
+    exceptions,
   );
   // `snyk test` did not return any test results
   if (results.length === 0) {
@@ -163,6 +164,7 @@ function setSnykFixAnalytics(
   snykTestResponses: snykFix.EntityToFix[],
   resultsByPlugin: snykFix.FixHandlerResultByPlugin,
   vulnerableResults: snykFix.EntityToFix[],
+  exceptions: snykFix.ErrorsByEcoSystem,
 ) {
   // Analytics # of projects
   analytics.add('snykFixFailedProjects', meta.failed);
@@ -185,5 +187,9 @@ function setSnykFixAnalytics(
       errors.push(...failedToFix.map((f) => f.error?.message));
     }
     analytics.add('snykFixErrors', { [plugin]: errors });
+  }
+  for (const ecosystem of Object.keys(exceptions)) {
+    const {userMessage} = exceptions[ecosystem];
+    analytics.add('snykFixExceptions', { [ecosystem]: userMessage });
   }
 }

@@ -20,7 +20,7 @@ import { getTotalIssueCount } from './lib/issues/total-issues-count';
 import { hasFixableIssues } from './lib/issues/fixable-issues';
 
 export { FixHandlerResultByPlugin } from './plugins/types';
-export { EntityToFix, FixedMeta } from './types';
+export { EntityToFix, FixedMeta, ErrorsByEcoSystem } from './types';
 
 const debug = debugLib('snyk-fix:main');
 
