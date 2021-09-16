@@ -78,6 +78,15 @@ For advanced usage, we offer language and context specific flags, listed further
 - `--project-name`=<PROJECT_NAME>:
   Specify a custom Snyk project name.
 
+- `--environment`=<ENVIRONMENT>[,<ENVIRONMENT>]...>:
+  Set the project environment to one or more values (comma-separated). Allowed values: frontend, backend, internal, external, mobile, saas, onprem, hosted, distributed
+
+- `--lifecycle`=<LIFECYCLE>[,<LIFECYCLE>]...>:
+  Set the project lifecycle to one or more values (comma-separated). Allowed values: production, development, sandbox
+
+- `--business-criticality`=<BUSINESS_CRITICALITY>[,<BUSINESS_CRITICALITY>]...>:
+  Set the project business criticality to one or more values (comma-separated). Allowed values: critical, high, medium, low
+
 - `--policy-path`=<PATH_TO_POLICY_FILE>`:
   Manually pass a path to a snyk policy file.
 
