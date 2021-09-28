@@ -191,7 +191,8 @@ export type SupportedUserReachableFacingCliArgs =
   | 'strict-out-of-sync'
   | 'sub-project'
   | 'trust-policies'
-  | 'yarn-workspaces';
+  | 'yarn-workspaces'
+  | 'with-remediation';
 
 export enum SupportedCliCommands {
   version = 'version',

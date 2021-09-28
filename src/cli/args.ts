@@ -219,6 +219,7 @@ export function args(rawArgv: string[]): Args {
     'prune-repeated-subdependencies',
     'dry-run',
     'sequential',
+    'with-remediation',
   ];
   for (const dashedArg of argumentsToTransform) {
     if (argv[dashedArg]) {

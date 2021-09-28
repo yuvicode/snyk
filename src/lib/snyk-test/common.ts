@@ -7,6 +7,7 @@ export function assembleQueryString(options) {
     org: string;
     severityThreshold?: boolean;
     ignorePolicy?: boolean;
+    noRemediation?: boolean;
   } = {
     org,
   };
@@ -14,10 +15,13 @@ export function assembleQueryString(options) {
   if (options.severityThreshold) {
     qs.severityThreshold = options.severityThreshold;
   }
+
+  if (options.withRemediation === 'false') {
+    qs.noRemediation = true;
+  }
   if (options['ignore-policy']) {
     qs.ignorePolicy = true;
   }
-
   return Object.keys(qs).length !== 0 ? qs : null;
 }
 
