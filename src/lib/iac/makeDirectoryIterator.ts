@@ -8,7 +8,11 @@ import { resolve } from 'path';
  */
 export function* makeDirectoryIterator(
   root: string,
-  options: { maxDepth?: number; includeDotfiles?: boolean } = {},
+  options: {
+    maxDepth?: number;
+    includeDotfiles?: boolean;
+    extension?: string;
+  } = {},
 ) {
   if (!isDirectory(root)) {
     throw new Error(`Path "${root}" is not a directory`);
@@ -34,6 +38,10 @@ export function* makeDirectoryIterator(
 
         yield* walk(resolved, currentDepth + 1);
       } else {
+        if (options.extension && !filename.endsWith(options.extension)) {
+          continue;
+        }
+
         yield resolved;
       }
     }

@@ -1,6 +1,9 @@
 import { FormattedResult } from './types';
 import * as analytics from '../../../../lib/analytics';
 import { calculatePercentage } from './math-utils';
+import { makeDirectoryIterator } from '../../../../lib/iac/makeDirectoryIterator';
+import path = require('path');
+import { LOCAL_POLICY_ENGINE_DIR } from './local-cache';
 
 export function addIacAnalytics(
   formattedResults: FormattedResult[],
@@ -12,6 +15,9 @@ export function addIacAnalytics(
   let issuesFromCustomRulesCount = 0;
   const issuesByType: Record<string, object> = {};
   const packageManagers = Array<string>();
+
+  const customRules = getRegoRulesFroBundle(LOCAL_POLICY_ENGINE_DIR);
+  const customRulesCount = customRules.length;
 
   formattedResults.forEach((res) => {
     totalIssuesCount =
@@ -29,6 +35,9 @@ export function addIacAnalytics(
       if (policy.isGeneratedByCustomRule) {
         issuesFromCustomRulesCount++;
         customRulesIdsFoundInIssues[policy.publicId] = true;
+        issuesByType['custom'] = issuesByType['custom'] ?? {};
+        issuesByType['custom'][policy.severity] =
+          (issuesByType['custom'][policy.severity] || 0) + 1;
       }
     });
   });
@@ -47,6 +56,11 @@ export function addIacAnalytics(
   analytics.add(
     'iac-custom-rules-issues-percentage',
     calculatePercentage(issuesFromCustomRulesCount, totalIssuesCount),
+  );
+  analytics.add('iac-custom-rules-count', customRulesCount);
+  analytics.add(
+    'iac-custom-rules-percentage',
+    calculatePercentage(uniqueCustomRulesCount, customRulesCount),
   );
   analytics.add('iac-custom-rules-coverage-count', uniqueCustomRulesCount);
 }
@@ -79,3 +93,20 @@ export const performanceAnalyticsObject: Record<
   [PerformanceAnalyticsKey.CacheCleanup]: null,
   [PerformanceAnalyticsKey.Total]: null,
 };
+
+function getRegoRulesFroBundle(pathToScan: string): string[] {
+  const directoryPaths = makeDirectoryIterator(pathToScan, {
+    extension: '.rego',
+  }); // todo: maxdepth
+
+  const customRules: string[] = [];
+  for (const filePath of directoryPaths) {
+    if (filePath.includes('lib/')) {
+      continue;
+    }
+    // The SDK creates a folder with the same publicId as the rule
+    // So the folder name should be the same as the publicId
+    customRules.push(path.basename(path.dirname(filePath)));
+  }
+  return customRules;
+}
