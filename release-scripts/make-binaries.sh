@@ -8,6 +8,8 @@ npx pkg . --compress Brotli -t node14-linux-x64  -o binary-releases/snyk-linux
 npx pkg . --compress Brotli -t node14-macos-x64  -o binary-releases/snyk-macos
 npx pkg . --compress Brotli -t node14-win-x64    -o binary-releases/snyk-win-unsigned.exe
 
+chmod +x binary-releases/snyk-linux
+
 # build docker package
 ./release-scripts/docker-desktop-release.sh
 

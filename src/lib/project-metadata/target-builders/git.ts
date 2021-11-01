@@ -2,9 +2,6 @@ import * as url from 'url';
 import subProcess = require('../../sub-process');
 import { GitTarget } from '../types';
 
-// for scp-like syntax [user@]server:project.git
-const originRegex = /(.+@)?(.+):(.+$)/;
-
 export async function getInfo(
   isFromContainer: boolean,
 ): Promise<GitTarget | null> {
@@ -28,6 +25,8 @@ export async function getInfo(
         // same format for parseable URLs
         target.remoteUrl = `http://${host}${pathname}`;
       } else {
+        // for scp-like syntax [user@]server:project.git
+        const originRegex = /(.+@)?(.+):(.+$)/;
         const originRes = originRegex.exec(origin);
         if (originRes && originRes[2] && originRes[3]) {
           target.remoteUrl = `http://${originRes[2]}/${originRes[3]}`;

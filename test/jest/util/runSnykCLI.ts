@@ -7,7 +7,7 @@ const runSnykCLI = async (
   argsString: string,
   options?: RunCommandOptions,
 ): Promise<RunCommandResult> => {
-  const cliPath = path.resolve(cwd, './bin/snyk');
+  const cliPath = path.resolve(cwd, './binary-releases/snyk-linux');
   const args = argsString.split(' ').filter((v) => !!v);
   return await runCommand('node', [cliPath, ...args], options);
 };
