@@ -42,7 +42,7 @@ test('test command line monitor --package-manager', (t) => {
 
 test('test --insecure', (t) => {
   t.teardown(() => {
-    delete (global as any).ignoreUnknownCA;
+    delete process.env.NODE_TLS_REJECT_UNAUTHORIZED;
   });
   const cliArgs = [
     '/Users/dror/.nvm/versions/node/v6.9.2/bin/node',
@@ -51,7 +51,11 @@ test('test --insecure', (t) => {
     '--insecure',
   ];
   args(cliArgs);
-  t.equal((global as any).ignoreUnknownCA, true, 'ignoreUnknownCA true');
+  t.equal(
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED,
+    '0',
+    'NODE_TLS_REJECT_UNAUTHORIZED disabled',
+  );
   t.end();
 });
 
