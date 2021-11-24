@@ -19,6 +19,7 @@ const commands = {
   version: async (...args) => callModule(import('./version'), args),
   wizard: async (...args) => callModule(import('./protect/wizard'), args),
   woof: async (...args) => callModule(import('./woof'), args),
+  apps: async (...args) => callModule(import('./apps'), args),
 };
 
 commands.aliases = abbrev(Object.keys(commands));
