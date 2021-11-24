@@ -148,6 +148,7 @@ export type IaCTestFlags = Pick<
   | 'severityThreshold'
   | 'json'
   | 'sarif'
+  | 'snapshot'
 
   // PolicyOptions
   | 'ignore-policy'

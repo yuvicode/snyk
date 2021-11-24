@@ -51,6 +51,8 @@ import {
 } from './oci-pull';
 import { UnsupportedEntitlementError } from '../../../../lib/errors/unsupported-entitlement-error';
 import { isValidUrl } from './url-utils';
+import { makeRequest } from '../../../../lib/request';
+import { getAuthHeader } from '../../../../lib/api-token';
 
 // this method executes the local processing engine and then formats the results to adapt with the CLI output.
 // this flow is the default GA flow for IAC scanning.
@@ -130,6 +132,19 @@ export async function test(
     }
 
     addIacAnalytics(filteredIssues, ignoreCount, !!customRulesPath);
+
+    if (options.snapshot) {
+      makeRequest({
+        method: 'POST',
+        url: `${config.API}/iac-snapshot`,
+        json: true,
+        headers: {
+          authorization: getAuthHeader(),
+        },
+        body: filteredIssues,
+      });
+      console.log(`${config.API}/iac-snapshot`)
+    }
 
     // TODO: add support for proper typing of old TestResult interface.
     return {

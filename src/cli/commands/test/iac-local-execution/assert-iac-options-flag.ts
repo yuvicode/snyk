@@ -22,6 +22,7 @@ const keys: (keyof IaCTestFlags)[] = [
   'quiet',
   'scan',
   'legacy',
+  'snapshot',
 
   // PolicyOptions
   'ignore-policy',
