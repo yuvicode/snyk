@@ -93,27 +93,27 @@ Specify a custom Snyk project name.
 
 ### `--target-reference=<TARGET_REFERENCE>`
 
-  A reference which differentiates this project. For example, a branch name or version. Projects using the same reference can be used for grouping. Only supported for Snyk Open Source. [More information](https://snyk.info/3B0vTPs).
+A reference which differentiates this project. For example, a branch name or version. Projects using the same reference can be used for grouping. Only supported for Snyk Open Source. [More information](https://snyk.info/3B0vTPs).
 
 ### `--project-environment=<ENVIRONMENT>[,<ENVIRONMENT>]...>`
 
 (only in `monitor` command)
-Set the project environment to one or more values (comma-separated). Allowed values: frontend, backend, internal, external, mobile, saas, onprem, hosted, distributed
+Set the project environment to one or more values (comma-separated). To clear the project environment set `--project-environment=`. Allowed values: frontend, backend, internal, external, mobile, saas, onprem, hosted, distributed
 
 ### `--project-lifecycle=<LIFECYCLE>[,<LIFECYCLE>]...>`
 
 (only in `monitor` command)
-Set the project lifecycle to one or more values (comma-separated). Allowed values: production, development, sandbox
+Set the project lifecycle to one or more values (comma-separated). To clear the project lifecycle set `--project-lifecycle=`. Allowed values: production, development, sandbox
 
 ### `--project-business-criticality=<BUSINESS_CRITICALITY>[,<BUSINESS_CRITICALITY>]...>`
 
 (only in `monitor` command)
-Set the project business criticality to one or more values (comma-separated). Allowed values: critical, high, medium, low
+Set the project business criticality to one or more values (comma-separated). To clear the project business criticality set `--project-business-criticality=`. Allowed values: critical, high, medium, low
 
 ### `--project-tags=<TAG>[,<TAG>]...>`
 
 (only in `monitor` command)
-Set the project tags to one or more values (comma-separated key value pairs with an "=" separator). e.g. --project-tags=department=finance,team=alpha
+Set the project tags to one or more values (comma-separated key value pairs with an "=" separator). e.g. --project-tags=department=finance,team=alpha. To clear the project tags set `--project-tags=`
 
 ### `--tags=<TAG>[,<TAG>]...>`
 
@@ -329,13 +329,11 @@ E.g. `SNYK_CFG_ORG=myorg` will override default org option in `config` with "myo
 
 ### `SNYK_REGISTRY_USERNAME`
 
-Specify a username to use when connecting to a container registry. Note that using the `--username` flag will
-override this value. This will be ignored in favour of local Docker binary credentials when Docker is present.
+Specify a username to use when connecting to a container registry. Note that using the `--username` flag will override this value. This will be ignored in favour of local Docker binary credentials when Docker is present.
 
 ### `SNYK_REGISTRY_PASSWORD`
 
-Specify a password to use when connecting to a container registry. Note that using the `--password` flag will
-override this value. This will be ignored in favour of local Docker binary credentials when Docker is present.
+Specify a password to use when connecting to a container registry. Note that using the `--password` flag will override this value. This will be ignored in favour of local Docker binary credentials when Docker is present.
 
 ## Connecting to Snyk API
 
